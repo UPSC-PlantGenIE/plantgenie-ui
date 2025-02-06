@@ -1,0 +1,47 @@
+.header {
+  display: none;
+}
+
+.nav {
+  grid-area: nav;
+}
+
+.main {
+  grid-area: main;
+}
+
+.footer {
+  grid-area: footer;
+}
+
+.header,
+.nav,
+.main,
+.footer {
+  background: var(--background);
+  border: 1px solid var(--color);
+  border-radius: 0.1rem;
+  padding: 0.5rem;
+}
+
+@media (min-width: 41em) {
+  .nav {
+    grid-area: unset;
+    grid-row: span 3;
+  }
+
+  .main {
+    grid-area: unset;
+    grid-column: span 1;
+  }
+
+  .header {
+    display: unset;
+    grid-column: span 1;
+  }
+
+  .footer {
+    grid-area: unset;
+    grid-column: span 1;
+  }
+}

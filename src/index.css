@@ -61,6 +61,7 @@
 
 body {
   margin: 0;
+  min-width: 200px;
   display: flex;
   background-color: var(--dark-purple);
 }

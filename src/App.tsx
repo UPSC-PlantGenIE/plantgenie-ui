@@ -3,10 +3,14 @@
 import "./App.css";
 
 import { BaseLayout } from "./components/layouts/BaseLayout";
+import { ApplicationRouter } from "./components/routing/AppRouter";
+// import { useAppStore } from "./lib/state";
 
 function App() {
   return (
-    <BaseLayout />
+    <BaseLayout>
+      <ApplicationRouter />
+    </BaseLayout>
   );
 }
 

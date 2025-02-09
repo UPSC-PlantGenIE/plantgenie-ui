@@ -1,11 +1,12 @@
 import { useEffect, createElement } from "react";
 
 import { useAppStore } from "../../lib/state";
-import { BaseLayout } from "../layouts/BaseLayout";
+// import { BaseLayout } from "../layouts/BaseLayout";
+import { Root } from "../../pages";
 
-type RouteParams = Record<string, string>;
+// type RouteParams = Record<string, string>;
 
-const routes = [{ path: "/", component: () => <>This is the home page</> }];
+const routes = [{ path: "/", component: () => <Root /> }];
 
 const matchRoute = (
   componentPath: string,
@@ -57,8 +58,8 @@ export const ApplicationRouter = () => {
   }
 
   return (
-    <div id="main">
+    <>
       404 Not Found. Sorry!
-    </div>
+    </>
   );
 };

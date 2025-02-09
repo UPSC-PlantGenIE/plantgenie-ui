@@ -1,0 +1,48 @@
+.Root {
+  display: flex;
+  flex-direction: column;
+  padding: 0.5em;
+}
+
+h2 {
+  color: var(--color-lime-600);
+  padding: 0.5em 0.5em;
+  border-top: solid 2px var(--color-lime-600);
+  border-bottom: solid 2px var(--color-lime-600);
+  text-align: center;
+}
+
+ul {
+  list-style-type: none;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  row-gap: 1em;
+  column-gap: 2em;
+  flex-wrap: wrap;
+}
+
+li {
+  padding: 0.75rem;
+  text-align: center;
+  border: solid 2px var(--color-purple-600);
+  border-radius: 0.1rem;
+}
+
+li > a {
+  color: var(--color-lime-600);
+}
+
+li:hover {
+  border-color: var(--color-purple-400);
+}
+
+li > a:hover {
+  text-decoration: none;
+  color: var(--color-lime-400);
+}
+
+p {
+  text-align: center;
+}

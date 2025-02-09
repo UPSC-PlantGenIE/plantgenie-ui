@@ -35,11 +35,7 @@
   /* action colors */
   --action: hsl(180deg, 50%, calc((50% * var(--unzero)) + (18% * var(--zero))));
 
-  --hover: hsl(
-    270deg,
-    80%,
-    calc((80% * var(--unzero)) + (70% * var(--zero)))
-  );
+  --hover: hsl(270deg, 80%, calc((80% * var(--unzero)) + (70% * var(--zero))));
   /* sizes */
   --font-scale: 0.5vmin;
   --radius: 0.25em;
@@ -68,4 +64,25 @@ body {
 
 * {
   box-sizing: border-box;
+}
+
+h1, h2, h3 {
+  font-family: var(--zilla);
+  font-weight: bold;
+  line-height: 1;
+  margin: 0;
+}
+
+a {
+  color: var(--color-blue-600);
+  text-decoration: none;
+}
+
+a:visited {
+  color: var(--color-purple-600);
+}
+
+a:hover {
+  color: var(--color-purple-200);
+  text-decoration: underline;
 }

@@ -1,0 +1,63 @@
+.Selection {
+  position: relative;
+  width: 100%;
+}
+
+button {
+  outline: none;
+  border: none;
+}
+
+.SelectionButton {
+  display: grid;
+  border-radius: 0.2em;
+  width: 100%;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  cursor: pointer;
+  background-color: var(--background);
+  color: var(--color);
+  outline: solid 2px var(--color-purple-600);
+  padding: 0.5em;
+}
+
+.SelectionButton:hover {
+  outline: solid 2px var(--color-purple-400);
+}
+
+.SelectedItem {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  grid-column-start: 1;
+  grid-row-start: 1;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.DropdownIcon {
+  grid-column-start: 1;
+  grid-row-start: 1;
+  width: 1.25rem; /* size-5 */
+  height: 1.25rem; /* size-5 */
+  align-self: center;
+  justify-self: end;
+}
+
+.DropdownList {
+  position: absolute;
+  z-index: 10;
+  margin-top: 0.2em;
+}
+
+.DropdownList > li {
+  display: flex;
+  align-items: center;
+}
+
+.DropdownList > li > span {
+  margin-left: 0.75em;
+
+}
+
+/* @media (prefers-color-scheme: dark) {} */

@@ -24,15 +24,18 @@ export const Root = () => {
         in Umeå, Sweden. The tools available here allow visualization and
         analysis of genomic data for the following species:
       </p>
-      <ul className="flex flex-row justify-center items-center gap-4 flex-wrap py-2">
-        <li className="p-4 text-center text-lg rounded-sm text-lime-500 ring-2 ring-purple-500 hover:text-lime-600 hover:ring-purple-800 dark:ring-purple-500 dark:hover:ring-purple-300 dark:hover:text-lime-300">
+      {/* <ul className="flex flex-row justify-center items-center gap-4 flex-wrap py-2"> */}
+      <ul className={styles.speciesList}>
+        <li>
+        {/* <li className="p-4 text-center text-lg rounded-sm text-lime-500 ring-2 ring-purple-500 hover:text-lime-600 hover:ring-purple-800 dark:ring-purple-500 dark:hover:ring-purple-300 dark:hover:text-lime-300"> */}
           <a target="_blank" href="https://en.wikipedia.org/wiki/Picea_abies">
             <em>Picea abies</em>
             <br />
             (Norway Spruce)
           </a>
         </li>
-        <li className="p-4 text-center text-lg rounded-sm text-lime-500 ring-2 ring-purple-500 hover:text-lime-600 hover:ring-purple-800 dark:ring-purple-500 dark:hover:ring-purple-300 dark:hover:text-lime-300">
+        <li>
+        {/* <li className="p-4 text-center text-lg rounded-sm text-lime-500 ring-2 ring-purple-500 hover:text-lime-600 hover:ring-purple-800 dark:ring-purple-500 dark:hover:ring-purple-300 dark:hover:text-lime-300"> */}
           <a
             target="_blank"
             href="https://en.wikipedia.org/wiki/Pinus_sylvestris"
@@ -42,7 +45,8 @@ export const Root = () => {
             (Scots Pine)
           </a>
         </li>
-        <li className="p-4 text-center text-lg rounded-sm text-lime-500 ring-2 ring-purple-500 hover:text-lime-600 hover:ring-purple-800 dark:ring-purple-500 dark:hover:ring-purple-300 dark:hover:text-lime-300">
+        <li>
+        {/* <li className="p-4 text-center text-lg rounded-sm text-lime-500 ring-2 ring-purple-500 hover:text-lime-600 hover:ring-purple-800 dark:ring-purple-500 dark:hover:ring-purple-300 dark:hover:text-lime-300"> */}
           <a
             target="_blank"
             href="https://en.wikipedia.org/wiki/Populus_tremula"

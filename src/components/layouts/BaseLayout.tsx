@@ -1,5 +1,6 @@
 import { ReactNode } from "react";
 import styles from "./BaseLayout.module.css";
+import { SelectionMenu } from "../general/Selection";
 
 interface BaseLayoutProps {
   children?: ReactNode;
@@ -10,6 +11,7 @@ export const BaseLayout = ({ children }: BaseLayoutProps) => {
     <>
       <div id="nav" role="navigation" className={styles.nav}>
         Nav
+        <SelectionMenu />
       </div>
       <div id="header" className={styles.header}>
         Header

@@ -3,26 +3,105 @@
   width: 100%;
 }
 
-button {
-  outline: none;
-  border: none;
+:where(.Selection) {
+  .selectedItem {
+    display: flex;
+    flex-direction: row;
+    gap: 1em;
+    align-items: center;
+    position: relative;
+    cursor: default;
+    padding-top: 0.2rem;
+    padding-bottom: 0.2rem;
+    padding-left: 0.4rem;
+  }
+
+  button {
+    display: grid;
+    justify-content: center;
+    align-items: center;
+    border: none;
+    border-radius: 0.2em;
+    width: 100%;
+    padding: 0.5em;
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+    cursor: pointer;
+    background-color: var(--color-slate-800);
+    color: var(--color);
+    outline: solid 2px var(--color-purple-600);
+  }
+
+  button:hover {
+    outline: solid 2px var(--color-purple-400);
+  }
+
+  ul {
+    position: absolute;
+    z-index: 10;
+    margin-top: 0.15em;
+    max-height: 4em;
+    overflow: auto;
+    border-radius: 0.2em;
+    width: 100%;
+    list-style: none;
+    background-color: var(--color-slate-800);
+  }
+
+  li {
+    display: flex;
+    flex-direction: row;
+    gap: 1em;
+    align-items: center;
+    position: relative;
+    cursor: default;
+    padding-top: 0.2rem;
+    padding-bottom: 0.2rem;
+    padding-left: 0.4rem;
+  }
+
+  /* Hide the scrollbar track for a minimal look */
+  ::-webkit-scrollbar {
+    width: 6px; /* Thin scrollbar */
+    height: 6px; /* For horizontal scrollbars */
+  }
+
+  /* Rounded edges and transparent track */
+  ::-webkit-scrollbar-track {
+    background: transparent;
+    border-radius: 10px;
+  }
+
+  /* Default scrollbar handle: thin and rounded */
+  ::-webkit-scrollbar-thumb {
+    background: rgba(128, 128, 128, 0.5); /* Semi-transparent */
+    border-radius: 10px;
+    transition: background 0.2s, width 0.2s;
+  }
+
+  /* Make the scrollbar thicker on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(128, 128, 128, 0.8);
+    width: 10px;
+  }
 }
 
-.SelectionButton {
+/* .SelectionButton {
   display: grid;
+  justify-content: center;
+  align-items: center;
   border-radius: 0.2em;
   width: 100%;
+  padding: 0.5em;
   grid-template-columns: repeat(1, minmax(0, 1fr));
   cursor: pointer;
   background-color: var(--background);
   color: var(--color);
   outline: solid 2px var(--color-purple-600);
-  padding: 0.5em;
-}
+} */
 
-.SelectionButton:hover {
+/* .SelectionButton:hover {
   outline: solid 2px var(--color-purple-400);
-}
+} */
 
 .SelectedItem {
   display: flex;
@@ -38,8 +117,8 @@ button {
 .DropdownIcon {
   grid-column-start: 1;
   grid-row-start: 1;
-  width: 1.25rem; /* size-5 */
-  height: 1.25rem; /* size-5 */
+  width: 1.25rem;
+  height: 1.25rem;
   align-self: center;
   justify-self: end;
 }
@@ -57,7 +136,6 @@ button {
 
 .DropdownList > li > span {
   margin-left: 0.75em;
-
 }
 
 /* @media (prefers-color-scheme: dark) {} */

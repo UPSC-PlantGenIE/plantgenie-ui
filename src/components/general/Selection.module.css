@@ -1,32 +1,20 @@
-.Selection {
+.selection {
   position: relative;
   width: 100%;
 }
 
-:where(.Selection) {
-  .selectedItem {
-    display: flex;
-    flex-direction: row;
-    gap: 1em;
-    align-items: center;
-    position: relative;
-    cursor: default;
-    padding-top: 0.2rem;
-    padding-bottom: 0.2rem;
-    padding-left: 0.4rem;
-  }
-
+:where(.selection) {
   button {
     display: grid;
-    justify-content: center;
-    align-items: center;
+    text-align: left;
     border: none;
-    border-radius: 0.2em;
+    border-radius: 0.5em;
     width: 100%;
     padding: 0.5em;
+    padding-left: 0.75rem;
     grid-template-columns: repeat(1, minmax(0, 1fr));
     cursor: pointer;
-    background-color: var(--color-slate-800);
+    background-color: var(--background);
     color: var(--color);
     outline: solid 2px var(--color-purple-600);
   }
@@ -35,28 +23,104 @@
     outline: solid 2px var(--color-purple-400);
   }
 
+  button:focus {
+    outline: solid 2px var(--color-purple-800);
+  }
+
+  .selectedItem {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+    grid-column-start: 1;
+    grid-row-start: 1;
+    font-size: 0.8rem;
+    padding-top: 0.2rem;
+    padding-bottom: 0.2rem;
+  }
+
+  .selectedItemName {
+    font-style: italic;
+  }
+
+  .option {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+    grid-column-start: 1;
+    grid-row-start: 1;
+  }
+
   ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
     position: absolute;
     z-index: 10;
-    margin-top: 0.15em;
-    max-height: 4em;
-    overflow: auto;
-    border-radius: 0.2em;
+    margin-top: 0.25rem; /* mt-1 */
+    max-height: 7rem; /* max-h-28 (28 * 0.25rem) */
     width: 100%;
-    list-style: none;
-    background-color: var(--color-slate-800);
+    overflow: auto;
+    border-radius: 0.375rem; /* rounded-md */
+    background-color: #ffffff; /* bg-white */
+    padding-top: 0.25rem; /* py-1 */
+    padding-bottom: 0.25rem;
+    font-size: 1rem;
+    box-shadow: 0px 10px 15px -3px rgba(0, 0, 0, 0.1),
+      0px 4px 6px -2px rgba(0, 0, 0, 0.05); /* shadow-lg */
+    /* outline: none; */
+    border: 1px solid rgba(0, 0, 0, 0.05); /* ring-1 ring-black/5 */
+  }
+
+  .selectedAvatar {
+    width: 1.5rem;
+    height: 1.5rem;
+    border: solid 1px white;
+    border-radius: calc(infinity * 1px);
+  }
+
+  .optionAvatar {
+    width: 1.5rem;
+    height: 1.5rem;
+    border: solid 1px white;
+    border-radius: calc(infinity * 1px);
+  }
+
+  .optionName {
+    font-size: 1em;
+    font-style: italic;
+  }
+
+  @media (min-width: 640px) {
+    /* sm breakpoint */
+    ul {
+      font-size: 0.875rem; /* sm:text-sm */
+    }
   }
 
   li {
-    display: flex;
-    flex-direction: row;
-    gap: 1em;
-    align-items: center;
     position: relative;
     cursor: default;
-    padding-top: 0.2rem;
-    padding-bottom: 0.2rem;
-    padding-left: 0.4rem;
+    user-select: none;
+    padding-top: 0.5rem; /* py-2 */
+    padding-bottom: 0.5rem;
+    padding-left: 0.75rem;
+    padding-right: 2.25rem; /* pr-9 */
+    color: #111827; /* text-gray-900 */
+  }
+
+  @media (prefers-color-scheme: dark) {
+    ul {
+      background-color: #1e293b; /* dark:bg-slate-800 */
+    }
+
+    li {
+      color: #f3f4f6; /* dark:text-gray-100 */
+    }
+  }
+
+  li:hover {
+    background-color: #94a3b8; /* hover:bg-slate-400 */
+    color: #f1f5f9; /* hover:text-slate-100 */
   }
 
   /* Hide the scrollbar track for a minimal look */
@@ -85,35 +149,6 @@
   }
 }
 
-/* .SelectionButton {
-  display: grid;
-  justify-content: center;
-  align-items: center;
-  border-radius: 0.2em;
-  width: 100%;
-  padding: 0.5em;
-  grid-template-columns: repeat(1, minmax(0, 1fr));
-  cursor: pointer;
-  background-color: var(--background);
-  color: var(--color);
-  outline: solid 2px var(--color-purple-600);
-} */
-
-/* .SelectionButton:hover {
-  outline: solid 2px var(--color-purple-400);
-} */
-
-.SelectedItem {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  grid-column-start: 1;
-  grid-row-start: 1;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
-
 .DropdownIcon {
   grid-column-start: 1;
   grid-row-start: 1;
@@ -123,19 +158,4 @@
   justify-self: end;
 }
 
-.DropdownList {
-  position: absolute;
-  z-index: 10;
-  margin-top: 0.2em;
-}
 
-.DropdownList > li {
-  display: flex;
-  align-items: center;
-}
-
-.DropdownList > li > span {
-  margin-left: 0.75em;
-}
-
-/* @media (prefers-color-scheme: dark) {} */

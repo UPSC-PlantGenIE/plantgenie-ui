@@ -32,35 +32,45 @@ export const SelectionMenu = () => {
   };
 
   return (
-    <div className={styles.Selection}>
+    <div className={styles.selection}>
       <button onClick={toggleSelect}>
-        <div id="selected-item" className={styles.selectedItem}>
-          {selected.img ? <img src={selected.img} /> : null}
-          <span id="selected-name">{selected.name}</span>
-          <svg
-            className={styles.DropdownIcon}
-            viewBox="0 0 16 16"
-            fill="currentColor"
-            aria-hidden="true"
-            data-slot="icon"
-          >
-            <path
-              fillRule="evenodd"
-              d="M5.22 10.22a.75.75 0 0 1 1.06 0L8 11.94l1.72-1.72a.75.75 0 1 1 1.06 1.06l-2.25 2.25a.75.75 0 0 1-1.06 0l-2.25-2.25a.75.75 0 0 1 0-1.06ZM10.78 5.78a.75.75 0 0 1-1.06 0L8 4.06 6.28 5.78a.75.75 0 0 1-1.06-1.06l2.25-2.25a.75.75 0 0 1 1.06 0l2.25 2.25a.75.75 0 0 1 0 1.06Z"
-              clipRule="evenodd"
+        {/* <span className="col-start-1 row-start-1 flex items-center gap-3 pr-6"> */}
+        <span className={styles.selectedItem}>
+          {selected.img ? (
+            <img
+              src={selected.img}
+              alt={`${selected.name} avatar`}
+              // className="size-5 shrink-0 rounded-full border border-white"
+              className={styles.selectedAvatar}
             />
-          </svg>
-        </div>
+          ) : null}
+          <span className="block truncate">{selected.name}</span>
+        </span>
+        <svg
+          className={styles.DropdownIcon}
+          viewBox="0 0 16 16"
+          fill="currentColor"
+          aria-hidden="true"
+          data-slot="icon"
+        >
+          <path
+            fillRule="evenodd"
+            d="M5.22 10.22a.75.75 0 0 1 1.06 0L8 11.94l1.72-1.72a.75.75 0 1 1 1.06 1.06l-2.25 2.25a.75.75 0 0 1-1.06 0l-2.25-2.25a.75.75 0 0 1 0-1.06ZM10.78 5.78a.75.75 0 0 1-1.06 0L8 4.06 6.28 5.78a.75.75 0 0 1-1.06-1.06l2.25-2.25a.75.75 0 0 1 1.06 0l2.25 2.25a.75.75 0 0 1 0 1.06Z"
+            clipRule="evenodd"
+          />
+        </svg>
       </button>
       <ul tabIndex={-1} role="listbox" hidden={!isOpen}>
-        {options.map((value, index) => (
+        {options.map((value) => (
           <li
             key={value.id}
             role="option"
             onClick={() => optionClickedHandler(value.id)}
           >
-            <img src={value.img} />
-            <span>{value.name}</span>
+            <div className={styles.option}>
+              <img src={value.img} className={styles.optionAvatar} />
+              <span className={styles.optionName}>{value.name}</span>
+            </div>
           </li>
         ))}
       </ul>

@@ -38,7 +38,7 @@
   --hover: hsl(270deg, 80%, calc((80% * var(--unzero)) + (70% * var(--zero))));
   /* sizes */
   --font-scale: 0.5vmin;
-  --radius: 0.25em;
+  --radius: 0.1em;
   --mobile-width: 41em;
 
   /* applied */

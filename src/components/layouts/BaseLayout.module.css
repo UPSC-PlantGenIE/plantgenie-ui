@@ -20,7 +20,8 @@
 .footer {
   background: var(--background);
   border: 1px solid var(--color);
-  border-radius: 0.1rem;
+  /* border-radius: 0.1rem; */
+  border-radius: var(--radius);
   padding: 0.5rem;
 }
 

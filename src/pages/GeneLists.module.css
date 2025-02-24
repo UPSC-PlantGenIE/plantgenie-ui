@@ -1,0 +1,17 @@
+/* .GeneLists {
+  display: flex;
+  flex-direction: column;
+  padding: 1em;
+  row-gap: 1em;
+} */
+
+
+.tableWrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.tableElement {
+  width: 100%;
+  border-collapse: collapse;
+}

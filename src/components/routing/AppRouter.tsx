@@ -2,13 +2,16 @@ import { useEffect, createElement } from "react";
 
 import { useAppStore } from "../../lib/state";
 // import { BaseLayout } from "../layouts/BaseLayout";
-import { GeneListsRoute, Root } from "../../pages";
+// import { GeneListsRoute, Root } from "../../pages";
+import { Root } from "../../pages";
+import { GeneListsViewerRoute } from "../../pages/GeneLists";
 
 // type RouteParams = Record<string, string>;
 
 const routes = [
   { path: "/", component: () => <Root /> },
-  { path: "/gene-lists", component: () => <GeneListsRoute /> },
+  { path: "/gene-lists", component: () => <GeneListsViewerRoute /> },
+  { path: "/gene-lists/search", component: () => <div>Search page!</div> },
 ];
 
 const matchRoute = (

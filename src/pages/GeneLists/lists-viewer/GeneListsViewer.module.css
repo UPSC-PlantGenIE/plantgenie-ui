@@ -1,0 +1,19 @@
+.tableWrapper {
+    width: 100%;
+    overflow-x: auto;
+  }
+
+  .tableElement {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  :where(.tableWrapper) {
+    th {
+      font-size: calc(var(--font-scale) * 3);
+    }
+
+    td {
+      font-size: calc(var(--font-scale) * 2.5);
+    }
+  }

@@ -2,11 +2,14 @@ import { useEffect, createElement } from "react";
 
 import { useAppStore } from "../../lib/state";
 // import { BaseLayout } from "../layouts/BaseLayout";
-import { Root } from "../../pages";
+import { GeneListsRoute, Root } from "../../pages";
 
 // type RouteParams = Record<string, string>;
 
-const routes = [{ path: "/", component: () => <Root /> }];
+const routes = [
+  { path: "/", component: () => <Root /> },
+  { path: "/gene-lists", component: () => <GeneListsRoute /> },
+];
 
 const matchRoute = (
   componentPath: string,
@@ -57,9 +60,5 @@ export const ApplicationRouter = () => {
     }
   }
 
-  return (
-    <>
-      404 Not Found. Sorry!
-    </>
-  );
+  return <>404 Not Found. Sorry!</>;
 };

@@ -1,3 +1,4 @@
 export const GeneSearchResultsRoute = () => {
-  return (<div>Your search results here!</div>)
+  
+  return (<div id="container">Your search results here!</div>)
 };

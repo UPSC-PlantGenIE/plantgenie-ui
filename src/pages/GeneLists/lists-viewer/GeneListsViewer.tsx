@@ -23,7 +23,7 @@ export const GeneListsViewerRoute = () => {
 
   return (
     <div id="container">
-      <button onClick={handleSearchClick}>New</button>
+      <button onClick={handleSearchClick}>New Gene Search</button>
       <div className={styles.tableWrapper}>
         <div className={styles.tableElement}>
           <table>

@@ -1,17 +1,23 @@
 import { useEffect, createElement } from "react";
 
 import { useAppStore } from "../../lib/state";
-// import { BaseLayout } from "../layouts/BaseLayout";
-// import { GeneListsRoute, Root } from "../../pages";
 import { Root } from "../../pages";
-import { GeneListsViewerRoute, GeneSearchRoute } from "../../pages/GeneLists";
+import {
+  GeneListsViewerRoute,
+  GeneSearchRoute,
+  GeneSearchResultsRoute,
+} from "../../pages/GeneLists";
 
 // type RouteParams = Record<string, string>;
 
 const routes = [
   { path: "/", component: () => <Root /> },
   { path: "/gene-lists", component: () => <GeneListsViewerRoute /> },
-  { path: "/gene-lists/search", component: () => <GeneSearchRoute />},
+  { path: "/gene-lists/search", component: () => <GeneSearchRoute /> },
+  {
+    path: "/gene-lists/search/results",
+    component: () => <GeneSearchResultsRoute />,
+  },
 ];
 
 const matchRoute = (

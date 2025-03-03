@@ -9,7 +9,13 @@ import {
 import { useAppStore } from "../../../lib/state";
 
 export const GeneSearchRoute = () => {
-  const speciesId = useAppStore((state) => state.speciesId);
+  const setSearchResults = useAppStore((state) => state.setSearchResults);
+  const delimiters: Record<string, string> = {
+    line: "\n",
+    comma: ",",
+    tab: "\t",
+    space: " ",
+  };
   const [enteredGeneIds, setEnteredGeneIds] = useState<string>("");
   const [delimiter, setDelimiter] = useState<string>("\n");
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -28,7 +34,7 @@ export const GeneSearchRoute = () => {
       }
     );
 
-    console.log(results);
+    setSearchResults(results.results);
 
     window.history.pushState(
       { name: "/gene-lists/search/results" },
@@ -37,7 +43,9 @@ export const GeneSearchRoute = () => {
     );
 
     window.dispatchEvent(
-      new PopStateEvent("popstate", { state: "/gene-lists/search/results" })
+      new PopStateEvent("popstate", {
+        state: { name: "/gene-lists/search/results", results: results },
+      })
     );
   };
 
@@ -45,12 +53,30 @@ export const GeneSearchRoute = () => {
     <div className={styles.GeneSearch}>
       Search Page!
       <Form action="/" method="POST" handleSubmit={handleSubmit}>
-        <select>
-          <option>{"line"}</option>
-          <option>{"comma"}</option>
-          <option>{"tab"}</option>
-          <option>{"space"}</option>
-        </select>
+        <label>
+          delimiter:
+          <select
+            onChange={(e) => {
+              const value = e.target.value;
+              setDelimiter(delimiters[value] || value);
+            }}
+            value={
+              Object.entries({
+                "\n": "line",
+                ",": "comma",
+                "\t": "tab",
+                " ": "space",
+              }).find(([key]) => key === delimiter)?.[1] || "line"
+            }
+          >
+            {Object.entries(delimiters).map(([key]) => (
+              <option key={key} value={key}>
+                {key}
+              </option>
+            ))}
+          </select>
+        </label>
+
         <textarea
           id="gene-ids-entry"
           placeholder="Enter your gene ids here..."

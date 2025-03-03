@@ -1,6 +1,6 @@
 import { StateCreator, create } from "zustand";
 
-import { GeneList } from "../api";
+import { GeneAnnotation, GeneList } from "../api";
 import {
   GENE_LIST_PREFIX,
   GENE_LIST_ID_KEY,
@@ -22,6 +22,8 @@ export interface GeneListSlice {
   addGeneList: (newList: GeneList) => void;
   updateGeneList: (updatedList: GeneList) => void;
   removeGeneList: (listToRemoveId: string) => void;
+  searchResults: Array<GeneAnnotation>;
+  setSearchResults: (newGeneAnnotations: Array<GeneAnnotation>) => void;
 }
 
 export const createMainSlice: StateCreator<MainSlice, [], [], MainSlice> = (
@@ -83,6 +85,9 @@ export const createGeneListSlice: StateCreator<
       return { availableGeneLists: keptGeneLists };
     });
   },
+  searchResults: [],
+  setSearchResults: (newGeneAnnotations) =>
+    set({ searchResults: newGeneAnnotations }),
 });
 
 export const useAppStore = create<MainSlice & GeneListSlice>()(

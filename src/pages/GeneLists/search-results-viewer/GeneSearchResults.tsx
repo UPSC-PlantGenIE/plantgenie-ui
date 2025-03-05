@@ -7,6 +7,9 @@ import { Form } from "../../../components/routing/Form";
 
 export const GeneSearchResultsRoute = () => {
   const searchResults = useAppStore((state) => state.searchResults);
+  const addGeneList = useAppStore((state) => state.addGeneList);
+  const updateGeneList = useAppStore((state) => state.updateGeneList);
+  const availableGeneLists = useAppStore((state) => state.availableGeneLists);
 
   const [geneListName, setGeneListName] = useState<string>("");
 
@@ -43,6 +46,10 @@ export const GeneSearchResultsRoute = () => {
     setSelectedRows(new Array(searchResults.length).fill(newSelectAll));
   };
 
+  const newGeneListSubmitHandler = async () => {
+    console.log("blah")
+  };
+
   return (
     <div id="container" className={styles.searchResultsViewer}>
       <div className={styles.tableWrapper}>
@@ -61,6 +68,7 @@ export const GeneSearchResultsRoute = () => {
                   </th>
                   <th>Chromosome ID</th>
                   <th>Gene ID</th>
+                  {/* <th>Alias</th> */}
                 </tr>
               </thead>
               <tbody>
@@ -76,6 +84,7 @@ export const GeneSearchResultsRoute = () => {
                         </td>
                         <td>{value.chromosomeId}</td>
                         <td>{value.geneId}</td>
+                        {/* <td><input /></td> */}
                       </tr>
                     ))
                   : null}
@@ -90,6 +99,12 @@ export const GeneSearchResultsRoute = () => {
                   setGeneListName(event.target.value)
                 }
               />
+            </label>
+            <label>
+              Or Update Gene List: {" "}
+              <select>
+                {availableGeneLists.map((value, index) => <option key={index}>{value.name}</option>)}
+              </select>
             </label>
             <button type="submit">submit</button>
           </div>

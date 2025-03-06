@@ -11,6 +11,7 @@ export const GeneSearchResultsRoute = () => {
   const updateGeneList = useAppStore((state) => state.updateGeneList);
   const availableGeneLists = useAppStore((state) => state.availableGeneLists);
 
+  const [selectedGeneListId, setSelectedGeneListId] = useState<string>();
   const [geneListName, setGeneListName] = useState<string>("");
 
   const [selectedRows, setSelectedRows] = useState<boolean[]>(
@@ -47,7 +48,7 @@ export const GeneSearchResultsRoute = () => {
   };
 
   const newGeneListSubmitHandler = async () => {
-    console.log("blah")
+    console.log("blah");
   };
 
   return (
@@ -90,6 +91,7 @@ export const GeneSearchResultsRoute = () => {
                   : null}
               </tbody>
             </table>
+            <div>{searchResults.length} genes</div>
             <label>
               New Gene List Name:{" "}
               <input
@@ -101,9 +103,13 @@ export const GeneSearchResultsRoute = () => {
               />
             </label>
             <label>
-              Or Update Gene List: {" "}
+              Or Update Gene List:{" "}
               <select>
-                {availableGeneLists.map((value, index) => <option key={index}>{value.name}</option>)}
+                {availableGeneLists.map((value, index) => (
+                  <option key={index} value={value.id}>
+                    {value.name}
+                  </option>
+                ))}
               </select>
             </label>
             <button type="submit">submit</button>

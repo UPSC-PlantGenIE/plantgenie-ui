@@ -1,4 +1,4 @@
-import { ChangeEvent, useEffect, useRef, useState } from "react";
+import { ChangeEvent, FormEvent, useEffect, useRef, useState } from "react";
 
 import styles from "./GeneSearchResults.module.css";
 
@@ -11,7 +11,9 @@ export const GeneSearchResultsRoute = () => {
   const updateGeneList = useAppStore((state) => state.updateGeneList);
   const availableGeneLists = useAppStore((state) => state.availableGeneLists);
 
-  const [selectedGeneListId, setSelectedGeneListId] = useState<string>();
+  const [selectedGeneListId, setSelectedGeneListId] = useState<
+    string | undefined
+  >(availableGeneLists[0].id ?? undefined);
   const [geneListName, setGeneListName] = useState<string>("");
 
   const [selectedRows, setSelectedRows] = useState<boolean[]>(
@@ -47,14 +49,18 @@ export const GeneSearchResultsRoute = () => {
     setSelectedRows(new Array(searchResults.length).fill(newSelectAll));
   };
 
-  const newGeneListSubmitHandler = async () => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
     console.log("blah");
+    const formData = new FormData(event.currentTarget);
+    const newGeneListName = formData.get("new-gene-list-name");
+    console.log(newGeneListName);
   };
 
   return (
     <div id="container" className={styles.searchResultsViewer}>
       <div className={styles.tableWrapper}>
-        <Form action="/" handleSubmit={() => console.log("submitted!")}>
+        <Form action="/" handleSubmit={handleSubmit}>
           <div className={styles.tableElement}>
             <table>
               <thead>
@@ -95,6 +101,7 @@ export const GeneSearchResultsRoute = () => {
             <label>
               New Gene List Name:{" "}
               <input
+                name="new-gene-list-name"
                 value={geneListName}
                 placeholder="Enter new name..."
                 onChange={(event: ChangeEvent<HTMLInputElement>) =>
@@ -104,12 +111,23 @@ export const GeneSearchResultsRoute = () => {
             </label>
             <label>
               Or Update Gene List:{" "}
-              <select>
-                {availableGeneLists.map((value, index) => (
-                  <option key={index} value={value.id}>
-                    {value.name}
-                  </option>
-                ))}
+              <select
+                onChange={(event) => {
+                  setSelectedGeneListId(event.target.value);
+                  console.log(event.target.value);
+                }}
+                value={selectedGeneListId}
+                disabled={availableGeneLists.length === 0}
+              >
+                {availableGeneLists.length !== 0 ? (
+                  availableGeneLists.map((value, index) => (
+                    <option key={index} value={value.id}>
+                      {value.name}
+                    </option>
+                  ))
+                ) : (
+                  <option value={undefined}>No gene lists available</option>
+                )}
               </select>
             </label>
             <button type="submit">submit</button>

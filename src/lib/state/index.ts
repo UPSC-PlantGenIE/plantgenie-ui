@@ -16,6 +16,8 @@ export interface MainSlice {
 }
 
 export interface GeneListSlice {
+  activeGeneList: GeneList | undefined;
+  setActiveGeneList: (geneListId: string) => void;
   selectedGeneListId: string;
   setSelectedGeneListId: (id: string) => void;
   availableGeneLists: Array<GeneList>;
@@ -44,7 +46,14 @@ export const createGeneListSlice: StateCreator<
   [],
   [],
   GeneListSlice
-> = (set) => ({
+> = (set, get) => ({
+  activeGeneList: undefined,
+  setActiveGeneList: (geneListId) =>
+    set({
+      activeGeneList: get().availableGeneLists.filter(
+        (value) => value.id === geneListId
+      )[0],
+    }),
   selectedGeneListId: localStorageParser<string>(GENE_LIST_ID_KEY) ?? "",
   setSelectedGeneListId: (id) => {
     localStorage.setItem(GENE_LIST_ID_KEY, id);

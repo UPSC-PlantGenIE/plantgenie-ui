@@ -4,16 +4,22 @@ import styles from "./GeneSearchResults.module.css";
 
 import { useAppStore } from "../../../lib/state";
 import { Form } from "../../../components/routing/Form";
+import { GeneList } from "../../../lib/api";
+
+const genUniqueId = () =>
+  `${Date.now()}-${Math.random().toString(36).substring(2, 10)}`;
 
 export const GeneSearchResultsRoute = () => {
+  const speciesId = useAppStore((state) => state.speciesId);
   const searchResults = useAppStore((state) => state.searchResults);
   const addGeneList = useAppStore((state) => state.addGeneList);
   const updateGeneList = useAppStore((state) => state.updateGeneList);
   const availableGeneLists = useAppStore((state) => state.availableGeneLists);
+  const setActiveGeneList = useAppStore((state) => state.setActiveGeneList);
 
   const [selectedGeneListId, setSelectedGeneListId] = useState<
     string | undefined
-  >(availableGeneLists[0].id ?? undefined);
+  >(availableGeneLists.length !== 0 ? availableGeneLists[0].id : undefined);
   const [geneListName, setGeneListName] = useState<string>("");
 
   const [selectedRows, setSelectedRows] = useState<boolean[]>(
@@ -53,8 +59,83 @@ export const GeneSearchResultsRoute = () => {
     event.preventDefault();
     console.log("blah");
     const formData = new FormData(event.currentTarget);
-    const newGeneListName = formData.get("new-gene-list-name");
-    console.log(newGeneListName);
+    const newGeneListName = formData.get("new-gene-list-name")?.toString();
+
+    console.log(
+      `New gene list name is empty string? ${newGeneListName === ""}`
+    );
+
+    const selectedGenes = [
+      ...new Set(searchResults.filter((_, index) => selectedRows[index])),
+    ];
+
+    const now = new Date().toUTCString();
+
+    if (newGeneListName !== undefined && newGeneListName !== "") {
+      const newGeneList: GeneList = {
+        id: genUniqueId(),
+        speciesId: speciesId,
+        name: newGeneListName,
+        createdAt: now,
+        updatedAt: now,
+        lastAccessed: now,
+        geneIds: selectedGenes.map(
+          (value) => `${value.chromosomeId}_${value.geneId}`
+        ),
+      };
+
+      addGeneList(newGeneList);
+      console.log(`${newGeneListName} created!`);
+
+      setActiveGeneList(newGeneList.id);
+
+      window.history.pushState(
+        { name: `/gene-lists/${newGeneList.id}` },
+        "",
+        `/gene-lists/${newGeneList.id}`
+      );
+
+      window.dispatchEvent(
+        new PopStateEvent("popstate", {
+          state: { name: `/gene-lists/${newGeneList.id}` },
+        })
+      );
+      return;
+    } else if (selectedGeneListId !== undefined) {
+      const selectedGeneList = availableGeneLists.filter(
+        (value) => value.id === selectedGeneListId
+      )[0];
+
+      // need to de-duplicate in case gene list already contains search result
+      const uniqueGenes = [
+        ...new Set([
+          ...selectedGeneList.geneIds,
+          ...selectedGenes.map(
+            (value) => `${value.chromosomeId}_${value.geneId}`
+          ),
+        ]),
+      ];
+
+      updateGeneList({
+        ...selectedGeneList,
+        updatedAt: now,
+        geneIds: uniqueGenes
+      });
+
+      window.history.pushState(
+        { name: `/gene-lists/${selectedGeneList.id}` },
+        "",
+        `/gene-lists/${selectedGeneList.id}`
+      );
+
+      window.dispatchEvent(
+        new PopStateEvent("popstate", {
+          state: { name: `/gene-lists/${selectedGeneList.id}` },
+        })
+      );
+      setActiveGeneList(selectedGeneList.id);
+      return;
+    }
   };
 
   return (

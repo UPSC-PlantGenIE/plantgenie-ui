@@ -21,6 +21,18 @@ export const GeneListsViewerRoute = () => {
     );
   };
 
+  const rowClickHandler = (id: string) => {
+    const navLink = `/gene-lists/${id}`;
+    return () => {
+      window.history.pushState({ name: navLink }, "", navLink);
+      window.dispatchEvent(
+        new PopStateEvent("popstate", {
+          state: { name: navLink },
+        })
+      );
+    };
+  };
+
   return (
     <div id="container" className={styles.geneListViewerContainer}>
       <button onClick={handleSearchClick}>New Gene Search</button>
@@ -39,7 +51,7 @@ export const GeneListsViewerRoute = () => {
             <tbody>
               {geneLists.length > 0
                 ? geneLists.map((value, index) => (
-                    <tr key={index}>
+                    <tr key={index} onClick={rowClickHandler(value.id)}>
                       <td>{value.id}</td>
                       <td>{value.name}</td>
                       <td>{value.createdAt}</td>

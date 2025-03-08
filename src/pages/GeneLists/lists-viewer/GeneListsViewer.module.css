@@ -8,12 +8,21 @@
     width: 100%;
     border-collapse: collapse;
   }
+
+  tr {
+    cursor: pointer;
+  }
+
+  tr:hover {
+    background-color: var(--color);
+    color: var(--background);
+  }
+
   th {
-    font-size: calc(var(--font-scale) * 3);
+    font-size: calc(var(--font-scale) * 5);
   }
 
   td {
-    font-size: calc(var(--font-scale) * 2.5);
+    font-size: calc(var(--font-scale) * 4);
   }
 }
-

@@ -6,6 +6,7 @@ import {
   GeneListsViewerRoute,
   GeneSearchRoute,
   GeneSearchResultsRoute,
+  SingleGeneListViewer,
 } from "../../pages/GeneLists";
 
 // type RouteParams = Record<string, string>;
@@ -17,6 +18,12 @@ const routes = [
   {
     path: "/gene-lists/search/results",
     component: () => <GeneSearchResultsRoute />,
+  },
+  {
+    path: "/gene-lists/:id",
+    component: ({ id }: Record<string, string>) => (
+      <SingleGeneListViewer id={id} />
+    ),
   },
 ];
 

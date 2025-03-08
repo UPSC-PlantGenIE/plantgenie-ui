@@ -9,11 +9,11 @@
       border-collapse: collapse;
     }
     th {
-      font-size: calc(var(--font-scale) * 3);
+      font-size: calc(var(--font-scale) * 5);
     }
 
     td {
-      font-size: calc(var(--font-scale) * 2.5);
+      font-size: calc(var(--font-scale) * 4);
     }
   }
 

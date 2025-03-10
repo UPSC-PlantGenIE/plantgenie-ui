@@ -9,8 +9,6 @@ import {
   SingleGeneListViewer,
 } from "../../pages/GeneLists";
 
-// type RouteParams = Record<string, string>;
-
 const routes = [
   { path: "/", component: () => <Root /> },
   { path: "/gene-lists", component: () => <GeneListsViewerRoute /> },

@@ -20,9 +20,42 @@ export const HeatMapVisualizer = () => {
         </label>
         <label>
           {" "}
-          Cluster By:{" "}
+          Cluster Metric:{" "}
+          <select>
+            {["Euclidean", "Chebyshev"].map((value, index) => (
+              <option key={index} value={value}>
+                {value}
+              </option>
+            ))}
+          </select>
+        </label>
+        <label>
+          {" "}
+          Cluster Linkage:{" "}
+          <select>
+            {["Average", "Ward"].map((value, index) => (
+              <option key={index} value={value}>
+                {value}
+              </option>
+            ))}
+          </select>
+        </label>
+        <label>
+          {" "}
+          Cluster Axis:{" "}
           <select>
             {["row", "col", "both"].map((value, index) => (
+              <option key={index} value={value}>
+                {value}
+              </option>
+            ))}
+          </select>
+        </label>
+        <label>
+          {" "}
+          Scaling:{" "}
+          <select>
+            {["row", "col", "zscore", "log2", "none"].map((value, index) => (
               <option key={index} value={value}>
                 {value}
               </option>

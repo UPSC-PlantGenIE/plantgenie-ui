@@ -38,7 +38,7 @@ export const BaseLayout = ({ children }: BaseLayoutProps) => {
             </h2>
             <Divider />
             <Link
-              to="/"
+              to="/exheatmap"
               className="w-full rounded-sm text-center text-base/6 text-slate-700 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-100"
             >
               Expression Heatmap

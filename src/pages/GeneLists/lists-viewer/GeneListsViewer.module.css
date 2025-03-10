@@ -24,5 +24,7 @@
 
   td {
     font-size: calc(var(--font-scale) * 4);
+    padding-left: 0.25em;
+    padding-right: 0.25em;
   }
 }

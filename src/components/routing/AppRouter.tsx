@@ -9,6 +9,8 @@ import {
   SingleGeneListViewer,
 } from "../../pages/GeneLists";
 
+import { HeatMapVisualizer } from "../../pages/HeatMap";
+
 const routes = [
   { path: "/", component: () => <Root /> },
   { path: "/gene-lists", component: () => <GeneListsViewerRoute /> },
@@ -23,6 +25,7 @@ const routes = [
       <SingleGeneListViewer id={id} />
     ),
   },
+  { path: "/exheatmap", component: () => (<HeatMapVisualizer />)}
 ];
 
 const matchRoute = (

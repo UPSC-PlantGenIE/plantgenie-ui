@@ -1,9 +1,12 @@
 import { MouseEvent, MouseEventHandler } from "react";
 import styles from "./GeneListsViewer.module.css";
 import { useAppStore } from "../../../lib/state";
+import { TrashIcon } from "../../../assets/icons/Trash";
 
 export const GeneListsViewerRoute = () => {
   const geneLists = useAppStore((state) => state.availableGeneLists);
+  const setActiveGeneList = useAppStore((state) => state.setActiveGeneList);
+  const removeGeneList = useAppStore((state) => state.removeGeneList);
 
   const handleSearchClick: MouseEventHandler = (
     event: MouseEvent<HTMLButtonElement>
@@ -22,8 +25,11 @@ export const GeneListsViewerRoute = () => {
   };
 
   const rowClickHandler = (id: string) => {
+    console.log(id);
+
     const navLink = `/gene-lists/${id}`;
     return () => {
+      setActiveGeneList(id);
       window.history.pushState({ name: navLink }, "", navLink);
       window.dispatchEvent(
         new PopStateEvent("popstate", {
@@ -46,6 +52,7 @@ export const GeneListsViewerRoute = () => {
                 <th>creation date</th>
                 <th>last updated</th>
                 <th>last accessed</th>
+                <th>delete?</th>
               </tr>
             </thead>
             <tbody>
@@ -57,6 +64,22 @@ export const GeneListsViewerRoute = () => {
                       <td>{value.createdAt}</td>
                       <td>{value.updatedAt}</td>
                       <td>{value.lastAccessed}</td>
+                      <td style={{ backgroundColor: "red" }}>
+                        <div
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                          }}
+                          onClick={(event) => {
+                            event.stopPropagation();
+                            removeGeneList(value.id);
+                          }}
+                        >
+                            <TrashIcon width={20} height={20} color="white"/>
+                          {/* </button> */}
+                        </div>
+                      </td>
                     </tr>
                   ))
                 : null}

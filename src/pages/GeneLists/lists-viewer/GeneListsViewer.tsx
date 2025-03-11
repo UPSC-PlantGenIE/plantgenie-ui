@@ -2,6 +2,7 @@ import { MouseEvent, MouseEventHandler } from "react";
 import styles from "./GeneListsViewer.module.css";
 import { useAppStore } from "../../../lib/state";
 import { TrashIcon } from "../../../assets/icons/Trash";
+import { NUMERIC_ID_TO_SPECIES } from "../../../lib/constants";
 
 export const GeneListsViewerRoute = () => {
   const geneLists = useAppStore((state) => state.availableGeneLists);
@@ -49,6 +50,7 @@ export const GeneListsViewerRoute = () => {
               <tr>
                 <th>id</th>
                 <th>name</th>
+                <th>species</th>
                 <th>creation date</th>
                 <th>last updated</th>
                 <th>last accessed</th>
@@ -61,6 +63,7 @@ export const GeneListsViewerRoute = () => {
                     <tr key={index} onClick={rowClickHandler(value.id)}>
                       <td>{value.id}</td>
                       <td>{value.name}</td>
+                      <td>{NUMERIC_ID_TO_SPECIES[value.speciesId]}</td>
                       <td>{value.createdAt}</td>
                       <td>{value.updatedAt}</td>
                       <td>{value.lastAccessed}</td>
@@ -76,7 +79,7 @@ export const GeneListsViewerRoute = () => {
                             removeGeneList(value.id);
                           }}
                         >
-                            <TrashIcon width={20} height={20} color="white"/>
+                          <TrashIcon width={20} height={20} color="white" />
                           {/* </button> */}
                         </div>
                       </td>

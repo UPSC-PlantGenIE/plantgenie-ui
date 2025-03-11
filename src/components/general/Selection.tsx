@@ -1,5 +1,6 @@
 import { useState } from "react";
 import styles from "./Selection.module.css";
+import { useAppStore } from "../../lib/state";
 
 interface Option {
   id: number;
@@ -19,6 +20,7 @@ const options: Array<Option> = [
 export const SelectionMenu = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [selected, setSelected] = useState<Option>(options[0]);
+  const setSelectedSpecies = useAppStore(state => state.setSpecies);
 
   const toggleSelect = () => {
     setIsOpen(!isOpen);
@@ -28,6 +30,8 @@ export const SelectionMenu = () => {
     const foundOption = options.find((item) => item.id === id);
     setSelected(foundOption ?? options[0]);
     // setSelectedOptionId(foundOption ? foundOption.id : options[0].id);
+    setSelectedSpecies(foundOption?.name ?? options[0].name);
+    
     setIsOpen(false);
   };
 

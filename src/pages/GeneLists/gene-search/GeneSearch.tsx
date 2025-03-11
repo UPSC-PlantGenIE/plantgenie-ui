@@ -9,6 +9,7 @@ import {
 import { useAppStore } from "../../../lib/state";
 
 export const GeneSearchRoute = () => {
+  const selectedSpecies = useAppStore((state) => state.species);
   const setSearchResults = useAppStore((state) => state.setSearchResults);
   const delimiters: Record<string, string> = {
     line: "\n",
@@ -29,7 +30,7 @@ export const GeneSearchRoute = () => {
     const results = await post<AnnotationsRequest, AnnotationsResponse>(
       "/api/annotations",
       {
-        species: "Picea abies",
+        species: selectedSpecies,
         geneIds: parsedGeneIds,
       }
     );

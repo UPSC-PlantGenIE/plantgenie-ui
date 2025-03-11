@@ -5,6 +5,7 @@ import {
   GENE_LIST_PREFIX,
   GENE_LIST_ID_KEY,
   SPECIES_ID_KEY,
+  AVAILABLE_EXPERIMENTS_BY_SPECIES,
 } from "../constants";
 import { localStorageParser } from "../localstorage";
 
@@ -13,6 +14,8 @@ export interface MainSlice {
   setApplicationPath: (path: string) => void;
   speciesId: number;
   setSpeciesId: (id: number) => void;
+  species: string;
+  setSpecies: (name: string) => void;
 }
 
 export interface GeneListSlice {
@@ -39,6 +42,8 @@ export const createMainSlice: StateCreator<MainSlice, [], [], MainSlice> = (
   })(),
   setApplicationPath: (path) => set({ applicationPath: path }),
   setSpeciesId: (id) => set({ speciesId: id }),
+  species: "Picea abies",
+  setSpecies: (name) => set({ species: name }),
 });
 
 export const createGeneListSlice: StateCreator<

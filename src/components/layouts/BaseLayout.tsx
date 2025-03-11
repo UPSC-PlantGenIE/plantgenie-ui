@@ -53,7 +53,6 @@ export const BaseLayout = ({ children }: BaseLayoutProps) => {
           </div>
         </div>
         <div className={styles.navFooter}>
-          {/* <div className="w-full flex flex-col gap-y-2 items-center"> */}
           <div className={styles.navFooterVersionLabel}>
             development version
           </div>

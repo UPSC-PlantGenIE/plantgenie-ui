@@ -27,6 +27,32 @@ export interface AnnotationsResponse {
   results: GeneAnnotation[];
 }
 
+export interface ExpressionRequest {
+  species: string;
+  experimentId: number;
+  geneIds: string[];
+}
+
+export interface GeneInfo {
+  chromosomeId: string;
+  geneId: string;
+}
+
+export interface SampleInfo {
+  experiment: string;
+  sampleId: string;
+  reference: string;
+  sequencingId: string;
+  condition: string;
+}
+
+export interface ExpressionResponse {
+  genes: GeneInfo[];
+  samples: SampleInfo[];
+  values: number[];
+}
+
+
 export const baseUrl = "http://localhost:8080";
 
 export const get = async <T>(url: string): Promise<T> => {
@@ -44,6 +70,7 @@ export const post = async <U, T>(url: string, body: U): Promise<T> => {
       method: "POST",
       body: JSON.stringify(body),
       headers: {
+        Accept: "application/json",
         "Content-Type": "application/json",
       },
     })

@@ -61,32 +61,3 @@ export const ExperimentTitleToId: { [key: string]: number } = {
   "Pinus sylvestris Wood Development": 13,
   "Picea abies Light Availability": 14,
 };
-
-const experimentsBySpecies: { [key: string]: string[] } = {
-  "Picea abies": [
-    "Cold Stress Needles",
-    "Cold Stress Roots",
-    "Drought Stress Needles",
-    "Drought Stress Roots",
-    "Somatic Embryogenesis",
-    "Zygotic Embryogenesis",
-    "ExAtlas",
-    "Wood Development",
-    "Light Availability",
-    // these ones are not in the db yet
-    // "Seasonal Needles",
-    // "Seasonal Wood",
-  ],
-  "Pinus sylvestris": [
-    "Cold Stress Needles",
-    "Cold Stress Roots",
-    "Drought Stress Needles",
-    "Drought Stress Roots",
-    "Wood Development",
-  ],
-  "Populus tremula": [
-    // "Light Response Test",
-    // "Drought Resistance Study",
-    // "Root Structure Analysis",
-  ],
-};

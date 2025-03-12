@@ -7,6 +7,7 @@ export const SingleGeneListViewer = ({ id }: Record<string, string>) => {
   const setActiveGeneList = useAppStore((state) => state.setActiveGeneList);
 
   useEffect(() => {
+    // update lastAccessed in Gene List for this route
     const filterForActiveGeneList = availableGeneLists.filter(
       (value) => value.id === id
     );

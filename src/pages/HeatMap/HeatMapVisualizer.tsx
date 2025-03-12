@@ -1,25 +1,72 @@
-import { useEffect, useRef } from "react";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
 
 import { useAppStore } from "../../lib/state";
 
 import styles from "./HeatMapVisualizer.module.css";
 import {
   AVAILABLE_EXPERIMENTS_BY_SPECIES,
+  ExperimentTitleToId,
   SPECIES_TO_NUMERIC_ID,
 } from "../../lib/constants";
+import { ExpressionRequest, ExpressionResponse, post } from "../../lib/api";
+import { ScaleLinear, scaleLinear } from "d3";
 
 export const HeatMapVisualizer = () => {
   const svgRef = useRef<SVGSVGElement>(null);
   const availableGeneLists = useAppStore((state) => state.availableGeneLists);
   const selectedSpecies = useAppStore((state) => state.species);
+  const activeGeneList = useAppStore((state) => state.activeGeneList);
+  const setActiveGeneList = useAppStore((state) => state.setActiveGeneList);
+
+  const availableExperiments =
+    AVAILABLE_EXPERIMENTS_BY_SPECIES[selectedSpecies];
+  const [selectedExperiment, setSelectedExperiment] = useState<string>(
+    availableExperiments[0]
+  );
+  const [expressionData, setExpressionData] =
+    useState<ExpressionResponse | null>(null);
+  const [horizontalScale, setHorizontalScale] = useState<ScaleLinear<
+    number,
+    number,
+    never
+  > | null>(null);
+
+  const [verticalScale, setVerticalScale] = useState<ScaleLinear<
+    number,
+    number,
+    never
+  > | null>(null);
 
   useEffect(() => {
-    if (svgRef.current) {
-      const { height, width } = svgRef.current.getBoundingClientRect();
-      console.log(`svg height: ${height} width: ${width}`);
-    }
+    if (activeGeneList === undefined) return;
+    if (svgRef === null) return;
+
     console.log(selectedSpecies);
-  }, [selectedSpecies]);
+
+    const response = post<ExpressionRequest, ExpressionResponse>(
+      "/api/expression",
+      {
+        species: selectedSpecies,
+        experimentId:
+          ExperimentTitleToId[`${selectedSpecies} ${selectedExperiment}`],
+        geneIds: activeGeneList.geneIds,
+      }
+    );
+
+    response.then((value) => {
+      console.log(value);
+      setExpressionData(value);
+      if (svgRef.current !== null) {
+        const { height, width } = svgRef.current.getBoundingClientRect();
+        setHorizontalScale(
+          () => scaleLinear([0, value.samples.length], [50, width - 50])
+        );
+        setVerticalScale(
+          () => scaleLinear([0, value.genes.length], [50, height - 50])
+        );
+      }
+    });
+  }, [activeGeneList, selectedSpecies, selectedExperiment]);
 
   return (
     <div id="container" className={styles.heatMapContainer}>
@@ -27,7 +74,11 @@ export const HeatMapVisualizer = () => {
         <label>
           {" "}
           Gene List:{" "}
-          <select>
+          <select
+            onChange={(event) => {
+              setActiveGeneList(event.target.value);
+            }}
+          >
             {availableGeneLists
               .filter(
                 (value) =>
@@ -43,7 +94,9 @@ export const HeatMapVisualizer = () => {
         <label>
           {" "}
           Experiment:{" "}
-          <select>
+          <select
+            onChange={(event) => setSelectedExperiment(event.target.value)}
+          >
             {AVAILABLE_EXPERIMENTS_BY_SPECIES[selectedSpecies].map(
               (value, index) => (
                 <option key={index} value={value}>
@@ -100,17 +153,18 @@ export const HeatMapVisualizer = () => {
       </div>
       <div style={{ backgroundColor: "var(--color)" }}>
         <svg ref={svgRef}>
-          <rect
-            width="100%"
-            height="100%"
-            fill="currentColor"
-            rx="5"
-            ry="5"
-          />
-          <rect x={0} y={0} width={100} height={100} fill="red"></rect>
-          <rect x={100} y={100} width={100} height={100} fill="red"></rect>
-          <rect x={200} y={200} width={100} height={100} fill="red"></rect>
-          <rect x={300} y={300} width={100} height={100} fill="red"></rect>
+          <rect width="100%" height="100%" fill="currentColor" rx="5" ry="5" />
+          {expressionData !== null
+            ? expressionData?.samples.map((colValue, colIndex) =>
+                expressionData?.genes.map((rowValue, rowIndex) => {
+                  if ((horizontalScale !== null) && (verticalScale !== null)) {
+                    const x = horizontalScale(colIndex);
+                    const y = verticalScale(rowIndex);
+                    return (<rect x={x} y={y} width={10} height={10} fill="black"></rect>)
+                  }
+                })
+              )
+            : null}
         </svg>
       </div>
     </div>

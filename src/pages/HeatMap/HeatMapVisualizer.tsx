@@ -1,4 +1,4 @@
-import { ChangeEvent, useEffect, useRef, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 
 import { useAppStore } from "../../lib/state";
 
@@ -9,15 +9,17 @@ import {
   SPECIES_TO_NUMERIC_ID,
 } from "../../lib/constants";
 import { ExpressionRequest, ExpressionResponse, post } from "../../lib/api";
-import { ScaleLinear, scaleLinear } from "d3";
-import { interpolateRdYlBu } from "d3-scale-chromatic";
+import { SvgHeatMap } from "./SvgHeatMap";
+// import { useExpression } from "../../lib/hooks";
 
 export const HeatMapVisualizer = () => {
-  const svgRef = useRef<SVGSVGElement>(null);
   const availableGeneLists = useAppStore((state) => state.availableGeneLists);
   const selectedSpecies = useAppStore((state) => state.species);
   const activeGeneList = useAppStore((state) => state.activeGeneList);
   const setActiveGeneList = useAppStore((state) => state.setActiveGeneList);
+
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<Error | undefined>();
 
   const availableExperiments =
     AVAILABLE_EXPERIMENTS_BY_SPECIES[selectedSpecies];
@@ -29,27 +31,7 @@ export const HeatMapVisualizer = () => {
   const [expressionData, setExpressionData] =
     useState<ExpressionResponse | null>(null);
 
-  const [horizontalScale, setHorizontalScale] = useState<ScaleLinear<
-    number,
-    number,
-    never
-  > | null>(null);
-
-  const [verticalScale, setVerticalScale] = useState<ScaleLinear<
-    number,
-    number,
-    never
-  > | null>(null);
-
-  const [colorScale, setColorScale] = useState<ScaleLinear<
-    number,
-    number,
-    never
-  > | null>(null);
-
   useEffect(() => {
-    if (svgRef === null) return;
-
     let defaultGeneList = activeGeneList;
 
     if (activeGeneList === undefined) {
@@ -71,6 +53,8 @@ export const HeatMapVisualizer = () => {
 
     console.log(selectedSpecies);
 
+    setLoading(true);
+
     const response = post<ExpressionRequest, ExpressionResponse>(
       "/api/expression",
       {
@@ -81,26 +65,20 @@ export const HeatMapVisualizer = () => {
       }
     );
 
-    response.then((value) => {
-      console.log(value);
-      setExpressionData(value);
-      if (svgRef.current !== null) {
-        const { height, width } = svgRef.current.getBoundingClientRect();
-        setHorizontalScale(() =>
-          scaleLinear([0, value.samples.length], [50, width - 50])
-        );
-        setVerticalScale(() =>
-          scaleLinear([0, value.genes.length], [50, height - 50])
-        );
-        setColorScale(() =>
-          scaleLinear(
-            [Math.max(...value.values), Math.min(...value.values)],
-            [0, 1]
-          )
-        );
-      }
-    });
+    response
+      .then((value) => {
+        console.log(value);
+        setExpressionData(value);
+      })
+      .catch((e) => setError(e as Error))
+      .finally(() => setLoading(false));
   }, [activeGeneList, selectedSpecies, selectedExperiment]);
+
+  // const { loading, error, expressionData } = useExpression({
+  //   species: selectedSpecies,
+  //   experimentId: ExperimentTitleToId[`${selectedSpecies} ${selectedExperiment}`],
+  //   geneIds: activeGeneList?.geneIds}
+  // );
 
   return (
     <div id="container" className={styles.heatMapContainer}>
@@ -186,40 +164,12 @@ export const HeatMapVisualizer = () => {
           </select>
         </label>
       </div>
-      <div style={{ backgroundColor: "var(--color)" }}>
-        <svg ref={svgRef}>
-          <rect width="100%" height="100%" fill="currentColor" rx="5" ry="5" />
-          {expressionData !== null
-            ? expressionData?.samples.map((colValue, colIndex) =>
-                expressionData?.genes.map((rowValue, rowIndex) => {
-                  if (
-                    horizontalScale !== null &&
-                    verticalScale !== null &&
-                    colorScale !== null
-                  ) {
-                    const x = horizontalScale(colIndex);
-                    const y = verticalScale(rowIndex);
-                    return (
-                      <rect
-                        key={rowIndex + rowIndex * colIndex}
-                        x={x}
-                        y={y}
-                        width={10}
-                        height={10}
-                        fill={interpolateRdYlBu(
-                          colorScale(
-                            expressionData.values[
-                              rowIndex + rowIndex * colIndex
-                            ]
-                          )
-                        )}
-                      ></rect>
-                    );
-                  }
-                })
-              )
-            : null}
-        </svg>
+      <div id="heatmap-container" style={{ backgroundColor: "var(--color)" }}>
+        {loading || !expressionData ? (
+          <div style={{ color: "var(--background)" }}>Loading... </div>
+        ) : null}
+        {error ? <div>There was an error fetching the data :(</div> : null}
+        {expressionData ? <SvgHeatMap expressionData={expressionData} /> : null}
       </div>
     </div>
   );

@@ -109,6 +109,7 @@ export const HeatMapVisualizer = () => {
           {" "}
           Gene List:{" "}
           <select
+            value={activeGeneList !== undefined ? activeGeneList.id : ""}
             onChange={(event) => {
               setActiveGeneList(event.target.value);
             }}

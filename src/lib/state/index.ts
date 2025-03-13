@@ -5,7 +5,6 @@ import {
   GENE_LIST_PREFIX,
   GENE_LIST_ID_KEY,
   SPECIES_ID_KEY,
-  AVAILABLE_EXPERIMENTS_BY_SPECIES,
 } from "../constants";
 import { localStorageParser } from "../localstorage";
 

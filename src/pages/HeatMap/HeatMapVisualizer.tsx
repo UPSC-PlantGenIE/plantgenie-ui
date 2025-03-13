@@ -10,7 +10,8 @@ import {
 } from "../../lib/constants";
 import { ExpressionRequest, ExpressionResponse, post } from "../../lib/api";
 import { SvgHeatMap } from "./SvgHeatMap";
-// import { useExpression } from "../../lib/hooks";
+import { useExpression } from "../../lib/hooks";
+import { createReorderedIndexMapper, getVectors, reshapeData } from "../../lib/clustering/utils";
 
 export const HeatMapVisualizer = () => {
   const availableGeneLists = useAppStore((state) => state.availableGeneLists);
@@ -73,12 +74,6 @@ export const HeatMapVisualizer = () => {
       .catch((e) => setError(e as Error))
       .finally(() => setLoading(false));
   }, [activeGeneList, selectedSpecies, selectedExperiment]);
-
-  // const { loading, error, expressionData } = useExpression({
-  //   species: selectedSpecies,
-  //   experimentId: ExperimentTitleToId[`${selectedSpecies} ${selectedExperiment}`],
-  //   geneIds: activeGeneList?.geneIds}
-  // );
 
   return (
     <div id="container" className={styles.heatMapContainer}>
@@ -169,7 +164,9 @@ export const HeatMapVisualizer = () => {
           <div style={{ color: "var(--background)" }}>Loading... </div>
         ) : null}
         {error ? <div>There was an error fetching the data :(</div> : null}
-        {expressionData ? <SvgHeatMap expressionData={expressionData} /> : null}
+        {expressionData && !loading ? (
+          <SvgHeatMap expressionData={expressionData} />
+        ) : null}
       </div>
     </div>
   );

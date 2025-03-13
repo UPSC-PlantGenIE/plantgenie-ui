@@ -4,6 +4,11 @@ import { ScaleLinear, scaleLinear } from "d3-scale";
 import { interpolateRdYlBu } from "d3-scale-chromatic";
 
 import { ExpressionResponse } from "../../lib/api";
+import {
+  createReorderedColMapper,
+  // createReorderedIndexMapper,
+  createReorderedRowMapper,
+} from "../../lib/clustering/utils";
 
 interface SvgHeatMapProps {
   expressionData: ExpressionResponse;
@@ -34,58 +39,88 @@ export const SvgHeatMap = ({ expressionData }: SvgHeatMapProps) => {
   > | null>(null);
 
   useEffect(() => {
-    if (svgRef.current !== null) {
-      const { height, width } = svgRef.current.getBoundingClientRect();
-      setSvgHeight(height);
-      setSvgWidth(width);
-      setHorizontalScale(() =>
-        scaleLinear([0, expressionData.samples.length], [50, width - 50])
-      );
-      setVerticalScale(() =>
-        scaleLinear([0, expressionData.genes.length], [50, height - 50])
-      );
-      setColorScale(() =>
-        scaleLinear(
-          [
-            Math.max(...expressionData.values),
-            Math.min(...expressionData.values),
-          ],
-          [0, 1]
-        )
-      );
+    const updateDimensions = () => {
+      if (svgRef.current) {
+        const { width, height } = svgRef.current.getBoundingClientRect();
+        requestAnimationFrame(() => {
+          setSvgWidth(width);
+          setSvgHeight(height);
+        });
+      }
+    };
+
+    const resizeObserver = new ResizeObserver(() => {
+      updateDimensions();
+    });
+
+    if (svgRef.current) {
+      resizeObserver.observe(svgRef.current);
     }
+
+    // Initial dimension update
+    updateDimensions();
+
+    return () => {
+      if (svgRef.current) {
+        resizeObserver.unobserve(svgRef.current);
+      }
+    };
   }, []);
 
+  // const valueIndexMapper = createReorderedIndexMapper(
+  //   [...Array(expressionData.genes.length).keys()],
+  //   [...Array(expressionData.samples.length).keys()]
+  // );
+
+  const rowIndexMapper = createReorderedRowMapper(
+    [...Array(expressionData.genes.length).keys()],
+    expressionData.samples.length
+  );
+  const colIndexMapper = createReorderedColMapper([
+    ...Array(expressionData.samples.length).keys(),
+  ]);
+
+  useEffect(() => {
+    if (!(svgHeight && svgWidth)) return;
+
+    setHorizontalScale(() =>
+      scaleLinear([0, expressionData.samples.length], [50, svgWidth - 50])
+    );
+    setVerticalScale(() =>
+      scaleLinear([0, expressionData.genes.length], [50, svgHeight - 50])
+    );
+    setColorScale(() =>
+      scaleLinear(
+        [
+          Math.max(...expressionData.values),
+          Math.min(...expressionData.values),
+        ],
+        [0, 1]
+      )
+    );
+  }, [svgHeight, svgWidth]);
+
   return (
-    <svg ref={svgRef}>
+    <svg
+      ref={svgRef}
+      style={{ height: "100%", width: "100%", border: "1px solid blue" }}
+    >
       <rect width="100%" height="100%" fill="currentColor" rx="5" ry="5" />
-      {expressionData !== null
-        ? expressionData?.samples.map((colValue, colIndex) =>
-            expressionData?.genes.map((rowValue, rowIndex) => {
-              if (
-                horizontalScale !== null &&
-                verticalScale !== null &&
-                colorScale !== null
-              ) {
-                const x = horizontalScale(colIndex);
-                const y = verticalScale(rowIndex);
-                return (
-                  <rect
-                    key={rowIndex + rowIndex * colIndex}
-                    x={x}
-                    y={y}
-                    width={10}
-                    height={10}
-                    fill={interpolateRdYlBu(
-                      colorScale(
-                        expressionData.values[rowIndex + rowIndex * colIndex]
-                      )
-                    )}
-                  ></rect>
-                );
-              }
-            })
-          )
+      {horizontalScale !== null &&
+      verticalScale !== null &&
+      colorScale !== null &&
+      svgHeight !== undefined &&
+      svgWidth !== undefined
+        ? expressionData.values.map((value, index) => (
+            <rect
+              key={index}
+              x={horizontalScale(colIndexMapper(index))}
+              y={verticalScale(rowIndexMapper(index))}
+              height={(svgHeight - 100) / expressionData.genes.length}
+              width={(svgWidth - 100) / expressionData.samples.length}
+              fill={interpolateRdYlBu(colorScale(value))}
+            ></rect>
+          ))
         : null}
     </svg>
   );

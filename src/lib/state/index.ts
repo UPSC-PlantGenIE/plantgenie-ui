@@ -59,7 +59,7 @@ export const createGeneListSlice: StateCreator<
         (value) => value.id === geneListId
       )[0],
     }),
-  selectedGeneListId: localStorageParser<string>(GENE_LIST_ID_KEY) ?? "",
+  selectedGeneListId: localStorageParser<string>(GENE_LIST_ID_KEY, ""),
   setSelectedGeneListId: (id) => {
     localStorage.setItem(GENE_LIST_ID_KEY, id);
     set({ selectedGeneListId: id });

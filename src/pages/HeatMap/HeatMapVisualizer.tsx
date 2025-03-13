@@ -10,6 +10,7 @@ import {
 } from "../../lib/constants";
 import { ExpressionRequest, ExpressionResponse, post } from "../../lib/api";
 import { ScaleLinear, scaleLinear } from "d3";
+import { interpolateRdYlBu } from "d3-scale-chromatic";
 
 export const HeatMapVisualizer = () => {
   const svgRef = useRef<SVGSVGElement>(null);
@@ -20,11 +21,14 @@ export const HeatMapVisualizer = () => {
 
   const availableExperiments =
     AVAILABLE_EXPERIMENTS_BY_SPECIES[selectedSpecies];
+
   const [selectedExperiment, setSelectedExperiment] = useState<string>(
     availableExperiments[0]
   );
+
   const [expressionData, setExpressionData] =
     useState<ExpressionResponse | null>(null);
+
   const [horizontalScale, setHorizontalScale] = useState<ScaleLinear<
     number,
     number,
@@ -37,9 +41,33 @@ export const HeatMapVisualizer = () => {
     never
   > | null>(null);
 
+  const [colorScale, setColorScale] = useState<ScaleLinear<
+    number,
+    number,
+    never
+  > | null>(null);
+
   useEffect(() => {
-    if (activeGeneList === undefined) return;
     if (svgRef === null) return;
+
+    let defaultGeneList = activeGeneList;
+
+    if (activeGeneList === undefined) {
+      console.log("activeGeneList undefined");
+
+      defaultGeneList =
+        availableGeneLists.length !== 0 ? availableGeneLists[0] : undefined;
+
+      if (defaultGeneList !== undefined) {
+        setActiveGeneList(defaultGeneList.id);
+        // above setActiveGeneList call will trigger re-render bc of useEffect dep, we return
+        return;
+      }
+    } else {
+      defaultGeneList = activeGeneList;
+    }
+
+    if (defaultGeneList === undefined) return;
 
     console.log(selectedSpecies);
 
@@ -49,7 +77,7 @@ export const HeatMapVisualizer = () => {
         species: selectedSpecies,
         experimentId:
           ExperimentTitleToId[`${selectedSpecies} ${selectedExperiment}`],
-        geneIds: activeGeneList.geneIds,
+        geneIds: defaultGeneList.geneIds,
       }
     );
 
@@ -58,11 +86,17 @@ export const HeatMapVisualizer = () => {
       setExpressionData(value);
       if (svgRef.current !== null) {
         const { height, width } = svgRef.current.getBoundingClientRect();
-        setHorizontalScale(
-          () => scaleLinear([0, value.samples.length], [50, width - 50])
+        setHorizontalScale(() =>
+          scaleLinear([0, value.samples.length], [50, width - 50])
         );
-        setVerticalScale(
-          () => scaleLinear([0, value.genes.length], [50, height - 50])
+        setVerticalScale(() =>
+          scaleLinear([0, value.genes.length], [50, height - 50])
+        );
+        setColorScale(() =>
+          scaleLinear(
+            [Math.max(...value.values), Math.min(...value.values)],
+            [0, 1]
+          )
         );
       }
     });
@@ -157,10 +191,29 @@ export const HeatMapVisualizer = () => {
           {expressionData !== null
             ? expressionData?.samples.map((colValue, colIndex) =>
                 expressionData?.genes.map((rowValue, rowIndex) => {
-                  if ((horizontalScale !== null) && (verticalScale !== null)) {
+                  if (
+                    horizontalScale !== null &&
+                    verticalScale !== null &&
+                    colorScale !== null
+                  ) {
                     const x = horizontalScale(colIndex);
                     const y = verticalScale(rowIndex);
-                    return (<rect x={x} y={y} width={10} height={10} fill="black"></rect>)
+                    return (
+                      <rect
+                        key={rowIndex + rowIndex * colIndex}
+                        x={x}
+                        y={y}
+                        width={10}
+                        height={10}
+                        fill={interpolateRdYlBu(
+                          colorScale(
+                            expressionData.values[
+                              rowIndex + rowIndex * colIndex
+                            ]
+                          )
+                        )}
+                      ></rect>
+                    );
                   }
                 })
               )

@@ -10,8 +10,12 @@ import {
 } from "../../lib/constants";
 import { ExpressionRequest, ExpressionResponse, post } from "../../lib/api";
 import { SvgHeatMap } from "./SvgHeatMap";
-import { useExpression } from "../../lib/hooks";
-import { createReorderedIndexMapper, getVectors, reshapeData } from "../../lib/clustering/utils";
+// import { useExpression } from "../../lib/hooks";
+// import {
+//   createReorderedIndexMapper,
+//   getVectors,
+//   reshapeData,
+// } from "../../lib/clustering/utils";
 
 export const HeatMapVisualizer = () => {
   const availableGeneLists = useAppStore((state) => state.availableGeneLists);

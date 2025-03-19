@@ -9,6 +9,8 @@ import {
   SingleGeneListViewer,
 } from "../../pages/GeneLists";
 
+import { BlastSubmit } from "../../pages/Blast";
+
 import { HeatMapVisualizer } from "../../pages/HeatMap";
 
 const routes = [
@@ -25,7 +27,14 @@ const routes = [
       <SingleGeneListViewer id={id} />
     ),
   },
-  { path: "/exheatmap", component: () => (<HeatMapVisualizer />)}
+  { path: "/exheatmap", component: () => <HeatMapVisualizer /> },
+  { path: "/blast", component: () => <BlastSubmit /> },
+  {
+    path: "/blast/result/:id",
+    component: ({ id }: Record<string, string>) => (
+      <div>Blast job id: {id}</div>
+    ),
+  },
 ];
 
 const matchRoute = (

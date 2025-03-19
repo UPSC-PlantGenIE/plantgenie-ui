@@ -25,7 +25,7 @@ export const BaseLayout = ({ children }: BaseLayoutProps) => {
             <Link to="/gene-lists">Gene Lists</Link>
             <Link to="/jbrowse">JBrowse</Link>
             <Link
-              to="/"
+              to="/blast"
               className="w-full rounded-sm text-center text-base/6 text-slate-700 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-100"
             >
               BLAST

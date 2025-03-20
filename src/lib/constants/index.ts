@@ -4,6 +4,8 @@ export const GENE_LIST_PREFIX = "gene-list";
 export const SPECIES_ID_KEY = "selected-species-id";
 export const GENE_LIST_ID_KEY = "selected-gene-list-id";
 
+export const AVAILABLE_BLAST_DBS_BY_SPECIES = {};
+
 export const AVAILABLE_EXPERIMENTS_BY_SPECIES: { [key: string]: string[] } = {
   "Picea abies": [
     "Cold Stress Needles",

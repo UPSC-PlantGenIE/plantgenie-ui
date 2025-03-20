@@ -11,12 +11,18 @@ export const BlastSubmit = () => {
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [selectedFileName, setSelectedFileName] = useState("Attach a file");
+  const [fastaSequences, setFastaSequences] = useState<string>("");
 
-  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files.length === 1) {
+  const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files !== null && e.target.files.length === 1) {
+      const attachedFile = e.target.files[0];
+
       console.log(e.target.files[0].name);
       console.log(e.target.files[0]);
       setSelectedFileName(e.target.files[0].name);
+
+      attachedFile.text().then((value) => setFastaSequences(value))
+
     } else {
       setSelectedFileName("Attach a file");
     }
@@ -42,6 +48,8 @@ export const BlastSubmit = () => {
           <textarea
             className={styles.fastaInput}
             placeholder="Enter fasta formatted sequences"
+            value={fastaSequences}
+            onChange={(event) => setFastaSequences(event.target.value)}
           ></textarea>
           <div className={styles.fileContainer}>
             <div

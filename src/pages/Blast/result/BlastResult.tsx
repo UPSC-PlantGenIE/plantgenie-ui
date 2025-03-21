@@ -5,6 +5,7 @@ export const BlastResult = ({ id }: Record<string, string>) => {
     "polling"
   );
   const [result, setResult] = useState<string | null>(null);
+  const [completedAt, setCompletedAt] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   useEffect(() => {
     const interval = setInterval(async () => {
@@ -15,6 +16,7 @@ export const BlastResult = ({ id }: Record<string, string>) => {
         const data = await response.json();
 
         if (data.status === "SUCCESS") {
+          setCompletedAt(data.completed_at);
           clearInterval(interval);
           fetchResults();
         } else if (data.status === "FAILED") {
@@ -47,7 +49,7 @@ export const BlastResult = ({ id }: Record<string, string>) => {
   });
   return (
     <div id="container">
-      <h2>Blast Job ID: {id}</h2>
+      <h2>Blast Job ID: {id} - completed at {completedAt ?? "(pending)"}</h2>
       {status === "polling" && <p>Waiting for job to complete...</p>}
       {status === "success" && <p>Job Completed! Result: {result}</p>}
       {status === "error" && <p style={{ color: "red" }}>Error: {error}</p>}

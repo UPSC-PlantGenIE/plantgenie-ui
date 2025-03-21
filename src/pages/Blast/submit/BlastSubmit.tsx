@@ -10,21 +10,42 @@ export const BlastSubmit = () => {
   // const selectedSpecies = useAppStore((state) => state.species);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [selectedFileName, setSelectedFileName] = useState("Attach a file");
+  const [selectedFileName, setSelectedFileName] = useState(
+    "Attach a file (max 1MB)"
+  );
   const [fastaSequences, setFastaSequences] = useState<string>("");
 
   const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault();
+    console.log(e.target.files?.length);
     if (e.target.files !== null && e.target.files.length === 1) {
       const attachedFile = e.target.files[0];
 
+      if (attachedFile.size > 2 ** 20) {
+        setSelectedFileName("File size too big, attach another");
+        return;
+      }
+
       console.log(e.target.files[0].name);
       console.log(e.target.files[0]);
-      setSelectedFileName(e.target.files[0].name);
 
-      attachedFile.text().then((value) => setFastaSequences(value))
-
+      attachedFile.text().then((value) => {
+        setFastaSequences(value.trim());
+        setSelectedFileName(attachedFile.name);
+      });
     } else {
       setSelectedFileName("Attach a file");
+    }
+  };
+
+  const handleFastaInputChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
+    event.preventDefault();
+    const newText = event.target.value;
+
+    const byteLength = new TextEncoder().encode(newText).length;
+
+    if (byteLength <= 2 ** 20) {
+      setFastaSequences(newText);
     }
   };
 
@@ -34,22 +55,65 @@ export const BlastSubmit = () => {
     }
   };
 
+  const handleFormSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    const formData = new FormData();
+
+    const blob = new Blob([fastaSequences], { type: "text/plain" });
+    // const fileName = "query.fasta";
+
+    formData.append("file", blob, selectedFileName);
+    formData.append("description", "string");
+    formData.append("dbtype", "cds");
+
+    try {
+      const response = await fetch(
+        "http://localhost:8000/submit_blast_query/",
+        {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+          },
+          body: formData,
+        }
+      );
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      const result = await response.json();
+      console.log("Response:", result);
+
+      window.history.pushState(
+        { name: `/blast/result/${result.job_id}` },
+        "",
+        `/blast/result/${result.job_id}`
+      );
+
+      window.dispatchEvent(
+        new PopStateEvent("popstate", {
+          state: { name: `/blast/result/${result.job_id}`, results: result },
+        })
+      );
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
   return (
     <div id="container" className={styles.blastSubmissionContainer}>
       <Form
         action="/blast/result/id"
         method="POST"
-        handleSubmit={(event: FormEvent<HTMLFormElement>) => {
-          event.preventDefault();
-          console.log("submitted job");
-        }}
+        handleSubmit={handleFormSubmit}
       >
         <div id="submission-container" className={styles.blastFormContainer}>
           <textarea
             className={styles.fastaInput}
             placeholder="Enter fasta formatted sequences"
             value={fastaSequences}
-            onChange={(event) => setFastaSequences(event.target.value)}
+            onChange={handleFastaInputChange}
           ></textarea>
           <div className={styles.fileContainer}>
             <div

@@ -9,7 +9,7 @@ import {
   SingleGeneListViewer,
 } from "../../pages/GeneLists";
 
-import { BlastSubmit } from "../../pages/Blast";
+import { BlastResult, BlastSubmit } from "../../pages/Blast";
 
 import { HeatMapVisualizer } from "../../pages/HeatMap";
 
@@ -31,9 +31,7 @@ const routes = [
   { path: "/blast", component: () => <BlastSubmit /> },
   {
     path: "/blast/result/:id",
-    component: ({ id }: Record<string, string>) => (
-      <div>Blast job id: {id}</div>
-    ),
+    component: ({ id }: Record<string, string>) => <BlastResult id={id} />,
   },
 ];
 

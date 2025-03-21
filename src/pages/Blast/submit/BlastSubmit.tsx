@@ -69,7 +69,7 @@ export const BlastSubmit = () => {
 
     try {
       const response = await fetch(
-        "http://localhost:8000/submit_blast_query/",
+        "http://localhost:8000/submit-blast-query/",
         {
           method: "POST",
           headers: {

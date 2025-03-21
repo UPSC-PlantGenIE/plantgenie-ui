@@ -6,6 +6,21 @@ import { Form } from "../../../components/routing/Form";
 
 import styles from "./BlastSubmit.module.css";
 
+type BlastProgramOptions = "blastn" | "blastp" | "blastx";
+const blastProgramOptions: BlastProgramOptions[] = [
+  "blastn",
+  "blastp",
+  "blastx",
+];
+
+type BlastDatabaseOptions = "genome" | "cds" | "mrna" | "protein";
+const blastDatabaseOptions: BlastDatabaseOptions[] = [
+  "genome",
+  "cds",
+  "mrna",
+  "protein",
+];
+
 export const BlastSubmit = () => {
   // const selectedSpecies = useAppStore((state) => state.species);
 
@@ -14,6 +29,11 @@ export const BlastSubmit = () => {
     "Attach a file (max 1MB)"
   );
   const [fastaSequences, setFastaSequences] = useState<string>("");
+  const [selectedProgram, setSelectedProgram] =
+    useState<BlastProgramOptions>("blastn");
+
+  const [selectedDatabase, setSelectedDatabase] =
+    useState<BlastDatabaseOptions>("cds");
 
   const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
@@ -108,6 +128,47 @@ export const BlastSubmit = () => {
         method="POST"
         handleSubmit={handleFormSubmit}
       >
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "start",
+            alignItems: "center",
+            columnGap: "1em",
+          }}
+        >
+          <label style={{ fontStyle: "var(--inter)" }}>
+            Program:{" "}
+            <select
+              value={selectedDatabase}
+              onChange={(event) =>
+                setSelectedProgram(event.target.value as BlastProgramOptions)
+              }
+            >
+              {blastDatabaseOptions.map((value, index) => (
+                <option key={index} value={value}>
+                  {value}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label>
+            Database:{" "}
+            <select
+              value={selectedProgram}
+              onChange={(event) =>
+                setSelectedDatabase(event.target.value as BlastDatabaseOptions)
+              }
+            >
+              {blastProgramOptions.map((value, index) => (
+                <option key={index} value={value}>
+                  {value}
+                </option>
+              ))}
+            </select>
+          </label>
+        </div>
+        <p>Query Sequence:</p>
         <div id="submission-container" className={styles.blastFormContainer}>
           <textarea
             className={styles.fastaInput}

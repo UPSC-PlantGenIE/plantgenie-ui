@@ -137,9 +137,23 @@ export const BlastSubmit = () => {
             columnGap: "1em",
           }}
         >
-          <label style={{ fontStyle: "var(--inter)" }}>
-            Program:{" "}
+          <label
+            style={{
+              fontStyle: "var(--inter)",
+              display: "flex",
+              flexDirection: "column",
+              fontSize: "0.75rem",
+              fontWeight: "bold",
+              alignItems: "flex-start",
+            }}
+          >
+            Program
             <select
+              style={{
+                // paddingLeft: "1em",
+                paddingRight: "1em",
+                textAlign: "left",
+              }}
               value={selectedDatabase}
               onChange={(event) =>
                 setSelectedProgram(event.target.value as BlastProgramOptions)
@@ -152,9 +166,21 @@ export const BlastSubmit = () => {
               ))}
             </select>
           </label>
-          <label>
-            Database:{" "}
+          <label
+            style={{
+              fontStyle: "var(--inter)",
+              display: "flex",
+              flexDirection: "column",
+              fontSize: "0.75rem",
+              fontWeight: "bold",
+              alignItems: "flex-start",
+            }}
+          >
+            Database
             <select
+              style={{
+                paddingRight: "1em",
+              }}
               value={selectedProgram}
               onChange={(event) =>
                 setSelectedDatabase(event.target.value as BlastDatabaseOptions)

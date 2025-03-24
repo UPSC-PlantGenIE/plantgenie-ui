@@ -9,11 +9,11 @@
     border-collapse: collapse;
   }
 
-  tr {
+  tbody tr {
     cursor: pointer;
   }
 
-  tr:hover {
+  tbody tr:hover {
     background-color: var(--color);
     color: var(--background);
   }

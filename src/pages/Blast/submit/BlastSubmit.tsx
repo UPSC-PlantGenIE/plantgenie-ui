@@ -85,7 +85,8 @@ export const BlastSubmit = () => {
 
     formData.append("file", blob, selectedFileName);
     formData.append("description", "string");
-    formData.append("dbtype", "cds");
+    formData.append("dbtype", selectedDatabase);
+    formData.append("program", selectedProgram);
 
     try {
       const response = await fetch(
@@ -150,16 +151,19 @@ export const BlastSubmit = () => {
             Program
             <select
               style={{
-                // paddingLeft: "1em",
                 paddingRight: "1em",
                 textAlign: "left",
+                backgroundColor: "var(--background)",
+                color: "var(--color)",
+                border: "1px solid var(--color)",
+                borderRadius: "var(--radius)"
               }}
-              value={selectedDatabase}
+              value={selectedProgram}
               onChange={(event) =>
                 setSelectedProgram(event.target.value as BlastProgramOptions)
               }
             >
-              {blastDatabaseOptions.map((value, index) => (
+              {blastProgramOptions.map((value, index) => (
                 <option key={index} value={value}>
                   {value}
                 </option>
@@ -180,13 +184,18 @@ export const BlastSubmit = () => {
             <select
               style={{
                 paddingRight: "1em",
+                textAlign: "left",
+                backgroundColor: "var(--background)",
+                color: "var(--color)",
+                border: "1px solid var(--color)",
+                borderRadius: "var(--radius)"
               }}
-              value={selectedProgram}
+              value={selectedDatabase}
               onChange={(event) =>
                 setSelectedDatabase(event.target.value as BlastDatabaseOptions)
               }
             >
-              {blastProgramOptions.map((value, index) => (
+              {blastDatabaseOptions.map((value, index) => (
                 <option key={index} value={value}>
                   {value}
                 </option>
@@ -194,11 +203,24 @@ export const BlastSubmit = () => {
             </select>
           </label>
         </div>
-        <p>Query Sequence:</p>
+        <label
+          style={{
+            fontStyle: "var(--inter)",
+            display: "flex",
+            flexDirection: "column",
+            fontSize: "0.75rem",
+            fontWeight: "bold",
+            alignItems: "flex-start",
+            paddingTop: "0.5em",
+            paddingBottom: "0.5em",
+          }}
+        >
+          Query Sequence
+        </label>
         <div id="submission-container" className={styles.blastFormContainer}>
           <textarea
             className={styles.fastaInput}
-            placeholder="Enter fasta formatted sequences"
+            placeholder="Enter fasta formatted sequences (max 1 MB)"
             value={fastaSequences}
             onChange={handleFastaInputChange}
           ></textarea>

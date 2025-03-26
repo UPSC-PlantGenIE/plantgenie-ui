@@ -86,3 +86,8 @@ a:hover {
   color: var(--color-purple-200);
   text-decoration: underline;
 }
+
+a:active {
+  color: var(--color);
+  background-color: var(--background);
+}

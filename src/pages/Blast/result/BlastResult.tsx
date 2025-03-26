@@ -18,9 +18,9 @@ interface BlastResultRow {
 }
 
 const blastTsvColumns = [
-  "",
-  "sseqid",
-  "pident",
+  "Query ID",
+  "Hit ID",
+  "% Identity",
   "length",
   "mismatch",
   "gapopen",

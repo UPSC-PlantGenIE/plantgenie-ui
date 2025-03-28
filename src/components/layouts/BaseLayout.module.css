@@ -83,13 +83,13 @@
 }
 
 .versionValue {
-  color: var(--color-red-400)
+  color: var(--color-red-400);
 }
 
 .navFooterVersion {
   padding-top: 0.5em;
   padding-bottom: 0.5em;
-  border: solid 2px var(--color-gray-400)
+  border: solid 2px var(--color-gray-400);
 }
 
 .selectLabel {
@@ -102,12 +102,35 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  row-gap: 0.5em;
+  row-gap: 0.25em;
 }
 
 .linkContainerHeader {
   font-size: 1em;
-  color: var(--color-lime-600)
+  color: var(--color-lime-600);
+  padding: 0.5em;
+}
+
+.links {
+  padding: 0.25em;
+  text-decoration: none;
+  color: var(--color);
+  width: 100%;
+  text-align: center;
+}
+
+.links:hover {
+  background-color: var(--color);
+  color: var(--background);
+  border-radius: var(--radius);
+  text-decoration: none;
+}
+
+.linksActive {
+  background-color: var(--color);
+  color: var(--background);
+  border-radius: var(--radius);
+  text-decoration: none;
 }
 
 @media (min-width: 41em) {
@@ -131,3 +154,25 @@
     grid-column: span 1;
   }
 }
+
+/* :where(.linkContainer) {
+  a {
+    padding: 0.25em;
+    text-decoration: none;
+    color: var(--color);
+    width: 100%;
+    text-align: center;
+  }
+  a:hover {
+    background-color: var(--color);
+    color: var(--background);
+    border-radius: var(--radius);
+    text-decoration: none;
+  }
+  a:active {
+    background-color: var(--color);
+    color: var(--background);
+    border-radius: var(--radius);
+    text-decoration: none;
+  }
+} */

@@ -22,11 +22,24 @@ export const BaseLayout = ({ children }: BaseLayoutProps) => {
             <Divider />
             <h2 className={styles.linkContainerHeader}>Genome Tools</h2>
             <Divider />
-            <Link to="/gene-lists">Gene Lists</Link>
-            <Link to="/jbrowse">JBrowse</Link>
+            <Link
+              to="/gene-lists"
+              className={styles.links}
+              activeClassName={styles.linksActive}
+            >
+              Gene Lists
+            </Link>
+            <Link
+              to="/jbrowse"
+              className={styles.links}
+              activeClassName={styles.linksActive}
+            >
+              JBrowse
+            </Link>
             <Link
               to="/blast"
-              className="w-full rounded-sm text-center text-base/6 text-slate-700 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-100"
+              className={styles.links}
+              activeClassName={styles.linksActive}
             >
               BLAST
             </Link>
@@ -39,14 +52,16 @@ export const BaseLayout = ({ children }: BaseLayoutProps) => {
             <Divider />
             <Link
               to="/exheatmap"
-              className="w-full rounded-sm text-center text-base/6 text-slate-700 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-100"
+              className={styles.links}
+              activeClassName={styles.linksActive}
             >
               Expression Heatmap
             </Link>
 
             <Link
               to="/"
-              className="w-full rounded-sm text-center text-base/6 text-slate-700 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-100"
+              className={styles.links}
+              activeClassName={styles.linksActive}
             >
               Expression Network
             </Link>
@@ -58,7 +73,8 @@ export const BaseLayout = ({ children }: BaseLayoutProps) => {
           </div>
           <div className={styles.navFooterVersionInfo}>
             <div className={styles.navFooterVersion}>
-              PlantGenIE version: <span className={styles.versionValue}>0.1-dev</span>
+              PlantGenIE version:{" "}
+              <span className={styles.versionValue}>0.1-dev</span>
             </div>
           </div>
         </div>

@@ -11,6 +11,9 @@ import { localStorageParser } from "../localstorage";
 export interface MainSlice {
   applicationPath: string;
   setApplicationPath: (path: string) => void;
+  activeApp: string | undefined;
+  setActiveApp: (applicationName: string) => void;
+  unsetActiveApp: () => void;
   speciesId: number;
   setSpeciesId: (id: number) => void;
   species: string;
@@ -40,6 +43,9 @@ export const createMainSlice: StateCreator<MainSlice, [], [], MainSlice> = (
     return 1;
   })(),
   setApplicationPath: (path) => set({ applicationPath: path }),
+  activeApp: undefined,
+  setActiveApp: (applicationName) => set({ activeApp: applicationName }),
+  unsetActiveApp: () => set({ activeApp: undefined }),
   setSpeciesId: (id) => set({ speciesId: id }),
   species: "Picea abies",
   setSpecies: (name) => set({ species: name }),

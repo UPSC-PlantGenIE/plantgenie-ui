@@ -80,7 +80,6 @@ export const GeneListsViewerRoute = () => {
                           }}
                         >
                           <TrashIcon width={20} height={20} color="white" />
-                          {/* </button> */}
                         </div>
                       </td>
                     </tr>

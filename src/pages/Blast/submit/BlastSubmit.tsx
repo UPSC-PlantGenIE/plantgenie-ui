@@ -2,7 +2,7 @@ import { useRef, useState, ChangeEvent, FormEvent } from "react";
 
 import { Form } from "../../../components/routing/Form";
 
-// import { useAppStore } from "../../../lib/state";
+import { useAppStore } from "../../../lib/state";
 
 import styles from "./BlastSubmit.module.css";
 
@@ -22,7 +22,7 @@ const blastDatabaseOptions: BlastDatabaseOptions[] = [
 ];
 
 export const BlastSubmit = () => {
-  // const selectedSpecies = useAppStore((state) => state.species);
+  const selectedSpecies = useAppStore((state) => state.species);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [selectedFileName, setSelectedFileName] = useState(
@@ -87,6 +87,7 @@ export const BlastSubmit = () => {
     formData.append("description", "string");
     formData.append("dbtype", selectedDatabase);
     formData.append("program", selectedProgram);
+    formData.append("species", selectedSpecies);
 
     try {
       const response = await fetch(
@@ -156,7 +157,7 @@ export const BlastSubmit = () => {
                 backgroundColor: "var(--background)",
                 color: "var(--color)",
                 border: "1px solid var(--color)",
-                borderRadius: "var(--radius)"
+                borderRadius: "var(--radius)",
               }}
               value={selectedProgram}
               onChange={(event) =>
@@ -188,7 +189,7 @@ export const BlastSubmit = () => {
                 backgroundColor: "var(--background)",
                 color: "var(--color)",
                 border: "1px solid var(--color)",
-                borderRadius: "var(--radius)"
+                borderRadius: "var(--radius)",
               }}
               value={selectedDatabase}
               onChange={(event) =>

@@ -64,6 +64,8 @@ const matchRoute = (
 export const ApplicationRouter = () => {
   const applicationPath = useAppStore((state) => state.applicationPath);
   const setApplicationPath = useAppStore((state) => state.setApplicationPath);
+  const setActiveApp = useAppStore((state) => state.setActiveApp);
+  const unsetActiveApp = useAppStore((state) => state.unsetActiveApp);
 
   useEffect(() => {
     const handlePopState = (event: PopStateEvent) => {
@@ -74,8 +76,23 @@ export const ApplicationRouter = () => {
     window.addEventListener("popstate", handlePopState);
     console.log(`my app path: ${applicationPath}`);
 
+    const splitApplicationPath = window.location.pathname.split("/");
+
+    console.log(window.location.pathname.split("/"))  ;
+    console.log(splitApplicationPath);
+    if (splitApplicationPath.length >= 2) {
+      const retrievedActiveApp = splitApplicationPath[1];
+      console.log(`received: ${retrievedActiveApp}`)
+
+      if (retrievedActiveApp === "") {
+        unsetActiveApp();
+      } else {
+        setActiveApp(retrievedActiveApp);
+      }
+    }
+
     return () => window.removeEventListener("popstate", handlePopState);
-  }, [applicationPath, setApplicationPath]);
+  }, [applicationPath, setApplicationPath, setActiveApp, unsetActiveApp]);
 
   for (const route of routes) {
     const params = matchRoute(route.path, applicationPath);

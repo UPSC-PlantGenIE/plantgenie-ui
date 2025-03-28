@@ -15,13 +15,14 @@ export const Link = ({
   activeClassName,
 }: LinkProps) => {
   const [isActive, setIsActive] = useState<boolean>(false);
-  const appPath = useAppStore((state) => state.applicationPath);
+  // const appPath = useAppStore((state) => state.applicationPath);
+  const activeApp = useAppStore((state) => state.activeApp);
 
   useEffect(() => {
-    if (appPath === to) console.log(`${to} is active!`)
+    // if (appPath === to) console.log(`${to} is active!`)
 
-    setIsActive(appPath === to);
-  }, [appPath, to]);
+    setIsActive(to.startsWith(`/${activeApp}`));
+  }, [to, activeApp]);
 
   const clickHandler = (event: MouseEvent<HTMLAnchorElement>) => {
     event.preventDefault();
@@ -30,11 +31,13 @@ export const Link = ({
       new PopStateEvent("popstate", { state: { name: to } })
     );
   };
+
   return (
     <a
       href={to}
       onClick={clickHandler}
-      className={!isActive || (activeClassName === null) || (to === "/") ? className : activeClassName}
+      className={`${className} ${isActive ? activeClassName : ""}`.trim()}
+      // className={!isActive || (activeClassName === null) || (to === "/") ? className : activeClassName}
     >
       {children}
     </a>

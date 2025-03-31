@@ -21,3 +21,5 @@ export const DistanceMetrics: Record<string, DistanceMetric> = {
   euclidean: euclideanDistance,
   chebyshev: chebyshevDistance,
 };
+
+export const DISTANCE_METRICS = Object.keys(DistanceMetrics);

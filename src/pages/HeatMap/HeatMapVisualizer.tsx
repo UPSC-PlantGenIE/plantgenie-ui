@@ -1,4 +1,4 @@
-import { ChangeEvent, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 import { useAppStore } from "../../lib/state";
 
@@ -10,12 +10,9 @@ import {
 } from "../../lib/constants";
 import { ExpressionRequest, ExpressionResponse, post } from "../../lib/api";
 import { SvgHeatMap } from "./SvgHeatMap";
-// import { useExpression } from "../../lib/hooks";
-// import {
-//   createReorderedIndexMapper,
-//   getVectors,
-//   reshapeData,
-// } from "../../lib/clustering/utils";
+import { LINKAGE_METRICS } from "../../lib/clustering";
+import { DISTANCE_METRICS } from "../../lib/clustering";
+import { DATA_SCALING_METHODS } from "../../lib/scaling";
 
 export const HeatMapVisualizer = () => {
   const availableGeneLists = useAppStore((state) => state.availableGeneLists);
@@ -32,6 +29,8 @@ export const HeatMapVisualizer = () => {
   const [selectedExperiment, setSelectedExperiment] = useState<string>(
     availableExperiments[0]
   );
+
+  const [scalingFunctionName, setScalingFunctionName] = useState<string>("log");
 
   const [expressionData, setExpressionData] =
     useState<ExpressionResponse | null>(null);
@@ -77,7 +76,13 @@ export const HeatMapVisualizer = () => {
       })
       .catch((e) => setError(e as Error))
       .finally(() => setLoading(false));
-  }, [activeGeneList, selectedSpecies, selectedExperiment]);
+  }, [
+    activeGeneList,
+    selectedSpecies,
+    selectedExperiment,
+    availableGeneLists,
+    setActiveGeneList,
+  ]);
 
   return (
     <div id="container" className={styles.heatMapContainer}>
@@ -122,7 +127,7 @@ export const HeatMapVisualizer = () => {
           {" "}
           Cluster Metric:{" "}
           <select>
-            {["Euclidean", "Chebyshev"].map((value, index) => (
+            {DISTANCE_METRICS.map((value, index) => (
               <option key={index} value={value}>
                 {value}
               </option>
@@ -133,7 +138,7 @@ export const HeatMapVisualizer = () => {
           {" "}
           Cluster Linkage:{" "}
           <select>
-            {["Average", "Ward"].map((value, index) => (
+            {LINKAGE_METRICS.map((value, index) => (
               <option key={index} value={value}>
                 {value}
               </option>
@@ -154,8 +159,11 @@ export const HeatMapVisualizer = () => {
         <label>
           {" "}
           Scaling:{" "}
-          <select>
-            {["row", "col", "zscore", "log2", "none"].map((value, index) => (
+          <select
+            value={scalingFunctionName}
+            onChange={(event) => setScalingFunctionName(event.target.value)}
+          >
+            {DATA_SCALING_METHODS.map((value, index) => (
               <option key={index} value={value}>
                 {value}
               </option>
@@ -169,7 +177,18 @@ export const HeatMapVisualizer = () => {
         ) : null}
         {error ? <div>There was an error fetching the data :(</div> : null}
         {expressionData && !loading ? (
-          <SvgHeatMap expressionData={expressionData} />
+          <SvgHeatMap
+            expressionData={expressionData}
+            marginTop={30}
+            marginBottom={30}
+            marginLeft={30}
+            marginRight={30}
+            labelFontSize={10}
+            labelPadding={10}
+            cellHeight={20}
+            cellPadding={1}
+            scalingFunctionName={scalingFunctionName}
+          />
         ) : null}
       </div>
     </div>

@@ -73,11 +73,12 @@ h1, h2, h3 {
   margin: 0;
 }
 
-a {
-  /* color: var(--color-blue-600); */
-  /* text-decoration: none; */
-}
 /*
+a {
+  color: var(--color-blue-600);
+  text-decoration: none;
+}
+
 a:visited {
   color: var(--color-purple-600);
 }
@@ -90,4 +91,5 @@ a:hover {
 a:active {
   color: var(--color);
   background-color: var(--background);
-} */
+}
+*/

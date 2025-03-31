@@ -66,3 +66,5 @@ export const LinkageMetrics: Record<string, NodeLinkage> = {
   average: averageNodeDistance,
   ward: wardNodeDistance,
 };
+
+export const LINKAGE_METRICS = Object.keys(LinkageMetrics);

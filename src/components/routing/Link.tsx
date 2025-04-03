@@ -15,11 +15,9 @@ export const Link = ({
   activeClassName,
 }: LinkProps) => {
   const [isActive, setIsActive] = useState<boolean>(false);
-  // const appPath = useAppStore((state) => state.applicationPath);
   const activeApp = useAppStore((state) => state.activeApp);
 
   useEffect(() => {
-    // if (appPath === to) console.log(`${to} is active!`)
 
     setIsActive(to.startsWith(`/${activeApp}`));
   }, [to, activeApp]);
@@ -37,7 +35,6 @@ export const Link = ({
       href={to}
       onClick={clickHandler}
       className={`${className} ${isActive ? activeClassName : ""}`.trim()}
-      // className={!isActive || (activeClassName === null) || (to === "/") ? className : activeClassName}
     >
       {children}
     </a>

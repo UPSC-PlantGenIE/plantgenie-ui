@@ -9,7 +9,7 @@ interface ClusteringHookProps {
   ncols: number;
   scalingFunctionName: string;
   clusterAxis: string;
-  clusterMetric: string;
+  distanceMetric: string;
   clusterLinkage: string;
 }
 
@@ -19,7 +19,7 @@ export const useClustering = ({
   ncols,
   scalingFunctionName,
   clusterAxis,
-  clusterMetric,
+  distanceMetric,
   clusterLinkage,
 }: ClusteringHookProps) => {
   const scaledData = useMemo(() => {
@@ -30,23 +30,23 @@ export const useClustering = ({
     return clusterAxis === "row" || clusterAxis === "both"
       ? hierarchicalClustering({
           data: getVectors(scaledData, nrows, ncols, "row"),
-          distanceMetric: clusterMetric,
+          distanceMetric: distanceMetric,
           linkageMetric: clusterLinkage,
           by: "row",
         })
       : Array.from({ length: nrows }, (_, index) => index);
-  }, [scaledData, nrows, ncols, clusterAxis, clusterMetric, clusterLinkage]);
+  }, [scaledData, nrows, ncols, clusterAxis, distanceMetric, clusterLinkage]);
 
   const colOrder = useMemo(() => {
     return clusterAxis === "col" || clusterAxis === "both"
       ? hierarchicalClustering({
           data: getVectors(scaledData, nrows, ncols, "col"),
-          distanceMetric: clusterMetric,
+          distanceMetric: distanceMetric,
           linkageMetric: clusterLinkage,
           by: "col",
         })
       : Array.from({ length: ncols }, (_, index) => index);
-  }, [scaledData, ncols, nrows, clusterAxis, clusterMetric, clusterLinkage]);
+  }, [scaledData, ncols, nrows, clusterAxis, distanceMetric, clusterLinkage]);
 
   return { rowOrder, colOrder, values: scaledData };
 };

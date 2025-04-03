@@ -31,6 +31,9 @@ export const HeatMapVisualizer = () => {
   );
 
   const [scalingFunctionName, setScalingFunctionName] = useState<string>("log");
+  const [clusterLinkage, setClusterLinkage] = useState<string>("average");
+  const [distanceMetric, setDistanceMetric] = useState<string>("euclidean");
+  const [clusterAxis, setClusterAxis] = useState<string>("row");
 
   const [expressionData, setExpressionData] =
     useState<ExpressionResponse | null>(null);
@@ -88,7 +91,6 @@ export const HeatMapVisualizer = () => {
     <div id="container" className={styles.heatMapContainer}>
       <div>
         <label>
-          {" "}
           Gene List:{" "}
           <select
             value={activeGeneList !== undefined ? activeGeneList.id : ""}
@@ -126,7 +128,10 @@ export const HeatMapVisualizer = () => {
         <label>
           {" "}
           Cluster Metric:{" "}
-          <select>
+          <select
+            value={distanceMetric}
+            onChange={(event) => setDistanceMetric(event.target.value)}
+          >
             {DISTANCE_METRICS.map((value, index) => (
               <option key={index} value={value}>
                 {value}
@@ -137,7 +142,10 @@ export const HeatMapVisualizer = () => {
         <label>
           {" "}
           Cluster Linkage:{" "}
-          <select>
+          <select
+            value={clusterLinkage}
+            onChange={(event) => setClusterLinkage(event.target.value)}
+          >
             {LINKAGE_METRICS.map((value, index) => (
               <option key={index} value={value}>
                 {value}
@@ -146,9 +154,11 @@ export const HeatMapVisualizer = () => {
           </select>
         </label>
         <label>
-          {" "}
           Cluster Axis:{" "}
-          <select>
+          <select
+            value={clusterAxis}
+            onChange={(event) => setClusterAxis(event.target.value)}
+          >
             {["row", "col", "both"].map((value, index) => (
               <option key={index} value={value}>
                 {value}
@@ -179,15 +189,18 @@ export const HeatMapVisualizer = () => {
         {expressionData && !loading ? (
           <SvgHeatMap
             expressionData={expressionData}
-            marginTop={30}
-            marginBottom={30}
-            marginLeft={30}
-            marginRight={30}
+            marginTop={10}
+            marginBottom={10}
+            marginLeft={10}
+            marginRight={10}
             labelFontSize={10}
             labelPadding={10}
             cellHeight={20}
             cellPadding={1}
             scalingFunctionName={scalingFunctionName}
+            clusterAxis={clusterAxis}
+            distanceMetric={distanceMetric}
+            clusterLinkage={clusterLinkage}
           />
         ) : null}
       </div>

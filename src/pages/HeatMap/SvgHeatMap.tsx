@@ -1,6 +1,6 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
-import { ScaleLinear, scaleLinear } from "d3-scale";
+import { scaleLinear } from "d3-scale";
 import { interpolateRdYlBu } from "d3-scale-chromatic";
 
 import { ExpressionResponse } from "../../lib/api";
@@ -24,35 +24,30 @@ interface SvgHeatMapProps {
   cellHeight: number;
   expressionData: ExpressionResponse;
   scalingFunctionName: string;
+  distanceMetric: string;
+  clusterAxis: string;
+  clusterLinkage: string;
 }
 
 export const SvgHeatMap = ({
+  marginBottom,
+  marginLeft,
+  marginRight,
+  marginTop,
   expressionData,
   labelFontSize,
+  labelPadding,
+  scalingFunctionName,
+  distanceMetric,
+  clusterAxis,
+  clusterLinkage,
+  cellHeight,
 }: SvgHeatMapProps) => {
   const svgRef = useRef<SVGSVGElement>(null);
 
-  const [svgWidth, setSvgWidth] = useState<number | undefined>(undefined);
-  const [svgHeight, setSvgHeight] = useState<number | undefined>(undefined);
+  const [svgWidth, setSvgWidth] = useState<number>(0);
+  const [svgHeight, setSvgHeight] = useState<number>(0);
   expressionData.genes.map((value) => value.chromosomeId);
-
-  const [horizontalScale, setHorizontalScale] = useState<ScaleLinear<
-    number,
-    number,
-    never
-  > | null>(null);
-
-  const [verticalScale, setVerticalScale] = useState<ScaleLinear<
-    number,
-    number,
-    never
-  > | null>(null);
-
-  const [colorScale, setColorScale] = useState<ScaleLinear<
-    number,
-    number,
-    never
-  > | null>(null);
 
   useEffect(() => {
     const updateDimensions = () => {
@@ -82,7 +77,8 @@ export const SvgHeatMap = ({
         resizeObserver.unobserve(svg);
       }
     };
-  }, []);
+  }, [expressionData.genes, cellHeight]);
+
   const rowLabels = expressionData.genes.map(
     (value) => `${value.chromosomeId}_${value.geneId}`
   );
@@ -104,11 +100,15 @@ export const SvgHeatMap = ({
     axis: "height",
   });
 
-  // const { rowOrder, colOrder, values } = useClustering({
-  //   data: expressionData.values,
-  //   nrows: rowLabels.length,
-  //   ncols: colLabels.length,
-  // });
+  const { rowOrder, colOrder, values } = useClustering({
+    data: expressionData.values,
+    nrows: rowLabels.length,
+    ncols: colLabels.length,
+    scalingFunctionName,
+    clusterAxis,
+    clusterLinkage,
+    distanceMetric,
+  });
 
   // const originalRowMap = useMemo(
   //   () =>
@@ -152,48 +152,118 @@ export const SvgHeatMap = ({
     ...Array(expressionData.samples.length).keys(),
   ]);
 
-  useEffect(() => {
-    if (!(svgHeight && svgWidth)) return;
+  const heatmapBounds = {
+    top: marginTop + colTextLength + labelPadding,
+    bottom: svgHeight - marginBottom,
+    left: marginLeft,
+    right: svgWidth - marginRight - rowTextLength - labelPadding,
+  };
 
-    setHorizontalScale(() =>
-      scaleLinear([0, expressionData.samples.length], [50, svgWidth - 50])
-    );
-    setVerticalScale(() =>
-      scaleLinear([0, expressionData.genes.length], [50, svgHeight - 50])
-    );
-    setColorScale(() =>
-      scaleLinear(
-        [
+  const horizontalScale = useMemo(
+    () =>
+      scaleLinear()
+        .domain([0, colLabels.length])
+        .range([heatmapBounds.left, heatmapBounds.right]),
+    [colLabels.length, heatmapBounds.left, heatmapBounds.right]
+  );
+
+  const verticalScale = useMemo(
+    () =>
+      scaleLinear()
+        .domain([0, rowLabels.length])
+        .range([heatmapBounds.top, heatmapBounds.bottom]),
+    [heatmapBounds.top, heatmapBounds.bottom, rowLabels.length]
+  );
+
+  const colorScale = useMemo(
+    () =>
+      scaleLinear()
+        .domain([
           Math.max(...expressionData.values),
           Math.min(...expressionData.values),
-        ],
-        [0, 1]
-      )
+        ])
+        .range([0, 1]),
+    [expressionData.values]
+  );
+
+  if (
+    !(
+      horizontalScale !== null &&
+      verticalScale !== null &&
+      colorScale !== null &&
+      svgHeight !== undefined &&
+      svgWidth !== undefined
+    )
+  ) {
+    return (
+      <svg
+        ref={svgRef}
+        style={{ height: "100%", width: "100%", border: "1px solid blue" }}
+      >
+        <rect
+          width="100%"
+          height="100%"
+          fill="currentColor"
+          rx="5"
+          ry="5"
+        ></rect>
+      </svg>
     );
-  }, [svgHeight, svgWidth, expressionData]);
+  }
 
   return (
     <svg
       ref={svgRef}
       style={{ height: "100%", width: "100%", border: "1px solid blue" }}
     >
-      <rect width="100%" height="100%" fill="currentColor" rx="5" ry="5" />
-      {horizontalScale !== null &&
-      verticalScale !== null &&
-      colorScale !== null &&
-      svgHeight !== undefined &&
-      svgWidth !== undefined
-        ? expressionData.values.map((value, index) => (
-            <rect
-              key={index}
-              x={horizontalScale(colIndexMapper(index))}
-              y={verticalScale(rowIndexMapper(index))}
-              height={(svgHeight - 100) / expressionData.genes.length}
-              width={(svgWidth - 100) / expressionData.samples.length}
-              fill={interpolateRdYlBu(colorScale(value))}
-            ></rect>
-          ))
-        : null}
+      <rect width="100%" height="100%" fill="currentColor" rx="5" ry="5"></rect>
+      <g id="rectangles">
+        {expressionData.values.map((value, index) => (
+          <rect
+            key={index}
+            x={horizontalScale(colIndexMapper(index))}
+            y={verticalScale(rowIndexMapper(index))}
+            // height={(svgHeight - 40) / expressionData.genes.length}
+            height={Math.abs(verticalScale(0) - verticalScale(1))}
+            // width={(svgWidth - 40) / expressionData.samples.length}
+            width={Math.abs(horizontalScale(0) - horizontalScale(1))}
+            fill={interpolateRdYlBu(colorScale(value))}
+          ></rect>
+        ))}
+      </g>
+      <g id="row-labels">
+        {rowOrder.map((value, index) => (
+          <text
+            key={index}
+            transform={`translate(${svgWidth - marginRight - rowTextLength}, ${
+              (verticalScale(index) + verticalScale(index + 1)) / 2
+            })`}
+            fontSize={labelFontSize}
+            textAnchor="left"
+            dominantBaseline="middle"
+            fontWeight="normal"
+            fill="black"
+          >
+            {rowLabels[value]}
+          </text>
+        ))}
+      </g>
+      <g id="col-labels">
+        {colOrder.map((value, index) => (
+          <text
+            key={index}
+            textAnchor="left"
+            dominantBaseline="middle"
+            fontWeight="normal"
+            fontSize={labelFontSize}
+            transform={`translate(${
+              (horizontalScale(index) + horizontalScale(index + 1)) / 2
+            },${marginTop + colTextLength}) rotate(-45)`}
+          >
+            {colLabels[value]}
+          </text>
+        ))}
+      </g>
     </svg>
   );
 };

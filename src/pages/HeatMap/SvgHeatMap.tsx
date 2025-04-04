@@ -192,8 +192,8 @@ export const SvgHeatMap = ({
       horizontalScale !== null &&
       verticalScale !== null &&
       colorScale !== null &&
-      svgHeight !== undefined &&
-      svgWidth !== undefined
+      svgHeight !== 0 &&
+      svgWidth !== 0
     )
   ) {
     return (
@@ -219,7 +219,7 @@ export const SvgHeatMap = ({
     >
       <rect width="100%" height="100%" fill="currentColor" rx="5" ry="5"></rect>
       <g id="rectangles">
-        {expressionData.values.map((value, index) => (
+        {expressionData.values.map((_, index) => (
           <rect
             key={index}
             x={horizontalScale(colIndexMapper(index))}

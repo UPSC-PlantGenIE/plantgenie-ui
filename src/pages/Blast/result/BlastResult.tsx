@@ -18,18 +18,18 @@ interface BlastResultRow {
 }
 
 const blastTsvColumns = [
-  "Query ID",
-  "Hit ID",
-  "% Identity",
-  "length",
-  "mismatch",
-  "gapopen",
-  "qstart",
-  "qend",
-  "sstart",
-  "send",
-  "evalue",
-  "bitscore",
+  "QID",
+  "HID",
+  "%Id",
+  "Len",
+  "MM",
+  "Gap",
+  "QS",
+  "QE",
+  "SS",
+  "SE",
+  "E",
+  "Bit",
 ];
 
 const parseBlastResults = (data: string): BlastResultRow[] => {
@@ -62,7 +62,7 @@ export const BlastResult = ({ id }: Record<string, string>) => {
   const [status, setStatus] = useState<"polling" | "success" | "error">(
     "polling"
   );
-  const [result, setResult] = useState<string | null>(null);
+  // const [result, setResult] = useState<string | null>(null);
   const [completedAt, setCompletedAt] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [blastResults, setBlastResults] = useState<BlastResultRow[]>([]);
@@ -98,7 +98,7 @@ export const BlastResult = ({ id }: Record<string, string>) => {
           `http://localhost:8000/retrieve-blast-result/${id}`
         );
         const data = await response.text();
-        setResult(data);
+        // setResult(data);
         setBlastResults(parseBlastResults(data));
         setStatus("success");
       } catch (err) {
@@ -108,15 +108,63 @@ export const BlastResult = ({ id }: Record<string, string>) => {
     };
     return () => clearInterval(interval);
   }, []);
+
+  const saveBlastTableHandler = async () => {
+    try {
+      const response = await fetch(
+        `http://localhost:8000/retrieve-blast-result/${id}`
+      );
+      const data = await response.text();
+
+      const blob = new Blob([data], { type: "text/tsv" });
+      const url = URL.createObjectURL(blob);
+
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `blast-${id}.tsv`;
+      link.click();
+
+      URL.revokeObjectURL(url);
+    } catch (error) {
+      window.alert("There was an error downloading the file");
+    }
+  };
+
+  const saveBlastHtmlHandler = async () => {
+    try {
+      const response = await fetch(
+        `http://localhost:8000/retrieve-blast-result-as-html/${id}`
+      );
+      const data = await response.text();
+
+      const blob = new Blob([data], { type: "text/html" });
+      const url = URL.createObjectURL(blob);
+
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `blast-${id}.html`;
+      link.click();
+
+      URL.revokeObjectURL(url);
+    } catch (error) {
+      window.alert("There was an error downloading the file");
+    }
+  };
+
   return (
     <div id="container" className={styles.blastResultContainer}>
-      <h3>Blast Job ID: {id}</h3>
+      {/* <h3>Blast Job ID: {id}</h3> */}
       {status === "polling" && <p>Waiting for job to complete...</p>}
       {status === "success" && (
         <>
-          <div>Completed at {completedAt ?? "(pending)"}</div>
-          <div style={{ width: "100%", overflowX: "auto" }}>
-            <table style={{ width: "100%", borderCollapse: "collapse" }}>
+          <div className={styles.blastResultDisplay}>
+            <span>Job ID: {id}</span>
+            <span style={{ fontSize: "0.85em" }}>
+              completed: {completedAt ?? "(pending)"}
+            </span>
+          </div>
+          <div style={{ width: "100%", overflowX: "auto", display: "grid" }}>
+            <table>
               <thead>
                 <tr>
                   {blastTsvColumns.map((value, index) => (
@@ -144,6 +192,32 @@ export const BlastResult = ({ id }: Record<string, string>) => {
                 <tr></tr>
               </tbody>
             </table>
+          </div>
+          <div className={styles.blastTableFooter}>
+            <span style={{ fontSize: "0.5em" }}>
+              No. Results: {blastResults.length}
+            </span>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "flex-end",
+                columnGap: "0.5em",
+              }}
+            >
+              <button
+                className={styles.downloadButton}
+                onClick={saveBlastTableHandler}
+              >
+                Download Table
+              </button>
+              <button
+                className={styles.downloadButton}
+                onClick={saveBlastHtmlHandler}
+              >
+                Download HTML
+              </button>
+            </div>
           </div>
         </>
       )}

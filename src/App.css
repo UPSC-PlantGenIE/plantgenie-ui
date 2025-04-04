@@ -4,6 +4,7 @@
   width: clamp(12em, 100vw, 1280px);
   display: grid;
   grid-template-areas:
+    "header"
     "nav"
     "main"
     "footer";

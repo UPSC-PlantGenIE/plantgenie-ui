@@ -1,6 +1,51 @@
+.blastResultContainer {
+  display: grid;
+  grid-template-rows: auto 1fr;
+}
+
+.blastResultDisplay {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 0.5em;
+  column-gap: 1em;
+  font-size: 0.75em;
+  background-color: #080808;
+  justify-content: space-between;
+  align-items: center;
+  border-top-left-radius: var(--radius);
+  border-top-right-radius: var(--radius);
+  border-bottom: 1px solid gray;
+}
+
+.blastTableFooter {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  width: 100%;
+  background-color: #080808;
+  border-bottom-left-radius: var(--radius);
+  border-bottom-right-radius: var(--radius);
+  border-top: 1px solid gray;
+  padding: 0.3em;
+  column-gap: 0.5em;
+}
+
 :where(.blastResultContainer) {
+  table {
+    width: 100%;
+    background-color: #141414;
+    border-collapse: collapse;
+  }
+
+  thead {
+    background-color: #080808;
+    border-bottom: 1px solid white;
+  }
+
   tbody tr {
     cursor: pointer;
+    padding: 0.5em;
   }
 
   tbody tr:hover {
@@ -9,12 +54,30 @@
   }
 
   th {
-    font-size: calc(var(--font-scale) * 4);
+    /* font-size: calc(var(--font-scale) * 3); */
+    font-size: 0.7em;
   }
 
   td {
-    font-size: calc(var(--font-scale) * 2);
-    padding-left: 0.25em;
-    padding-right: 0.25em;
+    /* font-size: calc(var(--font-scale) * 2); */
+    font-size: 0.6em;
+    padding: 0.75em;
+    /* padding-bottom: 0.3em; */
+    text-align: center;
+  }
+
+  .downloadButton {
+    background-color: #3b82f6;
+    color: #fff;
+    font-size: 0.5em;
+    padding: 0.15rem 0.5rem;
+    border: none;
+    border-radius: 0.125rem;
+    cursor: pointer;
+    height: max-content;
+    align-self: flex-end;
+  }
+  .downloadButton:hover {
+    background-color: #1d4ed8;
   }
 }

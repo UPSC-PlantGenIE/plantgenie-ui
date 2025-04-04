@@ -1,6 +1,6 @@
-import { FormEvent, ReactNode } from "react";
+import { FormEvent, FormHTMLAttributes, ReactNode } from "react";
 
-interface FormProps {
+interface FormProps extends FormHTMLAttributes<HTMLFormElement> {
   action: string;
   method?: string;
   children?: ReactNode;
@@ -12,9 +12,10 @@ export const Form = ({
   method = "GET",
   children,
   handleSubmit,
+  ...rest
 }: FormProps) => {
   return (
-    <form action={action} method={method} onSubmit={handleSubmit}>
+    <form action={action} method={method} onSubmit={handleSubmit} {...rest}>
       {children}
     </form>
   );

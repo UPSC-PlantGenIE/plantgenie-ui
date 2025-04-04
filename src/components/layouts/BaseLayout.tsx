@@ -4,6 +4,7 @@ import { SelectionMenu } from "../general/Selection";
 import styles from "./BaseLayout.module.css";
 import { Divider } from "../general/Divider";
 import { Link } from "../routing/Link";
+import { PairedLeaves, Octocat } from "../../assets/icons";
 
 interface BaseLayoutProps {
   children?: ReactNode;
@@ -80,13 +81,35 @@ export const BaseLayout = ({ children }: BaseLayoutProps) => {
         </div>
       </div>
       <div id="header" className={styles.header}>
-        Header
+        <Link to="/" className={styles.headerBrandLink}>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "center",
+              alignItems: "center",
+              gap: "0.5em",
+            }}
+          >
+            <PairedLeaves width={50} height={50} />
+            <h1 style={{ fontFamily: "var(--source)" }}>PlantGenIE</h1>
+          </div>
+        </Link>
       </div>
       <div id="main" className={styles.main}>
         {children ? children : "Main Content"}
       </div>
       <div id="footer" className={styles.footer}>
-        Footer
+        <p style={{fontSize: "0.5em", margin: 0}}>PlantGenIE - UPSC Genome Resources</p>
+        <p style={{fontSize: "0.5em", margin: 0}}>©2025 - Umeå Plant Science Centre</p>
+        <div style={{display: "flex", gap: "0.5em", color: "var(--color)"}}>
+          <a href="https://github.com/UPSC-PlantGenIE">
+            <Octocat fill="var(--color)" height={20} width={20}/>
+          </a>
+          <a href="https://www.upsc.se">
+            <PairedLeaves fill="var(--color)" height={20} width={20} />
+          </a>
+        </div>
       </div>
     </>
   );

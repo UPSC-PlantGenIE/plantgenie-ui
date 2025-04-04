@@ -89,10 +89,36 @@ export const HeatMapVisualizer = () => {
 
   return (
     <div id="container" className={styles.heatMapContainer}>
-      <div>
-        <label>
-          Gene List:{" "}
+      <div
+        style={{
+          display: "flex",
+          padding: "0.5em",
+          gap: "0.25em",
+          border: "1px solid var(--color)",
+          borderRadius: "var(--radius)",
+          flexWrap: "wrap",
+        }}
+      >
+        <label
+          style={{
+            fontStyle: "var(--inter)",
+            display: "flex",
+            flexDirection: "column",
+            fontSize: "0.75rem",
+            fontWeight: "bold",
+            alignItems: "flex-start",
+          }}
+        >
+          <span>GeneList</span>
           <select
+            style={{
+              paddingRight: "1em",
+              textAlign: "left",
+              backgroundColor: "var(--background)",
+              color: "var(--color)",
+              border: "1px solid var(--color)",
+              borderRadius: "var(--radius)",
+            }}
             value={activeGeneList !== undefined ? activeGeneList.id : ""}
             onChange={(event) => {
               setActiveGeneList(event.target.value);
@@ -110,10 +136,26 @@ export const HeatMapVisualizer = () => {
               ))}
           </select>
         </label>
-        <label>
-          {" "}
-          Experiment:{" "}
+        <label
+          style={{
+            fontStyle: "var(--inter)",
+            display: "flex",
+            flexDirection: "column",
+            fontSize: "0.75rem",
+            fontWeight: "bold",
+            alignItems: "flex-start",
+          }}
+        >
+          Experiment
           <select
+            style={{
+              paddingRight: "1em",
+              textAlign: "left",
+              backgroundColor: "var(--background)",
+              color: "var(--color)",
+              border: "1px solid var(--color)",
+              borderRadius: "var(--radius)",
+            }}
             onChange={(event) => setSelectedExperiment(event.target.value)}
           >
             {AVAILABLE_EXPERIMENTS_BY_SPECIES[selectedSpecies].map(
@@ -125,10 +167,26 @@ export const HeatMapVisualizer = () => {
             )}
           </select>
         </label>
-        <label>
-          {" "}
-          Cluster Metric:{" "}
+        <label
+          style={{
+            fontStyle: "var(--inter)",
+            display: "flex",
+            flexDirection: "column",
+            fontSize: "0.75rem",
+            fontWeight: "bold",
+            alignItems: "flex-start",
+          }}
+        >
+          Metric
           <select
+            style={{
+              paddingRight: "1em",
+              textAlign: "left",
+              backgroundColor: "var(--background)",
+              color: "var(--color)",
+              border: "1px solid var(--color)",
+              borderRadius: "var(--radius)",
+            }}
             value={distanceMetric}
             onChange={(event) => setDistanceMetric(event.target.value)}
           >
@@ -139,10 +197,26 @@ export const HeatMapVisualizer = () => {
             ))}
           </select>
         </label>
-        <label>
-          {" "}
-          Cluster Linkage:{" "}
+        <label
+          style={{
+            fontStyle: "var(--inter)",
+            display: "flex",
+            flexDirection: "column",
+            fontSize: "0.75rem",
+            fontWeight: "bold",
+            alignItems: "flex-start",
+          }}
+        >
+          Linkage
           <select
+            style={{
+              paddingRight: "1em",
+              textAlign: "left",
+              backgroundColor: "var(--background)",
+              color: "var(--color)",
+              border: "1px solid var(--color)",
+              borderRadius: "var(--radius)",
+            }}
             value={clusterLinkage}
             onChange={(event) => setClusterLinkage(event.target.value)}
           >
@@ -153,9 +227,26 @@ export const HeatMapVisualizer = () => {
             ))}
           </select>
         </label>
-        <label>
-          Cluster Axis:{" "}
+        <label
+          style={{
+            fontStyle: "var(--inter)",
+            display: "flex",
+            flexDirection: "column",
+            fontSize: "0.75rem",
+            fontWeight: "bold",
+            alignItems: "flex-start",
+          }}
+        >
+          Axis
           <select
+            style={{
+              paddingRight: "1em",
+              textAlign: "left",
+              backgroundColor: "var(--background)",
+              color: "var(--color)",
+              border: "1px solid var(--color)",
+              borderRadius: "var(--radius)",
+            }}
             value={clusterAxis}
             onChange={(event) => setClusterAxis(event.target.value)}
           >
@@ -166,10 +257,26 @@ export const HeatMapVisualizer = () => {
             ))}
           </select>
         </label>
-        <label>
-          {" "}
-          Scaling:{" "}
+        <label
+          style={{
+            fontStyle: "var(--inter)",
+            display: "flex",
+            flexDirection: "column",
+            fontSize: "0.75rem",
+            fontWeight: "bold",
+            alignItems: "flex-start",
+          }}
+        >
+          Scaling
           <select
+            style={{
+              paddingRight: "1em",
+              textAlign: "left",
+              backgroundColor: "var(--background)",
+              color: "var(--color)",
+              border: "1px solid var(--color)",
+              borderRadius: "var(--radius)",
+            }}
             value={scalingFunctionName}
             onChange={(event) => setScalingFunctionName(event.target.value)}
           >
@@ -180,6 +287,12 @@ export const HeatMapVisualizer = () => {
             ))}
           </select>
         </label>
+        <button
+          className={styles.saveButton}
+          onClick={() => console.log("Download button clicked")}
+        >
+          Save
+        </button>
       </div>
       <div id="heatmap-container" style={{ backgroundColor: "var(--color)" }}>
         {loading || !expressionData ? (

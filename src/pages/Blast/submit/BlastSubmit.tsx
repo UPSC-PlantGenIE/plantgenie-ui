@@ -5,6 +5,7 @@ import { Form } from "../../../components/routing/Form";
 import { useAppStore } from "../../../lib/state";
 
 import styles from "./BlastSubmit.module.css";
+import { Divider } from "../../../components/general/Divider";
 
 type BlastProgramOptions = "blastn" | "blastp" | "blastx";
 const blastProgramOptions: BlastProgramOptions[] = [
@@ -124,144 +125,161 @@ export const BlastSubmit = () => {
   };
 
   return (
-    <div id="container" className={styles.blastSubmissionContainer}>
+    <div
+      id="container"
+      style={{ display: "flex", flexDirection: "column", height: "100%" }}
+    >
       <Form
         action="/blast/result/id"
         method="POST"
         handleSubmit={handleFormSubmit}
+        className={styles.blastSubmissionContainer}
       >
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "start",
-            alignItems: "center",
-            columnGap: "1em",
-          }}
-        >
-          <label
+          <div
             style={{
-              fontStyle: "var(--inter)",
               display: "flex",
-              flexDirection: "column",
-              fontSize: "0.75rem",
-              fontWeight: "bold",
-              alignItems: "flex-start",
+              flexDirection: "row",
+              justifyContent: "start",
+              alignItems: "center",
+              columnGap: "1em",
+              border: "1px solid var(--color)",
+              paddingTop: "0.5em",
+              paddingBottom: "0.5em",
+              paddingLeft: "0.5em",
+              paddingRight: "0.5em",
+              borderRadius: "var(--radius)",
             }}
           >
-            Program
-            <select
+            <label
               style={{
-                paddingRight: "1em",
-                textAlign: "left",
-                backgroundColor: "var(--background)",
-                color: "var(--color)",
-                border: "1px solid var(--color)",
-                borderRadius: "var(--radius)",
+                fontStyle: "var(--inter)",
+                display: "flex",
+                flexDirection: "column",
+                fontSize: "0.75rem",
+                fontWeight: "bold",
+                alignItems: "flex-start",
               }}
-              value={selectedProgram}
-              onChange={(event) =>
-                setSelectedProgram(event.target.value as BlastProgramOptions)
-              }
             >
-              {blastProgramOptions.map((value, index) => (
-                <option key={index} value={value}>
-                  {value}
-                </option>
-              ))}
-            </select>
-          </label>
-          <label
-            style={{
-              fontStyle: "var(--inter)",
-              display: "flex",
-              flexDirection: "column",
-              fontSize: "0.75rem",
-              fontWeight: "bold",
-              alignItems: "flex-start",
-            }}
-          >
-            Database
-            <select
-              style={{
-                paddingRight: "1em",
-                textAlign: "left",
-                backgroundColor: "var(--background)",
-                color: "var(--color)",
-                border: "1px solid var(--color)",
-                borderRadius: "var(--radius)",
-              }}
-              value={selectedDatabase}
-              onChange={(event) =>
-                setSelectedDatabase(event.target.value as BlastDatabaseOptions)
-              }
-            >
-              {blastDatabaseOptions.map((value, index) => (
-                <option key={index} value={value}>
-                  {value}
-                </option>
-              ))}
-            </select>
-          </label>
-        </div>
-        <label
-          style={{
-            fontStyle: "var(--inter)",
-            display: "flex",
-            flexDirection: "column",
-            fontSize: "0.75rem",
-            fontWeight: "bold",
-            alignItems: "flex-start",
-            paddingTop: "0.5em",
-            paddingBottom: "0.5em",
-          }}
-        >
-          Query Sequence
-        </label>
-        <div id="submission-container" className={styles.blastFormContainer}>
-          <textarea
-            className={styles.fastaInput}
-            placeholder="Enter fasta formatted sequences (max 1 MB)"
-            value={fastaSequences}
-            onChange={handleFastaInputChange}
-          ></textarea>
-          <div className={styles.fileContainer}>
-            <div
-              id="file-selector"
-              className={styles.fileSelector}
-              onClick={handleFileSelectorClick}
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={1.5}
-                stroke="currentColor"
-                className={styles.attachIcon}
+              Program
+              <select
+                style={{
+                  paddingRight: "1em",
+                  textAlign: "left",
+                  backgroundColor: "var(--background)",
+                  color: "var(--color)",
+                  border: "1px solid var(--color)",
+                  borderRadius: "var(--radius)",
+                }}
+                value={selectedProgram}
+                onChange={(event) =>
+                  setSelectedProgram(event.target.value as BlastProgramOptions)
+                }
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="m18.375 12.739-7.693 7.693a4.5 4.5 0 0 1-6.364-6.364l10.94-10.94A3 3 0 1 1 19.5 7.372L8.552 18.32m.009-.01-.01.01m5.699-9.941-7.81 7.81a1.5 1.5 0 0 0 2.112 2.13"
-                />
-              </svg>
-              <input
-                id="file-element"
-                type="file"
-                ref={fileInputRef}
-                onChange={handleFileChange}
-                className="hidden"
-                hidden={true}
-              />
-              <span id="selected-filename" className={styles.selectedFilename}>
-                {selectedFileName}
-              </span>
-            </div>
-            <button type="submit" className={styles.submitButton}>
-              Submit
-            </button>
+                {blastProgramOptions.map((value, index) => (
+                  <option key={index} value={value}>
+                    {value}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <label
+              style={{
+                fontStyle: "var(--inter)",
+                display: "flex",
+                flexDirection: "column",
+                fontSize: "0.75rem",
+                fontWeight: "bold",
+                alignItems: "flex-start",
+              }}
+            >
+              Database
+              <select
+                style={{
+                  paddingRight: "1em",
+                  textAlign: "left",
+                  backgroundColor: "var(--background)",
+                  color: "var(--color)",
+                  border: "1px solid var(--color)",
+                  borderRadius: "var(--radius)",
+                }}
+                value={selectedDatabase}
+                onChange={(event) =>
+                  setSelectedDatabase(
+                    event.target.value as BlastDatabaseOptions
+                  )
+                }
+              >
+                {blastDatabaseOptions.map((value, index) => (
+                  <option key={index} value={value}>
+                    {value}
+                  </option>
+                ))}
+              </select>
+            </label>
           </div>
-        </div>
+          <div id="blast-form-container" className={styles.blastFormContainer}>
+            <label
+              style={{
+                fontStyle: "var(--inter)",
+                display: "flex",
+                flexDirection: "column",
+                fontSize: "0.75rem",
+                fontWeight: "bold",
+                alignItems: "flex-start",
+                paddingTop: "0.5em",
+                paddingBottom: "0.5em",
+                paddingLeft: "0.25em",
+              }}
+            >
+              Query Sequence
+            </label>
+            <Divider />
+            <textarea
+              className={styles.fastaInput}
+              placeholder="Enter fasta formatted sequences (max 1 MB)"
+              value={fastaSequences}
+              onChange={handleFastaInputChange}
+            ></textarea>
+            <div className={styles.fileContainer}>
+              <div
+                id="file-selector"
+                className={styles.fileSelector}
+                onClick={handleFileSelectorClick}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+                  className={styles.attachIcon}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="m18.375 12.739-7.693 7.693a4.5 4.5 0 0 1-6.364-6.364l10.94-10.94A3 3 0 1 1 19.5 7.372L8.552 18.32m.009-.01-.01.01m5.699-9.941-7.81 7.81a1.5 1.5 0 0 0 2.112 2.13"
+                  />
+                </svg>
+                <input
+                  id="file-element"
+                  type="file"
+                  ref={fileInputRef}
+                  onChange={handleFileChange}
+                  className="hidden"
+                  hidden={true}
+                />
+                <span
+                  id="selected-filename"
+                  className={styles.selectedFilename}
+                >
+                  {selectedFileName}
+                </span>
+              </div>
+              <button type="submit" className={styles.submitButton}>
+                Submit
+              </button>
+            </div>
+          </div>
       </Form>
     </div>
   );

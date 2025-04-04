@@ -62,7 +62,7 @@ export const Root = () => {
         backend REST API, which can also be queried directly for certain types
         of genomic resources, such as gene annotations, gene expression data and
         sequence data. You can find more information about the available
-        endpoints in the <a href="#">Swagger UI</a> documentation.
+        endpoints in the <a href="https://plantgenie.upsc.se/api/docs">Swagger UI</a> documentation.
       </p>
     </div>
   );

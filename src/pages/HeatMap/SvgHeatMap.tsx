@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { RefObject, useEffect, useMemo, useState } from "react";
 
 import { gray } from "d3-color";
 import { scaleLinear } from "d3-scale";
@@ -15,6 +15,7 @@ import { useMaxTextLength } from "../../lib/hooks";
 import { useClustering } from "../../lib/hooks";
 
 interface SvgHeatMapProps {
+  svgRef: RefObject<SVGSVGElement | null>;
   marginTop: number;
   marginBottom: number;
   marginLeft: number;
@@ -31,6 +32,7 @@ interface SvgHeatMapProps {
 }
 
 export const SvgHeatMap = ({
+  svgRef,
   marginBottom,
   marginLeft,
   marginRight,
@@ -44,8 +46,6 @@ export const SvgHeatMap = ({
   clusterLinkage,
   cellHeight,
 }: SvgHeatMapProps) => {
-  const svgRef = useRef<SVGSVGElement>(null);
-
   const [svgWidth, setSvgWidth] = useState<number>(0);
   const [svgHeight, setSvgHeight] = useState<number>(0);
   expressionData.genes.map((value) => value.chromosomeId);
@@ -140,10 +140,10 @@ export const SvgHeatMap = ({
   //   [colOrder]
   // );
 
-  const valueIndexMapper = createReorderedIndexMapper(
-    [...Array(expressionData.genes.length).keys()],
-    [...Array(expressionData.samples.length).keys()]
-  );
+  // const valueIndexMapper = createReorderedIndexMapper(
+  //   [...Array(expressionData.genes.length).keys()],
+  //   [...Array(expressionData.samples.length).keys()]
+  // );
 
   const rowIndexMapper = createReorderedRowMapper(
     [...Array(expressionData.genes.length).keys()],

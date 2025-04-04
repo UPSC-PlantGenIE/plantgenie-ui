@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { useAppStore } from "../../lib/state";
 
@@ -15,6 +15,7 @@ import { DISTANCE_METRICS } from "../../lib/clustering";
 import { DATA_SCALING_METHODS } from "../../lib/scaling";
 
 export const HeatMapVisualizer = () => {
+  const svgRef = useRef<SVGSVGElement>(null);
   const availableGeneLists = useAppStore((state) => state.availableGeneLists);
   const selectedSpecies = useAppStore((state) => state.species);
   const activeGeneList = useAppStore((state) => state.activeGeneList);
@@ -86,6 +87,26 @@ export const HeatMapVisualizer = () => {
     availableGeneLists,
     setActiveGeneList,
   ]);
+
+  const saveButtonClickHandler = () => {
+    if (!svgRef.current) return;
+
+    const now = new Date();
+    const utcString = now.toISOString().replace(/[:.]/g, "-"); // safe for filenames
+    const filename = `expression-heatmap-${utcString}.svg`;
+
+    const serializer = new XMLSerializer();
+    const svgString = serializer.serializeToString(svgRef.current);
+    const blob = new Blob([svgString], { type: "image/svg+xml;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = filename;
+    link.click();
+
+    URL.revokeObjectURL(url);
+  };
 
   return (
     <div id="container" className={styles.heatMapContainer}>
@@ -287,10 +308,7 @@ export const HeatMapVisualizer = () => {
             ))}
           </select>
         </label>
-        <button
-          className={styles.saveButton}
-          onClick={() => console.log("Download button clicked")}
-        >
+        <button className={styles.saveButton} onClick={saveButtonClickHandler}>
           Save
         </button>
       </div>
@@ -301,6 +319,7 @@ export const HeatMapVisualizer = () => {
         {error ? <div>There was an error fetching the data :(</div> : null}
         {expressionData && !loading ? (
           <SvgHeatMap
+            svgRef={svgRef}
             expressionData={expressionData}
             marginTop={10}
             marginBottom={10}

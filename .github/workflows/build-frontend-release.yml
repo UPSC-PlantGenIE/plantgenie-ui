@@ -36,7 +36,7 @@ jobs:
       - name: Upload zipped build artifact
         uses: actions/upload-artifact@v4
         with:
-          name: plantgenie-ui-build
+          name: plantgenie-ui
           path: plantgenie-ui-${{ github.ref_name }}.zip
 
   release:
@@ -53,12 +53,12 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: plantgenie-ui
-          path: dist
+          path: .
 
       - name: Create a release
         uses: softprops/action-gh-release@v2
         with:
-          files: dist/**
+          files: plantgenie-ui-${{ github.ref_name }}.zip
           tag_name: ${{ github.ref_name }}
           name: ${{ github.ref_name }}
           draft: false

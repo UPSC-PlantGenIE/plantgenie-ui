@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 
+import { gray } from "d3-color";
 import { scaleLinear } from "d3-scale";
 import { interpolateRdYlBu } from "d3-scale-chromatic";
 
@@ -124,10 +125,10 @@ export const SvgHeatMap = ({
   //   [rowLabels, colLabels]
   // );
 
-  // const reorderedIndexMap = useMemo(
-  //   () => createReorderedIndexMapper(rowOrder, colOrder),
-  //   [rowOrder, colOrder]
-  // );
+  const reorderedIndexMap = useMemo(
+    () => createReorderedIndexMapper(rowOrder, colOrder),
+    [rowOrder, colOrder]
+  );
 
   // const reorderedRowMap = useMemo(
   //   () => createReorderedRowMapper(rowOrder, colOrder.length),
@@ -223,11 +224,14 @@ export const SvgHeatMap = ({
             key={index}
             x={horizontalScale(colIndexMapper(index))}
             y={verticalScale(rowIndexMapper(index))}
-            // height={(svgHeight - 40) / expressionData.genes.length}
             height={Math.abs(verticalScale(0) - verticalScale(1))}
-            // width={(svgWidth - 40) / expressionData.samples.length}
             width={Math.abs(horizontalScale(0) - horizontalScale(1))}
-            fill={interpolateRdYlBu(colorScale(value))}
+            // fill={interpolateRdYlBu(colorScale(value))}
+            fill={
+              Number.isNaN(values[reorderedIndexMap(index)])
+                ? gray(50).toString()
+                : interpolateRdYlBu(values[reorderedIndexMap(index)])
+            }
           ></rect>
         ))}
       </g>

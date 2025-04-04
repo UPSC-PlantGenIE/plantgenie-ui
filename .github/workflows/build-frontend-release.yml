@@ -60,11 +60,11 @@ jobs:
       - name: Create a release
         uses: softprops/action-gh-release@v2
         with:
-          files: dist/**
+          files: dist
           tag_name: ${{ github.ref_name }}
-          name: Release ${{ github.ref_name }}
+          name: ${{ github.ref_name }}
           draft: false
           prerelease: false
-          body: "🚀 New release of plantgenie-ui!"
+          body: "New release of plantgenie-ui"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

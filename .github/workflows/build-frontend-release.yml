@@ -4,11 +4,6 @@ on:
   push:
     tags:
       - "v*.*.*"
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
   workflow_dispatch:
 
 jobs:
@@ -35,11 +30,14 @@ jobs:
       - name: Build project
         run: yarn build
 
-      - name: Upload build artifact
+      - name: Zip build artifacts
+        run: zip -r plantgenie-ui-${{ github.ref_name }}.zip dist
+
+      - name: Upload zipped build artifact
         uses: actions/upload-artifact@v4
         with:
-          name: plantgenie-ui
-          path: dist
+          name: plantgenie-ui-build
+          path: plantgenie-ui-${{ github.ref_name }}.zip
 
   release:
     name: Create GitHub Release
@@ -60,7 +58,7 @@ jobs:
       - name: Create a release
         uses: softprops/action-gh-release@v2
         with:
-          files: dist
+          files: dist/**
           tag_name: ${{ github.ref_name }}
           name: ${{ github.ref_name }}
           draft: false

@@ -119,7 +119,7 @@ export const GeneSearchResultsRoute = () => {
       updateGeneList({
         ...selectedGeneList,
         updatedAt: now,
-        geneIds: uniqueGenes
+        geneIds: uniqueGenes,
       });
 
       window.history.pushState(
@@ -140,81 +140,118 @@ export const GeneSearchResultsRoute = () => {
 
   return (
     <div id="container" className={styles.searchResultsViewer}>
-      <div className={styles.tableWrapper}>
-        <Form action="/" handleSubmit={handleSubmit}>
-          <div className={styles.tableElement}>
-            <table>
-              <thead>
-                <tr>
-                  <th>
-                    <input
-                      type="checkbox"
-                      checked={selectAll}
-                      onChange={handleHeaderCheckboxChange}
-                      ref={headerCheckboxRef}
-                    />
-                  </th>
-                  <th>Chromosome ID</th>
-                  <th>Gene ID</th>
-                  {/* <th>Alias</th> */}
-                </tr>
-              </thead>
-              <tbody>
-                {searchResults.length > 0
-                  ? searchResults.map((value, index) => (
-                      <tr key={index}>
-                        <td>
-                          <input
-                            type="checkbox"
-                            checked={selectedRows[index]}
-                            onChange={() => handleRowCheckboxChange(index)}
-                          />
-                        </td>
-                        <td>{value.chromosomeId}</td>
-                        <td>{value.geneId}</td>
-                        {/* <td><input /></td> */}
-                      </tr>
-                    ))
-                  : null}
-              </tbody>
-            </table>
-            <div>{searchResults.length} genes</div>
-            <label>
-              New Gene List Name:{" "}
-              <input
-                name="new-gene-list-name"
-                value={geneListName}
-                placeholder="Enter new name..."
-                onChange={(event: ChangeEvent<HTMLInputElement>) =>
-                  setGeneListName(event.target.value)
-                }
-              />
-            </label>
-            <label>
-              Or Update Gene List:{" "}
-              <select
-                onChange={(event) => {
-                  setSelectedGeneListId(event.target.value);
-                  console.log(event.target.value);
-                }}
-                value={selectedGeneListId}
-                disabled={availableGeneLists.length === 0}
-              >
-                {availableGeneLists.length !== 0 ? (
-                  availableGeneLists.map((value, index) => (
-                    <option key={index} value={value.id}>
-                      {value.name}
-                    </option>
+      <Form
+        action="/"
+        handleSubmit={handleSubmit}
+        className={styles.geneSearchResultDisplay}
+      >
+        <div className={styles.geneSearchSubmission}>
+          <label
+            style={{
+              fontStyle: "var(--inter)",
+              display: "flex",
+              flexDirection: "column",
+              fontSize: "0.6rem",
+              fontWeight: "bold",
+              alignItems: "flex-start",
+            }}
+          >
+            New Gene List Name
+            <input
+              name="new-gene-list-name"
+              value={geneListName}
+              placeholder="Enter new name..."
+              onChange={(event: ChangeEvent<HTMLInputElement>) =>
+                setGeneListName(event.target.value)
+              }
+              style={{ backgroundColor: "#080808", color: "var(--color)" }}
+            />
+          </label>
+          <label
+            style={{
+              fontStyle: "var(--inter)",
+              display: "flex",
+              flexDirection: "column",
+              fontSize: "0.6rem",
+              fontWeight: "bold",
+              alignItems: "flex-start",
+            }}
+          >
+            Or Update Gene List
+            <select
+              style={{
+                paddingRight: "1em",
+                textAlign: "left",
+                backgroundColor: "var(--background)",
+                color: "var(--color)",
+                border: "1px solid var(--color)",
+                borderRadius: "var(--radius)",
+              }}
+              onChange={(event) => {
+                setSelectedGeneListId(event.target.value);
+                console.log(event.target.value);
+              }}
+              value={selectedGeneListId}
+              disabled={availableGeneLists.length === 0}
+            >
+              {availableGeneLists.length !== 0 ? (
+                availableGeneLists.map((value, index) => (
+                  <option key={index} value={value.id}>
+                    {value.name}
+                  </option>
+                ))
+              ) : (
+                <option value={undefined}>No gene lists available</option>
+              )}
+            </select>
+          </label>
+          <button className={styles.submitButton} type="submit">
+            Save
+          </button>
+        </div>
+        <div style={{ width: "100%", overflowX: "auto", display: "grid" }}>
+          <table>
+            <thead>
+              <tr>
+                <th>
+                  <input
+                    type="checkbox"
+                    checked={selectAll}
+                    onChange={handleHeaderCheckboxChange}
+                    ref={headerCheckboxRef}
+                  />
+                </th>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              {searchResults.length > 0
+                ? searchResults.map((value, index) => (
+                    <tr key={index}>
+                      <td>
+                        <input
+                          type="checkbox"
+                          checked={selectedRows[index]}
+                          onChange={() => handleRowCheckboxChange(index)}
+                        />
+                      </td>
+                      <td>{`${value.chromosomeId}_${value.geneId}`}</td>
+                      <td>{value.preferredName}</td>
+                      <td>{value.description}</td>
+                    </tr>
                   ))
-                ) : (
-                  <option value={undefined}>No gene lists available</option>
-                )}
-              </select>
-            </label>
-            <button type="submit">submit</button>
+                : null}
+            </tbody>
+          </table>
+          <div className={styles.searchResultsTableFooter}>
+            <span style={{ fontSize: "0.7em" }}>
+              {searchResults.length} genes found!
+            </span>
           </div>
-        </Form>
-      </div>
+        </div>
+      </Form>
     </div>
   );
 };

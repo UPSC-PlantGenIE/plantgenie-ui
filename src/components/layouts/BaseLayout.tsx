@@ -13,6 +13,25 @@ interface BaseLayoutProps {
 export const BaseLayout = ({ children }: BaseLayoutProps) => {
   return (
     <>
+      <div id="header" className={styles.header}>
+        <Link to="/" className={styles.headerBrandLink}>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "flex-start",
+              alignItems: "center",
+              gap: "0.75em",
+              padding: "0.5em",
+            }}
+          >
+            <PairedLeaves width={50} height={50} />
+            <h1 style={{ fontFamily: "var(--source)", fontSize: "2.5em" }}>
+              PlantGenIE
+            </h1>
+          </div>
+        </Link>
+      </div>
       <div id="nav" role="navigation" className={styles.nav}>
         <div className={styles.navMain}>
           <div className={styles.navSelectContainer}>
@@ -80,31 +99,19 @@ export const BaseLayout = ({ children }: BaseLayoutProps) => {
           </div>
         </div>
       </div>
-      <div id="header" className={styles.header}>
-        <Link to="/" className={styles.headerBrandLink}>
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              justifyContent: "center",
-              alignItems: "center",
-              gap: "0.5em",
-            }}
-          >
-            <PairedLeaves width={50} height={50} />
-            <h1 style={{ fontFamily: "var(--source)" }}>PlantGenIE</h1>
-          </div>
-        </Link>
-      </div>
       <div id="main" className={styles.main}>
         {children ? children : "Main Content"}
       </div>
       <div id="footer" className={styles.footer}>
-        <p style={{fontSize: "0.5em", margin: 0}}>PlantGenIE - UPSC Genome Resources</p>
-        <p style={{fontSize: "0.5em", margin: 0}}>©2025 - Umeå Plant Science Centre</p>
-        <div style={{display: "flex", gap: "0.5em", color: "var(--color)"}}>
+        <p style={{ fontSize: "0.5em", margin: 0 }}>
+          PlantGenIE - UPSC Genome Resources
+        </p>
+        <p style={{ fontSize: "0.5em", margin: 0 }}>
+          ©2025 - Umeå Plant Science Centre
+        </p>
+        <div style={{ display: "flex", gap: "0.5em", color: "var(--color)" }}>
           <a href="https://github.com/UPSC-PlantGenIE">
-            <Octocat fill="var(--color)" height={20} width={20}/>
+            <Octocat fill="var(--color)" height={20} width={20} />
           </a>
           <a href="https://www.upsc.se">
             <PairedLeaves fill="var(--color)" height={20} width={20} />

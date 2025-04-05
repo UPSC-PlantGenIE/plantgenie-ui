@@ -143,18 +143,20 @@
 }
 
 @media (min-width: 41em) {
+  .header {
+    display: unset;
+    grid-row: span 1;
+    grid-column: span 2;
+  }
+
   .nav {
     grid-area: unset;
-    grid-row: span 3;
+    grid-row: span 2;
+    grid-column: span 1;;
   }
 
   .main {
     grid-area: unset;
-    grid-column: span 1;
-  }
-
-  .header {
-    display: unset;
     grid-column: span 1;
   }
 

@@ -19,7 +19,7 @@ export const SingleGeneListViewer = ({ id }: Record<string, string>) => {
 
   if (activeGeneList !== undefined) {
     return (
-      <div>
+      <div id="container">
         <h2>
           {activeGeneList.name} created {activeGeneList.createdAt}
         </h2>

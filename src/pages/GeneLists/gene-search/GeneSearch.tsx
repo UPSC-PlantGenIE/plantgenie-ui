@@ -51,32 +51,68 @@ export const GeneSearchRoute = () => {
   };
 
   return (
-    <div className={styles.GeneSearch}>
-      Search Page!
-      <Form action="/" method="POST" handleSubmit={handleSubmit}>
-        <label>
-          delimiter:
-          <select
-            onChange={(e) => {
-              const value = e.target.value;
-              setDelimiter(delimiters[value] || value);
+    <div
+      id="container"
+      style={{ display: "flex", flexDirection: "column", height: "100%" }}
+    >
+      <span>Gene ID Search</span>
+      <Form action="/" method="POST" handleSubmit={handleSubmit} className={styles.geneSearchForm}>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "start",
+            alignItems: "center",
+            columnGap: "1em",
+            border: "1px solid var(--color)",
+            paddingTop: "0.5em",
+            paddingBottom: "0.5em",
+            paddingLeft: "0.5em",
+            paddingRight: "0.5em",
+            borderRadius: "var(--radius)",
+          }}
+        >
+          <label
+            style={{
+              fontStyle: "var(--inter)",
+              display: "flex",
+              flexDirection: "column",
+              fontSize: "0.75rem",
+              fontWeight: "bold",
+              alignItems: "flex-start",
             }}
-            value={
-              Object.entries({
-                "\n": "line",
-                ",": "comma",
-                "\t": "tab",
-                " ": "space",
-              }).find(([key]) => key === delimiter)?.[1] || "line"
-            }
           >
-            {Object.entries(delimiters).map(([key]) => (
-              <option key={key} value={key}>
-                {key}
-              </option>
-            ))}
-          </select>
-        </label>
+            Delimiter
+            <select
+              style={{
+                paddingRight: "1em",
+                textAlign: "left",
+                backgroundColor: "var(--background)",
+                color: "var(--color)",
+                border: "1px solid var(--color)",
+                borderRadius: "var(--radius)",
+              }}
+              onChange={(e) => {
+                const value = e.target.value;
+                setDelimiter(delimiters[value] || value);
+              }}
+              value={
+                Object.entries({
+                  "\n": "line",
+                  ",": "comma",
+                  "\t": "tab",
+                  " ": "space",
+                }).find(([key]) => key === delimiter)?.[1] || "line"
+              }
+            >
+              {Object.entries(delimiters).map(([key]) => (
+                <option key={key} value={key}>
+                  {key}
+                </option>
+              ))}
+            </select>
+          </label>
+        </div>
 
         <textarea
           id="gene-ids-entry"

@@ -111,39 +111,10 @@ export const SvgHeatMap = ({
     distanceMetric,
   });
 
-  // const originalRowMap = useMemo(
-  //   () =>
-  //     createReorderedRowMapper(
-  //       rowLabels.map((_, index) => index),
-  //       colLabels.length
-  //     ),
-  //   [rowLabels, colLabels]
-  // );
-
-  // const originalColMap = useMemo(
-  //   () => createReorderedColMapper(colLabels.map((_, index) => index)),
-  //   [rowLabels, colLabels]
-  // );
-
   const reorderedIndexMap = useMemo(
     () => createReorderedIndexMapper(rowOrder, colOrder),
     [rowOrder, colOrder]
   );
-
-  // const reorderedRowMap = useMemo(
-  //   () => createReorderedRowMapper(rowOrder, colOrder.length),
-  //   [rowOrder, colOrder]
-  // );
-
-  // const reorderedColMap = useMemo(
-  //   () => createReorderedColMapper(colOrder),
-  //   [colOrder]
-  // );
-
-  // const valueIndexMapper = createReorderedIndexMapper(
-  //   [...Array(expressionData.genes.length).keys()],
-  //   [...Array(expressionData.samples.length).keys()]
-  // );
 
   const rowIndexMapper = createReorderedRowMapper(
     [...Array(expressionData.genes.length).keys()],
@@ -226,7 +197,6 @@ export const SvgHeatMap = ({
             y={verticalScale(rowIndexMapper(index))}
             height={Math.abs(verticalScale(0) - verticalScale(1))}
             width={Math.abs(horizontalScale(0) - horizontalScale(1))}
-            // fill={interpolateRdYlBu(colorScale(value))}
             fill={
               Number.isNaN(values[reorderedIndexMap(index)])
                 ? gray(50).toString()

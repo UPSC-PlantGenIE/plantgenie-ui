@@ -16,11 +16,12 @@ export interface AnnotationsRequest {
 export interface GeneAnnotation {
   chromosomeId: string;
   geneId: string;
-  tool: string;
+  // tool: string;
   evalue: number;
   score: number;
   seed_ortholog: string;
   description: string;
+  preferredName: string;
 }
 
 export interface AnnotationsResponse {

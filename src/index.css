@@ -57,7 +57,7 @@
 
 body {
   margin: 0;
-  min-width: 200px;
+  min-width: 12em;
   display: flex;
   background-color: var(--dark-purple);
 }
@@ -72,24 +72,3 @@ h1, h2, h3 {
   line-height: 1;
   margin: 0;
 }
-
-/*
-a {
-  color: var(--color-blue-600);
-  text-decoration: none;
-}
-
-a:visited {
-  color: var(--color-purple-600);
-}
-
-a:hover {
-  color: var(--color-purple-200);
-  text-decoration: underline;
-}
-
-a:active {
-  color: var(--color);
-  background-color: var(--background);
-}
-*/

@@ -17,6 +17,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  row-gap: 0.2em;
 }
 
 .header,
@@ -172,25 +173,3 @@
     grid-column: span 1;
   }
 }
-
-/* :where(.linkContainer) {
-  a {
-    padding: 0.25em;
-    text-decoration: none;
-    color: var(--color);
-    width: 100%;
-    text-align: center;
-  }
-  a:hover {
-    background-color: var(--color);
-    color: var(--background);
-    border-radius: var(--radius);
-    text-decoration: none;
-  }
-  a:active {
-    background-color: var(--color);
-    color: var(--background);
-    border-radius: var(--radius);
-    text-decoration: none;
-  }
-} */

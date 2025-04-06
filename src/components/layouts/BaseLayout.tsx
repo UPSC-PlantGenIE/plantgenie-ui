@@ -13,7 +13,7 @@ interface BaseLayoutProps {
 export const BaseLayout = ({ children }: BaseLayoutProps) => {
   return (
     <>
-      <div id="header" className={styles.header} style={{padding: "0.15em"}}>
+      <div id="header" className={styles.header} style={{ padding: "0.15em" }}>
         <div>
           <Link to="/" className={styles.headerBrandLink}>
             <PairedLeaves width={40} height={40} />
@@ -94,18 +94,32 @@ export const BaseLayout = ({ children }: BaseLayoutProps) => {
         {children ? children : "Main Content"}
       </div>
       <div id="footer" className={styles.footer}>
-        <p style={{ fontSize: "0.5em", margin: 0 }}>
-          PlantGenIE - UPSC Genome Resources
-        </p>
-        <p style={{ fontSize: "0.5em", margin: 0 }}>
-          ©2025 - Umeå Plant Science Centre
-        </p>
-        <div style={{ display: "flex", gap: "0.5em", color: "var(--color)" }}>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
+        >
+          <span style={{ fontSize: "0.7em" }}>
+            PlantGenIE - UPSC Genome Resources
+          </span>
+          <span style={{ fontSize: "0.5em"}}>
+            ©2025 - Umeå Plant Science Centre
+          </span>
+        </div>
+        <div
+          style={{
+            display: "flex",
+            columnGap: "0.25em",
+            color: "var(--color)",
+          }}
+        >
           <a href="https://github.com/UPSC-PlantGenIE">
-            <Octocat fill="var(--color)" height={20} width={20} />
+            <Octocat fill="var(--color)" height={25} width={25} />
           </a>
           <a href="https://www.upsc.se">
-            <PairedLeaves fill="var(--color)" height={20} width={20} />
+            <PairedLeaves fill="var(--color)" height={25} width={25} />
           </a>
         </div>
       </div>

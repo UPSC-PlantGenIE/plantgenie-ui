@@ -64,7 +64,7 @@ export const HeatMapVisualizer = () => {
     setLoading(true);
 
     const response = post<ExpressionRequest, ExpressionResponse>(
-      "/api/expression",
+      "/expression",
       {
         species: selectedSpecies,
         experimentId:

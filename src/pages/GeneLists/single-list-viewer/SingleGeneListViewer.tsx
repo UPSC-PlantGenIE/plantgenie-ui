@@ -32,7 +32,7 @@ export const SingleGeneListViewer = ({ id }: Record<string, string>) => {
 
     const fetchAnnotations = async () => {
       return await post<AnnotationsRequest, AnnotationsResponse>(
-        "/api/annotations",
+        "/annotations",
         {
           species: selectedSpecies,
           geneIds: geneList.geneIds,

@@ -1,16 +1,22 @@
+.geneListViewerContainer {
+  display: grid;
+}
+
 :where(.geneListViewerContainer) {
-  .tableWrapper {
+  table {
     width: 100%;
-    overflow-x: auto;
+    background-color: #141414;
+    border-collapse: collapse;
   }
 
-  .tableElement {
-    width: 100%;
-    border-collapse: collapse;
+  thead {
+    background-color: #080808;
+    border-bottom: 1px solid white;
   }
 
   tbody tr {
     cursor: pointer;
+    padding: 0.5em;
   }
 
   tbody tr:hover {
@@ -19,12 +25,61 @@
   }
 
   th {
-    font-size: calc(var(--font-scale) * 5);
+    font-size: 0.7em;
   }
 
   td {
-    font-size: calc(var(--font-scale) * 4);
-    padding-left: 0.25em;
-    padding-right: 0.25em;
+    font-size: 0.6em;
+    padding: 0.75em;
+    text-align: center;
   }
+
+  .newGeneSearchButton {
+    /* background-color: #3b82f6; */
+    background-color: var(--color-green-700);
+    color: #fff;
+    font-size: 0.85em;
+    padding: 0.15rem 0.5rem;
+    border: none;
+    border-radius: 0.125rem;
+    cursor: pointer;
+    height: max-content;
+    align-self: flex-end;
+  }
+  .newGeneSearchButton:hover {
+    /* background-color: #1d4ed8; */
+    background-color: var(--color-green-800);
+    outline: 2px solid var(--color-green-900);
+  }
+
+  .deleteButton {
+    background-color: var(--color-red-500);
+    color: #fff;
+    font-size: 0.6em;
+    padding: 0.15rem 0.5rem;
+    border: none;
+    border-radius: 0.125rem;
+    cursor: pointer;
+    height: max-content;
+    align-self: flex-end;
+  }
+
+  .deleteButton:hover {
+    background-color: var(--color-red-600);
+    outline: 2px solid var(--color-red-800);
+  }
+}
+
+.geneListsInfoDisplay {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 0.5em;
+  column-gap: 1em;
+  font-size: 0.75em;
+  background-color: #080808;
+  justify-content: space-between;
+  align-items: center;
+  border-top-left-radius: var(--radius);
+  border-top-right-radius: var(--radius);
+  border-bottom: 1px solid gray;
 }

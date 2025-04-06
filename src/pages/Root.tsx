@@ -3,12 +3,11 @@ import styles from "./Root.module.css";
 export const Root = () => {
   return (
     <div id="container" className={styles.Root}>
-      {/* <div className=""></div> */}
       <h2>Plant Genome Integrative Explorer</h2>
       <div className="border-t border-gray-500"></div>
       <p className="text-center text-lg">
         The PlantGenIE (
-        <span className="text-purple-300">
+        <span className={styles.plantgenieMention}>
           Plant Genome Integrative Explorer
         </span>
         ) is an open-source, online platform designed to support genomics and

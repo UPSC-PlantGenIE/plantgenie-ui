@@ -14,23 +14,14 @@ export const BaseLayout = ({ children }: BaseLayoutProps) => {
   return (
     <>
       <div id="header" className={styles.header}>
-        <Link to="/" className={styles.headerBrandLink}>
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              justifyContent: "flex-start",
-              alignItems: "center",
-              gap: "0.75em",
-              padding: "0.5em",
-            }}
-          >
+        <div>
+          <Link to="/" className={styles.headerBrandLink}>
             <PairedLeaves width={50} height={50} />
             <h1 style={{ fontFamily: "var(--source)", fontSize: "2.5em" }}>
               PlantGenIE
             </h1>
-          </div>
-        </Link>
+          </Link>
+        </div>
       </div>
       <div id="nav" role="navigation" className={styles.nav}>
         <div className={styles.navMain}>

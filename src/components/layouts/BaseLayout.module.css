@@ -126,6 +126,12 @@
 .headerBrandLink {
   color: var(--color);
   text-decoration: none;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 0.75em;
+  padding: 0.5em;
 }
 
 .links:hover {

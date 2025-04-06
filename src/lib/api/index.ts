@@ -54,7 +54,10 @@ export interface ExpressionResponse {
 }
 
 
-export const baseUrl = "http://localhost:8000";
+// export const baseUrl = "http://localhost:8000";
+export const baseUrl = process.env.NODE_ENV === 'development'
+? 'http://localhost:8000'
+: 'https://plantgenie.upsc.se/api';
 
 export const get = async <T>(url: string): Promise<T> => {
   const response = await fetch(`${baseUrl}${url}`);

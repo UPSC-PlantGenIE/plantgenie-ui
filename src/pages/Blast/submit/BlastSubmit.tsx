@@ -1,11 +1,11 @@
 import { useRef, useState, ChangeEvent, FormEvent } from "react";
 
-import { Form } from "../../../components/routing/Form";
-
 import { useAppStore } from "../../../lib/state";
+import { baseUrl } from "../../../lib/api";
+import { Form } from "../../../components/routing/Form";
+import { Divider } from "../../../components/general/Divider";
 
 import styles from "./BlastSubmit.module.css";
-import { Divider } from "../../../components/general/Divider";
 
 type BlastProgramOptions = "blastn" | "blastp" | "blastx";
 const blastProgramOptions: BlastProgramOptions[] = [
@@ -92,7 +92,7 @@ export const BlastSubmit = () => {
 
     try {
       const response = await fetch(
-        "http://localhost:8000/submit-blast-query/",
+        `${baseUrl}/submit-blast-query/`,
         {
           method: "POST",
           headers: {

@@ -4,7 +4,9 @@
 :root {
   --light: 1;
   --dark: -1;
-  --mode: var(--demo-mode, var(--os-mode, 1));
+  /* --mode: var(--demo-mode, var(--os-mode, 1)); */
+  /* fixing dark mode for now */
+  --mode: -1;
   --unmode: calc(var(--mode) * -1);
   --zero: calc((var(--mode) + 1) / 2);
   --unzero: calc((var(--unmode) + 1) / 2);

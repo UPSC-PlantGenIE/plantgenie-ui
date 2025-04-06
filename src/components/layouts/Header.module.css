@@ -1,0 +1,32 @@
+.header {
+  grid-area: header;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  background: var(--background);
+  border: 1px solid var(--color);
+  border-radius: var(--radius);
+  padding: 0.4rem;
+}
+
+@media (min-width: 41em) {
+  .header {
+    display: unset;
+    grid-row: span 1;
+    grid-column: span 2;
+  }
+}
+
+:where(.header) {
+  .brand {
+    color: var(--color);
+    text-decoration: none;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 0.75em;
+    padding: 0.5em;
+    width: max-content;
+  }
+}

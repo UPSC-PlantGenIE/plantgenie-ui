@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 
-import styles from "./BlastResult.module.css";
+import { baseUrl } from "../../../lib/api";
 
+import styles from "./BlastResult.module.css";
 interface BlastResultRow {
   qseqid: string;
   sseqid: string;
@@ -71,7 +72,7 @@ export const BlastResult = ({ id }: Record<string, string>) => {
     const interval = setInterval(async () => {
       try {
         const response = await fetch(
-          `http://localhost:8000/poll-for-blast-result/${id}`
+          `${baseUrl}/poll-for-blast-result/${id}`
         );
         const data = await response.json();
 
@@ -95,7 +96,7 @@ export const BlastResult = ({ id }: Record<string, string>) => {
     const fetchResults = async () => {
       try {
         const response = await fetch(
-          `http://localhost:8000/retrieve-blast-result/${id}`
+          `${baseUrl}/retrieve-blast-result/${id}`
         );
         const data = await response.text();
         // setResult(data);
@@ -112,7 +113,7 @@ export const BlastResult = ({ id }: Record<string, string>) => {
   const saveBlastTableHandler = async () => {
     try {
       const response = await fetch(
-        `http://localhost:8000/retrieve-blast-result/${id}`
+        `${baseUrl}/retrieve-blast-result/${id}`
       );
       const data = await response.text();
 
@@ -133,7 +134,7 @@ export const BlastResult = ({ id }: Record<string, string>) => {
   const saveBlastHtmlHandler = async () => {
     try {
       const response = await fetch(
-        `http://localhost:8000/retrieve-blast-result-as-html/${id}`
+        `${baseUrl}/retrieve-blast-result-as-html/${id}`
       );
       const data = await response.text();
 

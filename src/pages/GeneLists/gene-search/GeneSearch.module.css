@@ -1,6 +1,95 @@
-.geneSearchForm {
+.geneSearchContainer {
   display: flex;
   flex-direction: column;
   row-gap: 0.5em;
   height: 100%;
+}
+
+.blastSubmissionContainer {
+  display: flex;
+  flex-direction: column;
+  row-gap: 0.5em;
+  height: 100%;
+}
+
+.geneSearchFormContainer {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--color);
+  border-radius: 0.125rem;
+  padding: 0.25rem 0.5rem;
+  background-color: var(--background);
+  height: 100%;
+}
+
+.blastFormContainer:focus-within {
+  border-color: #3b82f6;
+}
+
+:where(.geneSearchContainer) {
+  .submitButton {
+    background-color: #3b82f6;
+    color: #fff;
+    font-size: 0.65rem;
+    padding: 0.25rem 0.5rem;
+    border: none;
+    border-radius: 0.125rem;
+    cursor: pointer;
+  }
+
+  .submitButton:hover {
+    background-color: #1d4ed8;
+  }
+
+  .fileContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    background: inherit;
+    padding-top: 0.25rem;
+    font-family: var(--zilla);
+  }
+
+  .fileSelector {
+    cursor: pointer;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 0.25rem;
+    color: #94a3b8;
+  }
+
+  .fileSelector:hover {
+    color: #e2e8f0;
+  }
+
+  .fileSelector:hover svg {
+    stroke: #e2e8f0;
+  }
+
+  .geneIdsInput {
+    background: var(--background);
+    min-height: 8rem;
+    font-size: 0.75rem;
+    color: var(--color);
+    border: none;
+    border-bottom: 1px solid #94a3b8;
+    padding-top: 0.25rem;
+    outline: none;
+    font-family: var(--inter);
+    resize: vertical;
+    height: 100%;
+  }
+
+  .selectedFilename {
+    font-size: 0.75rem;
+    font-style: italic;
+    font-family: var(--inter);
+  }
+
+  .attachIcon {
+    width: 1rem;
+    height: 1rem;
+  }
 }

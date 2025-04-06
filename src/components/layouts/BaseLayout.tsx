@@ -13,11 +13,11 @@ interface BaseLayoutProps {
 export const BaseLayout = ({ children }: BaseLayoutProps) => {
   return (
     <>
-      <div id="header" className={styles.header}>
+      <div id="header" className={styles.header} style={{padding: "0.15em"}}>
         <div>
           <Link to="/" className={styles.headerBrandLink}>
-            <PairedLeaves width={50} height={50} />
-            <h1 style={{ fontFamily: "var(--source)", fontSize: "2.5em" }}>
+            <PairedLeaves width={40} height={40} />
+            <h1 style={{ fontFamily: "var(--source)", fontSize: "2em" }}>
               PlantGenIE
             </h1>
           </Link>

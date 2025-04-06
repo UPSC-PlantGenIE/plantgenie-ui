@@ -5,6 +5,7 @@ import styles from "./BaseLayout.module.css";
 import { Divider } from "../general/Divider";
 import { Link } from "../routing/Link";
 import { PairedLeaves, Octocat } from "../../assets/icons";
+import { Header } from "./Header";
 
 interface BaseLayoutProps {
   children?: ReactNode;
@@ -13,16 +14,7 @@ interface BaseLayoutProps {
 export const BaseLayout = ({ children }: BaseLayoutProps) => {
   return (
     <>
-      <div id="header" className={styles.header} style={{ padding: "0.15em" }}>
-        <div>
-          <Link to="/" className={styles.headerBrandLink}>
-            <PairedLeaves width={40} height={40} />
-            <h1 style={{ fontFamily: "var(--source)", fontSize: "2em" }}>
-              PlantGenIE
-            </h1>
-          </Link>
-        </div>
-      </div>
+      <Header />
       <div id="nav" role="navigation" className={styles.nav}>
         <div className={styles.navMain}>
           <div className={styles.navSelectContainer}>
@@ -104,7 +96,7 @@ export const BaseLayout = ({ children }: BaseLayoutProps) => {
           <span style={{ fontSize: "0.7em" }}>
             PlantGenIE - UPSC Genome Resources
           </span>
-          <span style={{ fontSize: "0.5em"}}>
+          <span style={{ fontSize: "0.5em" }}>
             ©2025 - Umeå Plant Science Centre
           </span>
         </div>

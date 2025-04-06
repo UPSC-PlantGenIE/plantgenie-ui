@@ -39,7 +39,7 @@ export const GeneSearchRoute = () => {
       .map((line) => line.trim());
 
     const results = await post<AnnotationsRequest, AnnotationsResponse>(
-      "/api/annotations",
+      "/annotations",
       {
         species: selectedSpecies,
         geneIds: parsedGeneIds,

@@ -58,7 +58,12 @@ export const GeneListsViewerRoute = () => {
             ? "1 gene list available"
             : `${availableGeneLists.length} gene lists available`}
         </span>
-        <button className={styles.newGeneSearchButton} onClick={handleSearchClick}>New Gene Search</button>
+        <button
+          className={styles.newGeneSearchButton}
+          onClick={handleSearchClick}
+        >
+          New Gene Search
+        </button>
       </div>
       <div style={{ width: "100%", overflowX: "auto", display: "grid" }}>
         <table>
@@ -88,7 +93,10 @@ export const GeneListsViewerRoute = () => {
                     <td>
                       <button
                         className={styles.deleteButton}
-                        onClick={() => removeGeneList(value.id)}
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          removeGeneList(value.id);
+                        }}
                       >
                         <TrashIcon
                           width={20}

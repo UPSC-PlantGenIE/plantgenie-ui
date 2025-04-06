@@ -47,6 +47,7 @@ export const HeatMapVisualizer = () => {
 
       defaultGeneList =
         availableGeneLists.length !== 0 ? availableGeneLists[0] : undefined;
+      console.log(`default gene list ${defaultGeneList}`)
 
       if (defaultGeneList !== undefined) {
         setActiveGeneList(defaultGeneList.id);
@@ -57,7 +58,11 @@ export const HeatMapVisualizer = () => {
       defaultGeneList = activeGeneList;
     }
 
-    if (defaultGeneList === undefined) return;
+    if (defaultGeneList === undefined) {
+      setError(new Error("No gene list available"))
+      setLoading(false);
+      return
+    };
 
     console.log(selectedSpecies);
 
@@ -107,6 +112,10 @@ export const HeatMapVisualizer = () => {
 
     URL.revokeObjectURL(url);
   };
+
+  // if (error) {
+  //   return <div>Error!</div>
+  // }
 
   return (
     <div id="container" className={styles.heatMapContainer}>
@@ -313,11 +322,11 @@ export const HeatMapVisualizer = () => {
         </button>
       </div>
       <div id="heatmap-container" style={{ backgroundColor: "var(--color)" }}>
-        {loading || !expressionData ? (
+        {loading || !expressionData && !error ? (
           <div style={{ color: "var(--background)" }}>Loading... </div>
         ) : null}
         {error ? <div>There was an error fetching the data :(</div> : null}
-        {expressionData && !loading ? (
+        {expressionData && !loading && !error ? (
           <SvgHeatMap
             svgRef={svgRef}
             expressionData={expressionData}

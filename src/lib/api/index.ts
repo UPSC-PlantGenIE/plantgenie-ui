@@ -58,12 +58,12 @@ export interface ExpressionResponse {
 // ? 'http://localhost:8000'
 // : 'https://plantgenie.upsc.se/api';
 
-// export const baseUrl = import.meta.env.DEV
-//   ? "http://localhost:8000"
-//   : "https://plantgenie.upsc.se/api";
+export const baseUrl = import.meta.env.DEV
+  ? "http://localhost:8000"
+  : "https://plantgenie.upsc.se/api";
 
 // this may or may not work :D
-export const baseUrl = import.meta.env.VITE_API_BASE_URL;
+// export const baseUrl = import.meta.env.VITE_API_BASE_URL;
 
 export const get = async <T>(url: string): Promise<T> => {
   const response = await fetch(`${baseUrl}${url}`);

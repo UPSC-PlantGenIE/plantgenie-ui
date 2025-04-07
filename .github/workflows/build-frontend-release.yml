@@ -27,6 +27,12 @@ jobs:
       # - name: Run linter
       #   run: yarn lint
 
+      - name: Check base url
+        env:
+          VITE_API_BASE_URL: ${{ env.VITE_API_BASE_URL }}
+          VITE_APP_TITLE: ${{ env.VITE_APP_TITLE }}
+        run: echo $VITE_API_BASE_URL
+
       - name: Build project
         env:
           VITE_API_BASE_URL: ${{ env.VITE_API_BASE_URL }}

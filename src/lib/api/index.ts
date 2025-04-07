@@ -53,17 +53,25 @@ export interface ExpressionResponse {
   values: number[];
 }
 
-
 // export const baseUrl = "http://localhost:8000";
-export const baseUrl = process.env.NODE_ENV === 'development'
-? 'http://localhost:8000'
-: 'https://plantgenie.upsc.se/api';
+// export const baseUrl = process.env.NODE_ENV === 'development'
+// ? 'http://localhost:8000'
+// : 'https://plantgenie.upsc.se/api';
+
+// export const baseUrl = import.meta.env.DEV
+//   ? "http://localhost:8000"
+//   : "https://plantgenie.upsc.se/api";
+
+// this may or may not work :D
+export const baseUrl = import.meta.env.VITE_API_BASE_URL;
 
 export const get = async <T>(url: string): Promise<T> => {
   const response = await fetch(`${baseUrl}${url}`);
 
-  if (!response.ok)
+  if (!response.ok) {
+    // const errorResponse = await response.json();
     throw new Error(`Network request (get) to ${baseUrl}${url}`);
+  }
 
   return (await response.json()) as Promise<T>;
 };

@@ -10,7 +10,7 @@ jobs:
   build:
     name: Build Frontend
     runs-on: ubuntu-latest
-
+    environment: production
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -28,6 +28,9 @@ jobs:
       #   run: yarn lint
 
       - name: Build project
+        env:
+          VITE_API_BASE_URL: ${{ env.VITE_API_BASE_URL }}
+          VITE_APP_TITLE: ${{ env.VITE_APP_TITLE }}
         run: yarn build
 
       - name: Zip build artifacts

@@ -17,9 +17,11 @@ export const chebyshevDistance: DistanceMetric = (
   return a.reduce((max, ai, idx) => Math.max(max, Math.abs(ai - b[idx])), 0);
 };
 
-export const DistanceMetrics: Record<string, DistanceMetric> = {
+export const DistanceMetrics = {
   euclidean: euclideanDistance,
   chebyshev: chebyshevDistance,
 };
 
 export const DISTANCE_METRICS = Object.keys(DistanceMetrics);
+
+export type DistanceMetricOptions = keyof typeof DistanceMetrics;

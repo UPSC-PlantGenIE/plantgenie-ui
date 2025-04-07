@@ -13,6 +13,7 @@ import {
 
 import { useMaxTextLength } from "../../lib/hooks";
 import { useClustering } from "../../lib/hooks";
+import { DataScalingOptions } from "../../lib/scaling";
 
 interface SvgHeatMapProps {
   svgRef: RefObject<SVGSVGElement | null>;
@@ -25,7 +26,7 @@ interface SvgHeatMapProps {
   cellPadding: number;
   cellHeight: number;
   expressionData: ExpressionResponse;
-  scalingFunctionName: string;
+  scalingFunctionName: DataScalingOptions;
   distanceMetric: string;
   clusterAxis: string;
   clusterLinkage: string;
@@ -48,7 +49,7 @@ export const SvgHeatMap = ({
 }: SvgHeatMapProps) => {
   const [svgWidth, setSvgWidth] = useState<number>(0);
   const [svgHeight, setSvgHeight] = useState<number>(0);
-  expressionData.genes.map((value) => value.chromosomeId);
+  console.log(cellHeight)
 
   useEffect(() => {
     const updateDimensions = () => {
@@ -78,7 +79,7 @@ export const SvgHeatMap = ({
         resizeObserver.unobserve(svg);
       }
     };
-  }, [expressionData.genes, cellHeight]);
+  }, [svgRef]);
 
   const rowLabels = expressionData.genes.map(
     (value) => `${value.chromosomeId}_${value.geneId}`
@@ -186,9 +187,9 @@ export const SvgHeatMap = ({
   return (
     <svg
       ref={svgRef}
-      style={{ height: "100%", width: "100%", border: "1px solid blue" }}
+      style={{ height: "100%", width: "100%" }}
     >
-      <rect width="100%" height="100%" fill="currentColor" rx="5" ry="5"></rect>
+      <rect width="100%" height="100%" fill="var(--background)" rx="5" ry="5"></rect>
       <g id="rectangles">
         {expressionData.values.map((_, index) => (
           <rect
@@ -216,7 +217,7 @@ export const SvgHeatMap = ({
             textAnchor="left"
             dominantBaseline="middle"
             fontWeight="normal"
-            fill="black"
+            fill="var(--color)"
           >
             {rowLabels[value]}
           </text>
@@ -230,6 +231,7 @@ export const SvgHeatMap = ({
             dominantBaseline="middle"
             fontWeight="normal"
             fontSize={labelFontSize}
+            fill="var(--color)"
             transform={`translate(${
               (horizontalScale(index) + horizontalScale(index + 1)) / 2
             },${marginTop + colTextLength}) rotate(-45)`}

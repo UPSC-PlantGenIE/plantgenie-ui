@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { DataScalers } from "../scaling";
+import { DataScalers, DataScalingOptions } from "../scaling";
 import { hierarchicalClustering } from "../clustering/cluster";
 import { getVectors } from "../clustering/utils";
 
@@ -7,7 +7,7 @@ interface ClusteringHookProps {
   data: number[];
   nrows: number;
   ncols: number;
-  scalingFunctionName: string;
+  scalingFunctionName: DataScalingOptions;
   clusterAxis: string;
   distanceMetric: string;
   clusterLinkage: string;

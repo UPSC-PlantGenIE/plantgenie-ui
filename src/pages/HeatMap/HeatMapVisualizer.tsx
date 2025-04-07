@@ -12,7 +12,7 @@ import { ExpressionRequest, ExpressionResponse, post } from "../../lib/api";
 import { SvgHeatMap } from "./SvgHeatMap";
 import { LINKAGE_METRICS } from "../../lib/clustering";
 import { DISTANCE_METRICS } from "../../lib/clustering";
-import { DATA_SCALING_METHODS } from "../../lib/scaling";
+import { DATA_SCALING_METHODS, DataScalingOptions } from "../../lib/scaling";
 
 export const HeatMapVisualizer = () => {
   const svgRef = useRef<SVGSVGElement>(null);
@@ -31,7 +31,8 @@ export const HeatMapVisualizer = () => {
     availableExperiments[0]
   );
 
-  const [scalingFunctionName, setScalingFunctionName] = useState<string>("log");
+  const [scalingFunctionName, setScalingFunctionName] =
+    useState<DataScalingOptions>("log");
   const [clusterLinkage, setClusterLinkage] = useState<string>("average");
   const [distanceMetric, setDistanceMetric] = useState<string>("euclidean");
   const [clusterAxis, setClusterAxis] = useState<string>("row");
@@ -47,7 +48,7 @@ export const HeatMapVisualizer = () => {
 
       defaultGeneList =
         availableGeneLists.length !== 0 ? availableGeneLists[0] : undefined;
-      console.log(`default gene list ${defaultGeneList}`)
+      console.log(`default gene list ${defaultGeneList}`);
 
       if (defaultGeneList !== undefined) {
         setActiveGeneList(defaultGeneList.id);
@@ -59,10 +60,10 @@ export const HeatMapVisualizer = () => {
     }
 
     if (defaultGeneList === undefined) {
-      setError(new Error("No gene list available"))
+      setError(new Error("No gene list available"));
       setLoading(false);
-      return
-    };
+      return;
+    }
 
     console.log(selectedSpecies);
 
@@ -97,7 +98,7 @@ export const HeatMapVisualizer = () => {
     if (!svgRef.current) return;
 
     const now = new Date();
-    const utcString = now.toISOString().replace(/[:.]/g, "-"); // safe for filenames
+    const utcString = now.toISOString().replace(/[:.]/g, "-");
     const filename = `expression-heatmap-${utcString}.svg`;
 
     const serializer = new XMLSerializer();
@@ -139,7 +140,7 @@ export const HeatMapVisualizer = () => {
             alignItems: "flex-start",
           }}
         >
-          <span>GeneList</span>
+          GeneList
           <select
             style={{
               paddingRight: "1em",
@@ -308,7 +309,9 @@ export const HeatMapVisualizer = () => {
               borderRadius: "var(--radius)",
             }}
             value={scalingFunctionName}
-            onChange={(event) => setScalingFunctionName(event.target.value)}
+            onChange={(event) =>
+              setScalingFunctionName(event.target.value as DataScalingOptions)
+            }
           >
             {DATA_SCALING_METHODS.map((value, index) => (
               <option key={index} value={value}>
@@ -321,9 +324,15 @@ export const HeatMapVisualizer = () => {
           Save
         </button>
       </div>
-      <div id="heatmap-container" style={{ backgroundColor: "var(--color)" }}>
-        {loading || !expressionData && !error ? (
-          <div style={{ color: "var(--background)" }}>Loading... </div>
+      <div
+        id="heatmap-container"
+        style={{
+          backgroundColor: "var(--background)",
+          borderRadius: "var(--radius)",
+        }}
+      >
+        {loading || (!expressionData && !error) ? (
+          <div style={{ color: "var(--color)" }}>Loading... </div>
         ) : null}
         {error ? <div>There was an error fetching the data :(</div> : null}
         {expressionData && !loading && !error ? (
@@ -334,7 +343,7 @@ export const HeatMapVisualizer = () => {
             marginBottom={10}
             marginLeft={10}
             marginRight={10}
-            labelFontSize={10}
+            labelFontSize={8}
             labelPadding={10}
             cellHeight={20}
             cellPadding={1}

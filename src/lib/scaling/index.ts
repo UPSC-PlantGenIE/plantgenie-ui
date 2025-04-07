@@ -14,10 +14,10 @@ interface ScalerArgs {
   ncols: number;
 }
 
-interface Scaler {
-  name: string;
-  function: (args: ScalerArgs) => number[];
-}
+// interface Scaler {
+//   name: string;
+//   function: (args: ScalerArgs) => number[];
+// }
 
 const rowScaler = ({ data, nrows, ncols }: ScalerArgs): number[] => {
   return arrayRange(0, nrows * ncols - 1, ncols).flatMap((value) => {
@@ -71,7 +71,10 @@ const logScaler = ({ data }: ScalerArgs): number[] => {
 };
 
 const noneScaler = ({ data }: ScalerArgs): number[] => {
-  const unitIntervalMap = scaleLinear([Math.min(...data), Math.max(...data)], [0, 1]);
+  const unitIntervalMap = scaleLinear(
+    [Math.min(...data), Math.max(...data)],
+    [0, 1]
+  );
   return data.map((value) => 1 - unitIntervalMap(value));
 };
 
@@ -109,7 +112,8 @@ const zScoreScaler = ({ data, nrows, ncols }: ScalerArgs): number[] => {
     .flat();
 };
 
-export const DataScalers: Record<string, Scaler> = {
+// export const DataScalers: Record<string, Scaler> = {
+export const DataScalers = {
   row: { name: "row", function: rowScaler },
   column: { name: "column", function: columnScaler },
   // matrix: { name: "matrix", function: matrixScaler },
@@ -119,3 +123,4 @@ export const DataScalers: Record<string, Scaler> = {
 };
 
 export const DATA_SCALING_METHODS = Object.keys(DataScalers);
+export type DataScalingOptions = keyof typeof DataScalers;

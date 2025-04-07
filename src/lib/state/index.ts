@@ -22,7 +22,7 @@ export interface MainSlice {
 
 export interface GeneListSlice {
   activeGeneList: GeneList | undefined;
-  setActiveGeneList: (geneListId: string) => void;
+  setActiveGeneList: (geneListId: string | undefined) => void;
   selectedGeneListId: string;
   setSelectedGeneListId: (id: string) => void;
   availableGeneLists: Array<GeneList>;
@@ -58,12 +58,18 @@ export const createGeneListSlice: StateCreator<
   GeneListSlice
 > = (set, get) => ({
   activeGeneList: undefined,
-  setActiveGeneList: (geneListId) =>
-    set({
-      activeGeneList: get().availableGeneLists.filter(
-        (value) => value.id === geneListId
-      )[0],
-    }),
+  setActiveGeneList: (geneListId) => {
+    if (geneListId === undefined) {
+      set({activeGeneList: undefined});
+    } else {
+      set({
+        activeGeneList: get().availableGeneLists.filter(
+          (value) => value.id === geneListId
+        )[0],
+      })
+    }
+  }
+    ,
   selectedGeneListId: localStorageParser<string>(GENE_LIST_ID_KEY, ""),
   setSelectedGeneListId: (id) => {
     localStorage.setItem(GENE_LIST_ID_KEY, id);

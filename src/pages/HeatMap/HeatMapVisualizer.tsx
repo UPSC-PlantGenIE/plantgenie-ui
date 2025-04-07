@@ -13,6 +13,8 @@ import { SvgHeatMap } from "./SvgHeatMap";
 import { LINKAGE_METRICS } from "../../lib/clustering";
 import { DISTANCE_METRICS } from "../../lib/clustering";
 import { DATA_SCALING_METHODS, DataScalingOptions } from "../../lib/scaling";
+import { NoGeneListsError } from "./Errors";
+import { NoGeneListsErrorComponent } from "./HeatmapError";
 
 export const HeatMapVisualizer = () => {
   const svgRef = useRef<SVGSVGElement>(null);
@@ -41,6 +43,12 @@ export const HeatMapVisualizer = () => {
     useState<ExpressionResponse | null>(null);
 
   useEffect(() => {
+    if (availableGeneLists.length === 0) {
+      setError(
+        new NoGeneListsError("No gene lists are available. Please create one!")
+      );
+      return;
+    }
     let defaultGeneList = activeGeneList;
 
     if (activeGeneList === undefined) {
@@ -150,21 +158,26 @@ export const HeatMapVisualizer = () => {
               border: "1px solid var(--color)",
               borderRadius: "var(--radius)",
             }}
+            disabled={availableGeneLists.length === 0}
             value={activeGeneList !== undefined ? activeGeneList.id : ""}
             onChange={(event) => {
               setActiveGeneList(event.target.value);
             }}
           >
-            {availableGeneLists
-              .filter(
-                (value) =>
-                  value.speciesId === SPECIES_TO_NUMERIC_ID[selectedSpecies]
-              )
-              .map((value, index) => (
-                <option key={index} value={value.id}>
-                  {value.name}
-                </option>
-              ))}
+            {availableGeneLists.length !== 0 ? (
+              availableGeneLists
+                .filter(
+                  (value) =>
+                    value.speciesId === SPECIES_TO_NUMERIC_ID[selectedSpecies]
+                )
+                .map((value, index) => (
+                  <option key={index} value={value.id}>
+                    {value.name}
+                  </option>
+                ))
+            ) : (
+              <option>No gene lists available!</option>
+            )}
           </select>
         </label>
         <label
@@ -334,7 +347,14 @@ export const HeatMapVisualizer = () => {
         {loading || (!expressionData && !error) ? (
           <div style={{ color: "var(--color)" }}>Loading... </div>
         ) : null}
-        {error ? <div>There was an error fetching the data :(</div> : null}
+        {/* {error ? <div>{error.message}</div> : null} */}
+        {error ? (
+          error instanceof NoGeneListsError ? (
+            <NoGeneListsErrorComponent />
+          ) : (
+            <div>An error occurred</div>
+          )
+        ) : null}
         {expressionData && !loading && !error ? (
           <SvgHeatMap
             svgRef={svgRef}

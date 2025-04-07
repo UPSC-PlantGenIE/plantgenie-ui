@@ -6,6 +6,7 @@ import { NUMERIC_ID_TO_SPECIES } from "../../../lib/constants";
 
 export const GeneListsViewerRoute = () => {
   const geneLists = useAppStore((state) => state.availableGeneLists);
+  const activeGeneList = useAppStore((state) => state.activeGeneList);
   const setActiveGeneList = useAppStore((state) => state.setActiveGeneList);
   const updateGeneList = useAppStore((state) => state.updateGeneList);
   const removeGeneList = useAppStore((state) => state.removeGeneList);
@@ -95,6 +96,9 @@ export const GeneListsViewerRoute = () => {
                         className={styles.deleteButton}
                         onClick={(event) => {
                           event.stopPropagation();
+                          if (activeGeneList?.id === value.id) {
+                            setActiveGeneList(undefined);
+                          }
                           removeGeneList(value.id);
                         }}
                       >

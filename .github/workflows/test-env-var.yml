@@ -12,9 +12,9 @@ jobs:
     steps:
       - name: Check if MY_ENV_VAR is defined
         run: |
-          if [ -z "$MY_ENV_VAR" ]; then
+          if [ -z "$VITE_API_BASE_URL" ]; then
             echo "❌ MY_ENV_VAR is not set in production."
             exit 1
           else
-            echo "✅ MY_ENV_VAR is set to: $MY_ENV_VAR"
+            echo "✅ MY_ENV_VAR is set to: $VITE_API_BASE_URL"
           fi

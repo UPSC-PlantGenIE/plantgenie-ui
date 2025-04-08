@@ -33,6 +33,14 @@ const routes = [
     path: "/blast/result/:id",
     component: ({ id }: Record<string, string>) => <BlastResult id={id} />,
   },
+  // {
+  //   path: "/jbrowse",
+  //   component: () => (
+  //     <div style={{width: "100%", height: "100%"}}>
+  //       <iframe width="100%" height="100%" src="https://genomes.scilifelab.se/genome-browser/?config=%2Fdata%2F38qQhuj9O2BKK4HM0cdQfbxOGVXUchMO%2Fconfig.json"></iframe>
+  //     </div>
+  //   ),
+  // },
 ];
 
 const matchRoute = (
@@ -78,11 +86,11 @@ export const ApplicationRouter = () => {
 
     const splitApplicationPath = window.location.pathname.split("/");
 
-    console.log(window.location.pathname.split("/"))  ;
+    console.log(window.location.pathname.split("/"));
     console.log(splitApplicationPath);
     if (splitApplicationPath.length >= 2) {
       const retrievedActiveApp = splitApplicationPath[1];
-      console.log(`received: ${retrievedActiveApp}`)
+      console.log(`received: ${retrievedActiveApp}`);
 
       if (retrievedActiveApp === "") {
         unsetActiveApp();

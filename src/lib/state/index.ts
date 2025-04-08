@@ -8,6 +8,8 @@ import {
 } from "../constants";
 import { localStorageParser } from "../localstorage";
 
+export type AvailableSpecies = "Picea abies" | "Pinus sylvestris";
+
 export interface MainSlice {
   applicationPath: string;
   setApplicationPath: (path: string) => void;
@@ -16,8 +18,8 @@ export interface MainSlice {
   unsetActiveApp: () => void;
   speciesId: number;
   setSpeciesId: (id: number) => void;
-  species: string;
-  setSpecies: (name: string) => void;
+  species: AvailableSpecies;
+  setSpecies: (name: AvailableSpecies) => void;
 }
 
 export interface GeneListSlice {
@@ -60,16 +62,15 @@ export const createGeneListSlice: StateCreator<
   activeGeneList: undefined,
   setActiveGeneList: (geneListId) => {
     if (geneListId === undefined) {
-      set({activeGeneList: undefined});
+      set({ activeGeneList: undefined });
     } else {
       set({
         activeGeneList: get().availableGeneLists.filter(
           (value) => value.id === geneListId
         )[0],
-      })
+      });
     }
-  }
-    ,
+  },
   selectedGeneListId: localStorageParser<string>(GENE_LIST_ID_KEY, ""),
   setSelectedGeneListId: (id) => {
     localStorage.setItem(GENE_LIST_ID_KEY, id);

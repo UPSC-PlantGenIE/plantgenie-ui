@@ -10,7 +10,11 @@ import {
 } from "../../lib/constants";
 import { ExpressionRequest, ExpressionResponse, post } from "../../lib/api";
 import { SvgHeatMap } from "./SvgHeatMap";
-import { LINKAGE_METRICS } from "../../lib/clustering";
+import {
+  DistanceMetricOptions,
+  LINKAGE_METRICS,
+  LinkageMetricOptions,
+} from "../../lib/clustering";
 import { DISTANCE_METRICS } from "../../lib/clustering";
 import { DATA_SCALING_METHODS, DataScalingOptions } from "../../lib/scaling";
 import { NoGeneListsError } from "./Errors";
@@ -35,8 +39,10 @@ export const HeatMapVisualizer = () => {
 
   const [scalingFunctionName, setScalingFunctionName] =
     useState<DataScalingOptions>("log");
-  const [clusterLinkage, setClusterLinkage] = useState<string>("average");
-  const [distanceMetric, setDistanceMetric] = useState<string>("euclidean");
+  const [clusterLinkage, setClusterLinkage] =
+    useState<LinkageMetricOptions>("average");
+  const [distanceMetric, setDistanceMetric] =
+    useState<DistanceMetricOptions>("euclidean");
   const [clusterAxis, setClusterAxis] = useState<string>("row");
 
   const [expressionData, setExpressionData] =
@@ -232,7 +238,9 @@ export const HeatMapVisualizer = () => {
               borderRadius: "var(--radius)",
             }}
             value={distanceMetric}
-            onChange={(event) => setDistanceMetric(event.target.value)}
+            onChange={(event) =>
+              setDistanceMetric(event.target.value as DistanceMetricOptions)
+            }
           >
             {DISTANCE_METRICS.map((value, index) => (
               <option key={index} value={value}>
@@ -262,7 +270,9 @@ export const HeatMapVisualizer = () => {
               borderRadius: "var(--radius)",
             }}
             value={clusterLinkage}
-            onChange={(event) => setClusterLinkage(event.target.value)}
+            onChange={(event) =>
+              setClusterLinkage(event.target.value as LinkageMetricOptions)
+            }
           >
             {LINKAGE_METRICS.map((value, index) => (
               <option key={index} value={value}>

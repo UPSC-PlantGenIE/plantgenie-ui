@@ -6,12 +6,15 @@ import { Divider } from "../general/Divider";
 import { Link } from "../routing/Link";
 import { PairedLeaves, Octocat } from "../../assets/icons";
 import { Header } from "./Header";
+import { useAppStore } from "../../lib/state";
 
 interface BaseLayoutProps {
   children?: ReactNode;
 }
 
 export const BaseLayout = ({ children }: BaseLayoutProps) => {
+  const selectedSpecies = useAppStore((state) => state.species);
+
   return (
     <>
       <Header />

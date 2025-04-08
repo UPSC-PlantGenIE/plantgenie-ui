@@ -14,6 +14,7 @@ import {
 import { useMaxTextLength } from "../../lib/hooks";
 import { useClustering } from "../../lib/hooks";
 import { DataScalingOptions } from "../../lib/scaling";
+import { DistanceMetricOptions, LinkageMetricOptions } from "../../lib/clustering";
 
 interface SvgHeatMapProps {
   svgRef: RefObject<SVGSVGElement | null>;
@@ -27,9 +28,9 @@ interface SvgHeatMapProps {
   cellHeight: number;
   expressionData: ExpressionResponse;
   scalingFunctionName: DataScalingOptions;
-  distanceMetric: string;
+  distanceMetric: DistanceMetricOptions;
   clusterAxis: string;
-  clusterLinkage: string;
+  clusterLinkage: LinkageMetricOptions;
 }
 
 export const SvgHeatMap = ({

@@ -1,3 +1,6 @@
+import { LinkageMetricOptions } from "./linkages";
+import { DistanceMetricOptions } from "./metrics";
+
 export interface Node {
   id: number;
   parent: Node | null;
@@ -19,7 +22,7 @@ export type NodeLinkage = ({}: NodeLinkageArgs) => number;
 
 export interface HierarchicalClusteringArgs {
   data: number[][];
-  distanceMetric: string;
-  linkageMetric: string;
+  distanceMetric: DistanceMetricOptions;
+  linkageMetric: LinkageMetricOptions;
   by: string;
 }

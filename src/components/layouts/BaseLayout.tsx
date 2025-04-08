@@ -71,13 +71,23 @@ export const BaseLayout = ({ children }: BaseLayoutProps) => {
           </div>
         </div>
         <div className={styles.navFooter}>
-          <div className={styles.navFooterVersionLabel}>
-            development version
-          </div>
-          <div className={styles.navFooterVersionInfo}>
-            <div className={styles.navFooterVersion}>
+          <div
+            style={{
+              width: "100%",
+              textAlign: "center",
+              borderBottom: "1px solid var(--color)",
+              borderTop: "1px solid var(--color)",
+              padding: "0.5em",
+            }}
+          >
+            <div className={styles.navFooterVersionLabel}>
+              development version
+            </div>
+            <div className={styles.navFooterVersionInfo}>
               PlantGenIE version:{" "}
-              <span className={styles.versionValue}>0.1-dev</span>
+              <span className={styles.versionValue}>
+                {import.meta.env.VITE_APP_VERSION}
+              </span>
             </div>
           </div>
         </div>

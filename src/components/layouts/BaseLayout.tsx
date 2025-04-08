@@ -16,78 +16,80 @@ export const BaseLayout = ({ children }: BaseLayoutProps) => {
     <>
       <Header />
       <div id="nav" role="navigation" className={styles.nav}>
-        <div className={styles.navMain}>
-          <div className={styles.navSelectContainer}>
-            <label className={styles.selectLabel}>Selected Species</label>
-            <SelectionMenu />
-          </div>
-          <div className={styles.linkContainer}>
-            <Divider />
-            <h2 className={styles.linkContainerHeader}>Genome Tools</h2>
-            <Divider />
-            <Link
-              to="/gene-lists"
-              className={styles.links}
-              activeClassName={styles.linksActive}
-            >
-              Gene Lists
-            </Link>
-            <Link
-              to="/jbrowse"
-              className={styles.links}
-              activeClassName={styles.linksActive}
-            >
-              JBrowse
-            </Link>
-            <Link
-              to="/blast"
-              className={styles.links}
-              activeClassName={styles.linksActive}
-            >
-              BLAST
-            </Link>
-          </div>
-          <div className={styles.linkContainer}>
-            <Divider />
-            <h2 className={styles.linkContainerHeader}>
-              Gene Expression Tools
-            </h2>
-            <Divider />
-            <Link
-              to="/exheatmap"
-              className={styles.links}
-              activeClassName={styles.linksActive}
-            >
-              Expression Heatmap
-            </Link>
-
-            <Link
-              to="/"
-              className={styles.links}
-              activeClassName={styles.linksActive}
-            >
-              Expression Network
-            </Link>
-          </div>
-        </div>
-        <div className={styles.navFooter}>
-          <div
-            style={{
-              width: "100%",
-              textAlign: "center",
-              borderBottom: "1px solid var(--color)",
-              borderTop: "1px solid var(--color)",
-              padding: "0.5em",
-            }}
-          >
-            <div className={styles.navFooterVersionLabel}>
-              development version
+        <div style={{ position: "sticky", top: 0, width: "100%"}}>
+          <div className={styles.navMain}>
+            <div className={styles.navSelectContainer}>
+              <label className={styles.selectLabel}>Selected Species</label>
+              <SelectionMenu />
             </div>
-            <div className={styles.navFooterVersionInfo}>
-              PlantGenIE version:{" "}
-              <span className={styles.versionValue}>
-                {import.meta.env.VITE_APP_VERSION}
-              </span>
+            <div className={styles.linkContainer}>
+              <Divider />
+              <h2 className={styles.linkContainerHeader}>Genome Tools</h2>
+              <Divider />
+              <Link
+                to="/gene-lists"
+                className={styles.links}
+                activeClassName={styles.linksActive}
+              >
+                Gene Lists
+              </Link>
+              <Link
+                to="/jbrowse"
+                className={styles.links}
+                activeClassName={styles.linksActive}
+              >
+                JBrowse
+              </Link>
+              <Link
+                to="/blast"
+                className={styles.links}
+                activeClassName={styles.linksActive}
+              >
+                BLAST
+              </Link>
+            </div>
+            <div className={styles.linkContainer}>
+              <Divider />
+              <h2 className={styles.linkContainerHeader}>
+                Gene Expression Tools
+              </h2>
+              <Divider />
+              <Link
+                to="/exheatmap"
+                className={styles.links}
+                activeClassName={styles.linksActive}
+              >
+                Expression Heatmap
+              </Link>
+
+              <Link
+                to="/"
+                className={styles.links}
+                activeClassName={styles.linksActive}
+              >
+                Expression Network
+              </Link>
+            </div>
+          </div>
+          <div className={styles.navFooter}>
+            <div
+              style={{
+                width: "100%",
+                textAlign: "center",
+                borderBottom: "1px solid var(--color)",
+                borderTop: "1px solid var(--color)",
+                padding: "0.5em",
+              }}
+            >
+              <div className={styles.navFooterVersionLabel}>
+                development version
+              </div>
+              <div className={styles.navFooterVersionInfo}>
+                PlantGenIE version:{" "}
+                <span className={styles.versionValue}>
+                  {import.meta.env.VITE_APP_VERSION}
+                </span>
+              </div>
             </div>
           </div>
         </div>

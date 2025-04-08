@@ -49,7 +49,7 @@ export const SvgHeatMap = ({
 }: SvgHeatMapProps) => {
   const [svgWidth, setSvgWidth] = useState<number>(0);
   const [svgHeight, setSvgHeight] = useState<number>(0);
-  console.log(cellHeight)
+  console.log(cellHeight);
 
   useEffect(() => {
     const updateDimensions = () => {
@@ -171,12 +171,17 @@ export const SvgHeatMap = ({
     return (
       <svg
         ref={svgRef}
-        style={{ height: "100%", width: "100%", border: "1px solid blue" }}
+        style={{
+          height: "100%",
+          width: "100%",
+          border: "1px solid var(--color)",
+          borderRadius: "var(--radius)",
+        }}
       >
         <rect
           width="100%"
           height="100%"
-          fill="currentColor"
+          fill="var(--background)"
           rx="5"
           ry="5"
         ></rect>
@@ -187,9 +192,20 @@ export const SvgHeatMap = ({
   return (
     <svg
       ref={svgRef}
-      style={{ height: "100%", width: "100%" }}
+      style={{
+        height: "100%",
+        width: "100%",
+        border: "1px solid var(--color)",
+        borderRadius: "var(--radius)",
+      }}
     >
-      <rect width="100%" height="100%" fill="var(--background)" rx="5" ry="5"></rect>
+      <rect
+        width="100%"
+        height="100%"
+        fill="var(--background)"
+        rx="5"
+        ry="5"
+      ></rect>
       <g id="rectangles">
         {expressionData.values.map((_, index) => (
           <rect

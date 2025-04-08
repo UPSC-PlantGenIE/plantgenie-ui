@@ -20,3 +20,20 @@ jobs:
           else
             echo "✅ MY_ENV_VAR is set to: $VITE_API_BASE_URL"
           fi
+
+  test-secret-var:
+    name: Test Secret Variable
+    runs-on: ubuntu-latest
+    environment: production  # Uses the production environment configuration
+
+    steps:
+      - name: Check if MY_ENV_VAR is defined
+        env:
+          VITE_API_BASE_URL: ${{ secrets.VITE_API_BASE_URL}}
+        run: |
+          if [ -z "$VITE_API_BASE_URL" ]; then
+            echo "❌ MY_ENV_VAR is not set in production."
+            exit 1
+          else
+            echo "✅ MY_ENV_VAR is set to: $VITE_API_BASE_URL"
+          fi

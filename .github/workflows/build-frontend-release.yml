@@ -35,8 +35,8 @@ jobs:
 
       - name: Build project
         env:
-          VITE_API_BASE_URL: ${{ env.VITE_API_BASE_URL }}
-          VITE_APP_TITLE: ${{ env.VITE_APP_TITLE }}
+          VITE_API_BASE_URL: ${{ vars.VITE_API_BASE_URL }}
+          VITE_APP_TITLE: ${{ vars.VITE_APP_TITLE }}
         run: yarn build
 
       - name: Zip build artifacts

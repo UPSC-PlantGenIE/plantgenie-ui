@@ -12,7 +12,7 @@ jobs:
     steps:
       - name: Check if MY_ENV_VAR is defined
         env:
-          VITE_API_BASE_URL: ${{ env.VITE_API_BASE_URL}}
+          VITE_API_BASE_URL: ${{ vars.VITE_API_BASE_URL}}
         run: |
           if [ -z "$VITE_API_BASE_URL" ]; then
             echo "❌ MY_ENV_VAR is not set in production."

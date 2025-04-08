@@ -1,0 +1,20 @@
+name: Test Production Environment Variable
+
+on:
+  workflow_dispatch:  # Allows manual trigger from the GitHub Actions UI
+
+jobs:
+  test-env-var:
+    name: Test Environment Variable
+    runs-on: ubuntu-latest
+    environment: production  # Uses the production environment configuration
+
+    steps:
+      - name: Check if MY_ENV_VAR is defined
+        run: |
+          if [ -z "$MY_ENV_VAR" ]; then
+            echo "❌ MY_ENV_VAR is not set in production."
+            exit 1
+          else
+            echo "✅ MY_ENV_VAR is set to: $MY_ENV_VAR"
+          fi

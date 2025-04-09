@@ -23,12 +23,13 @@ import { NoGeneListsErrorComponent } from "./HeatmapError";
 export const HeatMapVisualizer = () => {
   const svgRef = useRef<SVGSVGElement>(null);
   const availableGeneLists = useAppStore((state) => state.availableGeneLists);
+  const selectedSpeciesId = useAppStore((state) => state.speciesId);
   const selectedSpecies = useAppStore((state) => state.species);
   const activeGeneList = useAppStore((state) => state.activeGeneList);
   const setActiveGeneList = useAppStore((state) => state.setActiveGeneList);
 
   const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<Error | undefined>();
+  const [error, setError] = useState<Error | undefined>(undefined);
 
   const availableExperiments =
     AVAILABLE_EXPERIMENTS_BY_SPECIES[selectedSpecies];
@@ -37,6 +38,8 @@ export const HeatMapVisualizer = () => {
     availableExperiments[0]
   );
 
+  const [expressionData, setExpressionData] =
+    useState<ExpressionResponse | null>(null);
   const [scalingFunctionName, setScalingFunctionName] =
     useState<DataScalingOptions>("log");
   const [clusterLinkage, setClusterLinkage] =
@@ -45,23 +48,36 @@ export const HeatMapVisualizer = () => {
     useState<DistanceMetricOptions>("euclidean");
   const [clusterAxis, setClusterAxis] = useState<string>("row");
 
-  const [expressionData, setExpressionData] =
-    useState<ExpressionResponse | null>(null);
-
   useEffect(() => {
-    if (availableGeneLists.length === 0) {
+    if (
+      availableGeneLists.filter(
+        (value) => value.speciesId === selectedSpeciesId
+      ).length === 0
+    ) {
       setError(
         new NoGeneListsError("No gene lists are available. Please create one!")
       );
-      return;
+    } else {
+      setError(undefined);
     }
+  }, [availableGeneLists, selectedSpeciesId]);
+
+  useEffect(() => {
     let defaultGeneList = activeGeneList;
+    const geneListsForSelectedSpecies = availableGeneLists.filter(
+      (value) => value.speciesId === selectedSpeciesId
+    );
 
     if (activeGeneList === undefined) {
       console.log("activeGeneList undefined");
 
+      // defaultGeneList =
+      //   availableGeneLists.length !== 0 ? availableGeneLists[0] : undefined;
+
       defaultGeneList =
-        availableGeneLists.length !== 0 ? availableGeneLists[0] : undefined;
+        geneListsForSelectedSpecies.length !== 0
+          ? geneListsForSelectedSpecies[0]
+          : undefined;
       console.log(`default gene list ${defaultGeneList}`);
 
       if (defaultGeneList !== undefined) {
@@ -103,6 +119,7 @@ export const HeatMapVisualizer = () => {
   }, [
     activeGeneList,
     selectedSpecies,
+    selectedSpeciesId,
     selectedExperiment,
     availableGeneLists,
     setActiveGeneList,
@@ -164,13 +181,19 @@ export const HeatMapVisualizer = () => {
               border: "1px solid var(--color)",
               borderRadius: "var(--radius)",
             }}
-            disabled={availableGeneLists.length === 0}
+            disabled={
+              availableGeneLists.filter(
+                (value) => value.speciesId === selectedSpeciesId
+              ).length === 0
+            }
             value={activeGeneList !== undefined ? activeGeneList.id : ""}
             onChange={(event) => {
               setActiveGeneList(event.target.value);
             }}
           >
-            {availableGeneLists.length !== 0 ? (
+            {availableGeneLists.filter(
+              (value) => value.speciesId === selectedSpeciesId
+            ).length !== 0 ? (
               availableGeneLists
                 .filter(
                   (value) =>

@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import { ReactNode, useEffect } from "react";
 import { SelectionMenu } from "../general/Selection";
 
 import styles from "./BaseLayout.module.css";
@@ -7,19 +7,44 @@ import { Link } from "../routing/Link";
 import { PairedLeaves, Octocat } from "../../assets/icons";
 import { Header } from "./Header";
 import { useAppStore } from "../../lib/state";
+import { EXAMPLE_GENE_IDS, GENE_LIST_PREFIX } from "../../lib/constants";
+import { GeneList } from "../../lib/api";
 
 interface BaseLayoutProps {
   children?: ReactNode;
 }
 
 export const BaseLayout = ({ children }: BaseLayoutProps) => {
-  const selectedSpecies = useAppStore((state) => state.species);
+  // const selectedSpecies = useAppStore((state) => state.species);
+  const addGeneList = useAppStore((state) => state.addGeneList);
+  const removeGeneList = useAppStore((state) => state.removeGeneList);
+
+  useEffect(() => {
+    const exampleListId = "id-example-list";
+    const exampleListToDelete = localStorage.getItem(
+      `${GENE_LIST_PREFIX}-${exampleListId}`
+    );
+
+    if (exampleListToDelete) removeGeneList(exampleListId);
+
+    const now = new Date().toUTCString();
+    const exampleList: GeneList = {
+      id: "id-example-list",
+      name: "Example Gene List",
+      speciesId: 1,
+      createdAt: now,
+      updatedAt: now,
+      lastAccessed: now,
+      geneIds: EXAMPLE_GENE_IDS,
+    };
+    addGeneList(exampleList);
+  });
 
   return (
     <>
       <Header />
       <div id="nav" role="navigation" className={styles.nav}>
-        <div style={{ position: "sticky", top: 0, width: "100%"}}>
+        <div style={{ position: "sticky", top: 0, width: "100%" }}>
           <div className={styles.navMain}>
             <div className={styles.navSelectContainer}>
               <label className={styles.selectLabel}>Selected Species</label>

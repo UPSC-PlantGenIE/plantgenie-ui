@@ -20,6 +20,7 @@ const options: Array<Option> = [
 export const SelectionMenu = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [selected, setSelected] = useState<Option>(options[0]);
+  const setSelectedSpeciesId = useAppStore((state) => state.setSpeciesId);
   const setSelectedSpecies = useAppStore((state) => state.setSpecies);
 
   const toggleSelect = () => {
@@ -34,6 +35,7 @@ export const SelectionMenu = () => {
       (foundOption?.name ?? options[0].name) as AvailableSpecies
     );
 
+    setSelectedSpeciesId(foundOption?.id ?? options[0].id)
     setIsOpen(false);
   };
 

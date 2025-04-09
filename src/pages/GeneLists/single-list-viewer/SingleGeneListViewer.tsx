@@ -4,7 +4,6 @@ import {
   AnnotationsRequest,
   AnnotationsResponse,
   GeneAnnotation,
-  GeneList,
   post,
 } from "../../../lib/api";
 import { TrashIcon } from "../../../assets/icons/Trash";
@@ -34,6 +33,11 @@ export const SingleGeneListViewer = ({ id }: Record<string, string>) => {
       lastAccessed: new Date().toUTCString(),
     });
 
+  }, [id])
+
+  useEffect(() => {
+    if (!selectedGeneList) return;
+
     const fetchAnnotations = async () => {
       return await post<AnnotationsRequest, AnnotationsResponse>(
         "/annotations",
@@ -47,7 +51,7 @@ export const SingleGeneListViewer = ({ id }: Record<string, string>) => {
     fetchAnnotations()
       .then((results) => setAnnotations(results.results))
       .catch((error) => console.log(error));
-  }, [id]);
+  }, [id, availableGeneLists]);
 
   const deleteHandler = (geneIdToDelete: string) => {
     return () => {

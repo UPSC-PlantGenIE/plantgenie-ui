@@ -15,7 +15,6 @@ export const GeneSearchResultsRoute = () => {
   const addGeneList = useAppStore((state) => state.addGeneList);
   const updateGeneList = useAppStore((state) => state.updateGeneList);
   const availableGeneLists = useAppStore((state) => state.availableGeneLists);
-  const setActiveGeneList = useAppStore((state) => state.setActiveGeneList);
 
   const [selectedGeneListId, setSelectedGeneListId] = useState<
     string | undefined
@@ -57,13 +56,8 @@ export const GeneSearchResultsRoute = () => {
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log("blah");
     const formData = new FormData(event.currentTarget);
     const newGeneListName = formData.get("new-gene-list-name")?.toString();
-
-    console.log(
-      `New gene list name is empty string? ${newGeneListName === ""}`
-    );
 
     const selectedGenes = [
       ...new Set(searchResults.filter((_, index) => selectedRows[index])),
@@ -85,9 +79,6 @@ export const GeneSearchResultsRoute = () => {
       };
 
       addGeneList(newGeneList);
-      console.log(`${newGeneListName} created!`);
-
-      setActiveGeneList(newGeneList.id);
 
       window.history.pushState(
         { name: `/gene-lists/${newGeneList.id}` },
@@ -133,7 +124,6 @@ export const GeneSearchResultsRoute = () => {
           state: { name: `/gene-lists/${selectedGeneList.id}` },
         })
       );
-      setActiveGeneList(selectedGeneList.id);
       return;
     }
   };
@@ -189,7 +179,6 @@ export const GeneSearchResultsRoute = () => {
               }}
               onChange={(event) => {
                 setSelectedGeneListId(event.target.value);
-                console.log(event.target.value);
               }}
               value={selectedGeneListId}
               disabled={availableGeneLists.length === 0}

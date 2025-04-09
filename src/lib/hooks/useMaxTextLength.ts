@@ -56,7 +56,7 @@ export const useMaxTextLength = ({
 
     setMaxTextLength(Math.max(...textLengths));
     document.body.removeChild(svg);
-    console.log(`Max text lengths: ${Math.max(...textLengths)}`);
+    // console.log(`Max text lengths: ${Math.max(...textLengths)}`);
   }, [
     texts,
     fontSize,

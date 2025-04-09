@@ -63,7 +63,6 @@ export const GeneSearchRoute = () => {
 
   const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
-    console.log(e.target.files?.length);
     if (e.target.files !== null && e.target.files.length === 1) {
       const attachedFile = e.target.files[0];
 
@@ -71,9 +70,6 @@ export const GeneSearchRoute = () => {
         setSelectedFileName("File size too big, attach another");
         return;
       }
-
-      console.log(e.target.files[0].name);
-      console.log(e.target.files[0]);
 
       attachedFile.text().then((value) => {
         setEnteredGeneIds(value.trim());

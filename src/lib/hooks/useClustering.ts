@@ -2,6 +2,7 @@ import { useMemo } from "react";
 import { DataScalers, DataScalingOptions } from "../scaling";
 import { hierarchicalClustering } from "../clustering/cluster";
 import { getVectors } from "../clustering/utils";
+import { DistanceMetricOptions, LinkageMetricOptions } from "../clustering";
 
 interface ClusteringHookProps {
   data: number[];
@@ -9,8 +10,8 @@ interface ClusteringHookProps {
   ncols: number;
   scalingFunctionName: DataScalingOptions;
   clusterAxis: string;
-  distanceMetric: string;
-  clusterLinkage: string;
+  distanceMetric: DistanceMetricOptions;
+  clusterLinkage: LinkageMetricOptions;
 }
 
 export const useClustering = ({

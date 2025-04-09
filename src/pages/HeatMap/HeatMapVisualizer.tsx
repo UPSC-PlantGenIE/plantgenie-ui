@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
 import { useAppStore } from "../../lib/state";
 
@@ -10,21 +10,30 @@ import {
 } from "../../lib/constants";
 import { ExpressionRequest, ExpressionResponse, post } from "../../lib/api";
 import { SvgHeatMap } from "./SvgHeatMap";
-import { LINKAGE_METRICS } from "../../lib/clustering";
+import {
+  DistanceMetricOptions,
+  LINKAGE_METRICS,
+  LinkageMetricOptions,
+} from "../../lib/clustering";
 import { DISTANCE_METRICS } from "../../lib/clustering";
 import { DATA_SCALING_METHODS, DataScalingOptions } from "../../lib/scaling";
 import { NoGeneListsError } from "./Errors";
 import { NoGeneListsErrorComponent } from "./HeatmapError";
 
+import { useHeatMapStore } from "./state";
+
 export const HeatMapVisualizer = () => {
-  const svgRef = useRef<SVGSVGElement>(null);
+  const svgRef = useHeatMapStore((state) => state.svgRef);
+  const svgHeight = useHeatMapStore((state) => state.svgHeight);
+  // const svgRef = useRef<SVGSVGElement>(null);
   const availableGeneLists = useAppStore((state) => state.availableGeneLists);
+  const selectedSpeciesId = useAppStore((state) => state.speciesId);
   const selectedSpecies = useAppStore((state) => state.species);
   const activeGeneList = useAppStore((state) => state.activeGeneList);
   const setActiveGeneList = useAppStore((state) => state.setActiveGeneList);
 
   const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<Error | undefined>();
+  const [error, setError] = useState<Error | undefined>(undefined);
 
   const availableExperiments =
     AVAILABLE_EXPERIMENTS_BY_SPECIES[selectedSpecies];
@@ -33,30 +42,47 @@ export const HeatMapVisualizer = () => {
     availableExperiments[0]
   );
 
-  const [scalingFunctionName, setScalingFunctionName] =
-    useState<DataScalingOptions>("log");
-  const [clusterLinkage, setClusterLinkage] = useState<string>("average");
-  const [distanceMetric, setDistanceMetric] = useState<string>("euclidean");
-  const [clusterAxis, setClusterAxis] = useState<string>("row");
-
   const [expressionData, setExpressionData] =
     useState<ExpressionResponse | null>(null);
+  const [scalingFunctionName, setScalingFunctionName] =
+    useState<DataScalingOptions>("log");
+  const [clusterLinkage, setClusterLinkage] =
+    useState<LinkageMetricOptions>("average");
+  const [distanceMetric, setDistanceMetric] =
+    useState<DistanceMetricOptions>("euclidean");
+  const [clusterAxis, setClusterAxis] = useState<string>("row");
 
   useEffect(() => {
-    if (availableGeneLists.length === 0) {
+    if (
+      availableGeneLists.filter(
+        (value) => value.speciesId === selectedSpeciesId
+      ).length === 0
+    ) {
       setError(
         new NoGeneListsError("No gene lists are available. Please create one!")
       );
-      return;
+    } else {
+      setError(undefined);
     }
+  }, [availableGeneLists, selectedSpeciesId]);
+
+  useEffect(() => {
     let defaultGeneList = activeGeneList;
+    const geneListsForSelectedSpecies = availableGeneLists.filter(
+      (value) => value.speciesId === selectedSpeciesId
+    );
 
     if (activeGeneList === undefined) {
-      console.log("activeGeneList undefined");
+      // console.log("activeGeneList undefined");
+
+      // defaultGeneList =
+      //   availableGeneLists.length !== 0 ? availableGeneLists[0] : undefined;
 
       defaultGeneList =
-        availableGeneLists.length !== 0 ? availableGeneLists[0] : undefined;
-      console.log(`default gene list ${defaultGeneList}`);
+        geneListsForSelectedSpecies.length !== 0
+          ? geneListsForSelectedSpecies[0]
+          : undefined;
+      // console.log(`default gene list ${defaultGeneList}`);
 
       if (defaultGeneList !== undefined) {
         setActiveGeneList(defaultGeneList.id);
@@ -72,8 +98,6 @@ export const HeatMapVisualizer = () => {
       setLoading(false);
       return;
     }
-
-    console.log(selectedSpecies);
 
     setLoading(true);
 
@@ -97,6 +121,7 @@ export const HeatMapVisualizer = () => {
   }, [
     activeGeneList,
     selectedSpecies,
+    selectedSpeciesId,
     selectedExperiment,
     availableGeneLists,
     setActiveGeneList,
@@ -121,10 +146,6 @@ export const HeatMapVisualizer = () => {
 
     URL.revokeObjectURL(url);
   };
-
-  // if (error) {
-  //   return <div>Error!</div>
-  // }
 
   return (
     <div id="container" className={styles.heatMapContainer}>
@@ -158,13 +179,19 @@ export const HeatMapVisualizer = () => {
               border: "1px solid var(--color)",
               borderRadius: "var(--radius)",
             }}
-            disabled={availableGeneLists.length === 0}
+            disabled={
+              availableGeneLists.filter(
+                (value) => value.speciesId === selectedSpeciesId
+              ).length === 0
+            }
             value={activeGeneList !== undefined ? activeGeneList.id : ""}
             onChange={(event) => {
               setActiveGeneList(event.target.value);
             }}
           >
-            {availableGeneLists.length !== 0 ? (
+            {availableGeneLists.filter(
+              (value) => value.speciesId === selectedSpeciesId
+            ).length !== 0 ? (
               availableGeneLists
                 .filter(
                   (value) =>
@@ -232,7 +259,9 @@ export const HeatMapVisualizer = () => {
               borderRadius: "var(--radius)",
             }}
             value={distanceMetric}
-            onChange={(event) => setDistanceMetric(event.target.value)}
+            onChange={(event) =>
+              setDistanceMetric(event.target.value as DistanceMetricOptions)
+            }
           >
             {DISTANCE_METRICS.map((value, index) => (
               <option key={index} value={value}>
@@ -262,7 +291,9 @@ export const HeatMapVisualizer = () => {
               borderRadius: "var(--radius)",
             }}
             value={clusterLinkage}
-            onChange={(event) => setClusterLinkage(event.target.value)}
+            onChange={(event) =>
+              setClusterLinkage(event.target.value as LinkageMetricOptions)
+            }
           >
             {LINKAGE_METRICS.map((value, index) => (
               <option key={index} value={value}>
@@ -342,12 +373,12 @@ export const HeatMapVisualizer = () => {
         style={{
           backgroundColor: "var(--background)",
           borderRadius: "var(--radius)",
+          height: `${svgHeight}px`,
         }}
       >
-        {loading || (!expressionData && !error) ? (
+        {loading && !expressionData && !error ? (
           <div style={{ color: "var(--color)" }}>Loading... </div>
         ) : null}
-        {/* {error ? <div>{error.message}</div> : null} */}
         {error ? (
           error instanceof NoGeneListsError ? (
             <NoGeneListsErrorComponent />
@@ -363,10 +394,10 @@ export const HeatMapVisualizer = () => {
             marginBottom={10}
             marginLeft={10}
             marginRight={10}
-            labelFontSize={8}
+            labelFontSize={10}
             labelPadding={10}
-            cellHeight={20}
-            cellPadding={1}
+            cellHeight={15}
+            cellPadding={0}
             scalingFunctionName={scalingFunctionName}
             clusterAxis={clusterAxis}
             distanceMetric={distanceMetric}

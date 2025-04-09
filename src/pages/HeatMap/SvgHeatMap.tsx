@@ -1,4 +1,4 @@
-import { RefObject, useEffect, useMemo, useState } from "react";
+import { RefObject, useEffect, useMemo } from "react";
 
 import { gray } from "d3-color";
 import { scaleLinear } from "d3-scale";
@@ -14,7 +14,11 @@ import {
 import { useMaxTextLength } from "../../lib/hooks";
 import { useClustering } from "../../lib/hooks";
 import { DataScalingOptions } from "../../lib/scaling";
-import { DistanceMetricOptions, LinkageMetricOptions } from "../../lib/clustering";
+import {
+  DistanceMetricOptions,
+  LinkageMetricOptions,
+} from "../../lib/clustering";
+import { useHeatMapStore, setSvgHeight, setSvgWidth } from "./state";
 
 interface SvgHeatMapProps {
   svgRef: RefObject<SVGSVGElement | null>;
@@ -47,18 +51,39 @@ export const SvgHeatMap = ({
   clusterAxis,
   clusterLinkage,
   cellHeight,
+  cellPadding,
 }: SvgHeatMapProps) => {
-  const [svgWidth, setSvgWidth] = useState<number>(0);
-  const [svgHeight, setSvgHeight] = useState<number>(0);
-  console.log(cellHeight);
+  const svgWidth = useHeatMapStore((state) => state.svgWidth);
+  const svgHeight = useHeatMapStore((state) => state.svgHeight);
+
+  const rowLabels = expressionData.genes.map(
+    (value) => `${value.chromosomeId}_${value.geneId}`
+  );
+  const colLabels = expressionData.samples.map(
+    (value) => `${value.reference} ${value.condition}`
+  );
+
+  const rowTextLength = useMaxTextLength({
+    texts: rowLabels,
+    fontSize: labelFontSize,
+    rotation: 0,
+    axis: "width",
+  });
+
+  const colTextLength = useMaxTextLength({
+    texts: colLabels,
+    fontSize: labelFontSize,
+    rotation: -45,
+    axis: "height",
+  });
 
   useEffect(() => {
     const updateDimensions = () => {
       if (svgRef.current) {
-        const { width, height } = svgRef.current.getBoundingClientRect();
+        const { width } = svgRef.current.getBoundingClientRect();
         requestAnimationFrame(() => {
           setSvgWidth(width);
-          setSvgHeight(height);
+          // setSvgHeight(height);
         });
       }
     };
@@ -82,26 +107,42 @@ export const SvgHeatMap = ({
     };
   }, [svgRef]);
 
-  const rowLabels = expressionData.genes.map(
-    (value) => `${value.chromosomeId}_${value.geneId}`
-  );
-  const colLabels = expressionData.samples.map(
-    (value) => `${value.reference} ${value.condition}`
-  );
+  // const rowLabels = expressionData.genes.map(
+  //   (value) => `${value.chromosomeId}_${value.geneId}`
+  // );
+  // const colLabels = expressionData.samples.map(
+  //   (value) => `${value.reference} ${value.condition}`
+  // );
 
-  const rowTextLength = useMaxTextLength({
-    texts: rowLabels,
-    fontSize: labelFontSize,
-    rotation: 0,
-    axis: "width",
-  });
+  // const rowTextLength = useMaxTextLength({
+  //   texts: rowLabels,
+  //   fontSize: labelFontSize,
+  //   rotation: 0,
+  //   axis: "width",
+  // });
 
-  const colTextLength = useMaxTextLength({
-    texts: colLabels,
-    fontSize: labelFontSize,
-    rotation: -45,
-    axis: "height",
-  });
+  // const colTextLength = useMaxTextLength({
+  //   texts: colLabels,
+  //   fontSize: labelFontSize,
+  //   rotation: -45,
+  //   axis: "height",
+  // });
+
+  useEffect(() => {
+    setSvgHeight(
+      expressionData.genes.length * (cellHeight + cellPadding) +
+        labelPadding +
+        colTextLength * Math.sin(Math.PI / 4) +
+        marginTop +
+        marginBottom
+    );
+  }, [
+    expressionData.genes,
+    colTextLength,
+    marginBottom,
+    marginTop,
+    cellHeight,
+  ]);
 
   const { rowOrder, colOrder, values } = useClustering({
     data: expressionData.values,
@@ -201,20 +242,42 @@ export const SvgHeatMap = ({
       }}
     >
       <rect
+        id="svg-background"
+        fill="#080808"
+        width="100%"
+        height="100%"
+        rx={5}
+        ry={5}
+      ></rect>
+      <rect
+        id="heatmap-background"
+        fill="var(--color)"
+        strokeWidth={1}
+        stroke="var(--color)"
+        rx={1}
+        ry={1}
+        // +- 1 for extra whitespace around the heatmap
+        x={heatmapBounds.left - 1}
+        y={heatmapBounds.top - 1}
+        width={heatmapBounds.right - heatmapBounds.left + 2}
+        height={heatmapBounds.bottom - heatmapBounds.top + 2}
+      ></rect>
+      {/* <rect
         width="100%"
         height="100%"
         fill="var(--background)"
         rx="5"
         ry="5"
-      ></rect>
+      ></rect> */}
       <g id="rectangles">
         {expressionData.values.map((_, index) => (
           <rect
             key={index}
             x={horizontalScale(colIndexMapper(index))}
             y={verticalScale(rowIndexMapper(index))}
-            height={Math.abs(verticalScale(0) - verticalScale(1))}
-            width={Math.abs(horizontalScale(0) - horizontalScale(1))}
+            // height={Math.abs(verticalScale(0) - verticalScale(1))}
+            height={cellHeight}
+            width={Math.abs(horizontalScale(0) - horizontalScale(1)) - cellPadding}
             fill={
               Number.isNaN(values[reorderedIndexMap(index)])
                 ? gray(50).toString()

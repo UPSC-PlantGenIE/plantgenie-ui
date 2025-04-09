@@ -82,15 +82,15 @@ export const ApplicationRouter = () => {
     };
 
     window.addEventListener("popstate", handlePopState);
-    console.log(`my app path: ${applicationPath}`);
+    // console.log(`my app path: ${applicationPath}`);
 
     const splitApplicationPath = window.location.pathname.split("/");
 
-    console.log(window.location.pathname.split("/"));
-    console.log(splitApplicationPath);
+    // console.log(window.location.pathname.split("/"));
+    // console.log(splitApplicationPath);
     if (splitApplicationPath.length >= 2) {
       const retrievedActiveApp = splitApplicationPath[1];
-      console.log(`received: ${retrievedActiveApp}`);
+      // console.log(`received: ${retrievedActiveApp}`);
 
       if (retrievedActiveApp === "") {
         unsetActiveApp();

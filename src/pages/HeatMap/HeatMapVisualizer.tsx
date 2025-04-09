@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
 import { useAppStore } from "../../lib/state";
 
@@ -20,8 +20,12 @@ import { DATA_SCALING_METHODS, DataScalingOptions } from "../../lib/scaling";
 import { NoGeneListsError } from "./Errors";
 import { NoGeneListsErrorComponent } from "./HeatmapError";
 
+import { useHeatMapStore } from "./state";
+
 export const HeatMapVisualizer = () => {
-  const svgRef = useRef<SVGSVGElement>(null);
+  const svgRef = useHeatMapStore((state) => state.svgRef);
+  const svgHeight = useHeatMapStore((state) => state.svgHeight);
+  // const svgRef = useRef<SVGSVGElement>(null);
   const availableGeneLists = useAppStore((state) => state.availableGeneLists);
   const selectedSpeciesId = useAppStore((state) => state.speciesId);
   const selectedSpecies = useAppStore((state) => state.species);
@@ -69,7 +73,7 @@ export const HeatMapVisualizer = () => {
     );
 
     if (activeGeneList === undefined) {
-      console.log("activeGeneList undefined");
+      // console.log("activeGeneList undefined");
 
       // defaultGeneList =
       //   availableGeneLists.length !== 0 ? availableGeneLists[0] : undefined;
@@ -78,7 +82,7 @@ export const HeatMapVisualizer = () => {
         geneListsForSelectedSpecies.length !== 0
           ? geneListsForSelectedSpecies[0]
           : undefined;
-      console.log(`default gene list ${defaultGeneList}`);
+      // console.log(`default gene list ${defaultGeneList}`);
 
       if (defaultGeneList !== undefined) {
         setActiveGeneList(defaultGeneList.id);
@@ -111,7 +115,7 @@ export const HeatMapVisualizer = () => {
 
     response
       .then((value) => {
-        console.log(value);
+        // console.log(value);
         setExpressionData(value);
       })
       .catch((e) => setError(e as Error))
@@ -375,12 +379,12 @@ export const HeatMapVisualizer = () => {
         style={{
           backgroundColor: "var(--background)",
           borderRadius: "var(--radius)",
+          height: `${svgHeight}px`,
         }}
       >
-        {loading || (!expressionData && !error) ? (
+        {loading && !expressionData && !error ? (
           <div style={{ color: "var(--color)" }}>Loading... </div>
         ) : null}
-        {/* {error ? <div>{error.message}</div> : null} */}
         {error ? (
           error instanceof NoGeneListsError ? (
             <NoGeneListsErrorComponent />
@@ -396,10 +400,10 @@ export const HeatMapVisualizer = () => {
             marginBottom={10}
             marginLeft={10}
             marginRight={10}
-            labelFontSize={8}
+            labelFontSize={10}
             labelPadding={10}
-            cellHeight={20}
-            cellPadding={1}
+            cellHeight={15}
+            cellPadding={0}
             scalingFunctionName={scalingFunctionName}
             clusterAxis={clusterAxis}
             distanceMetric={distanceMetric}

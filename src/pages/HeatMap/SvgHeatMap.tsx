@@ -107,32 +107,11 @@ export const SvgHeatMap = ({
     };
   }, [svgRef]);
 
-  // const rowLabels = expressionData.genes.map(
-  //   (value) => `${value.chromosomeId}_${value.geneId}`
-  // );
-  // const colLabels = expressionData.samples.map(
-  //   (value) => `${value.reference} ${value.condition}`
-  // );
-
-  // const rowTextLength = useMaxTextLength({
-  //   texts: rowLabels,
-  //   fontSize: labelFontSize,
-  //   rotation: 0,
-  //   axis: "width",
-  // });
-
-  // const colTextLength = useMaxTextLength({
-  //   texts: colLabels,
-  //   fontSize: labelFontSize,
-  //   rotation: -45,
-  //   axis: "height",
-  // });
-
   useEffect(() => {
     setSvgHeight(
       expressionData.genes.length * (cellHeight + cellPadding) +
         labelPadding +
-        colTextLength * Math.sin(Math.PI / 4) +
+        colTextLength +
         marginTop +
         marginBottom
     );

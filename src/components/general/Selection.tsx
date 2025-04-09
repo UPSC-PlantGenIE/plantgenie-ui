@@ -22,6 +22,7 @@ export const SelectionMenu = () => {
   const [selected, setSelected] = useState<Option>(options[0]);
   const setSelectedSpeciesId = useAppStore((state) => state.setSpeciesId);
   const setSelectedSpecies = useAppStore((state) => state.setSpecies);
+  const setActiveGeneList = useAppStore((state) => state.setActiveGeneList);
 
   const toggleSelect = () => {
     setIsOpen(!isOpen);
@@ -34,8 +35,9 @@ export const SelectionMenu = () => {
     setSelectedSpecies(
       (foundOption?.name ?? options[0].name) as AvailableSpecies
     );
+    setActiveGeneList(undefined);
 
-    setSelectedSpeciesId(foundOption?.id ?? options[0].id)
+    setSelectedSpeciesId(foundOption?.id ?? options[0].id);
     setIsOpen(false);
   };
 

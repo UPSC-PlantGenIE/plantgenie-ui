@@ -7,7 +7,11 @@ import { Link } from "../routing/Link";
 import { PairedLeaves, Octocat } from "../../assets/icons";
 import { Header } from "./Header";
 import { useAppStore } from "../../lib/state";
-import { EXAMPLE_GENE_IDS, GENE_LIST_PREFIX } from "../../lib/constants";
+import {
+  EXAMPLE_GENE_IDS,
+  GENE_LIST_PREFIX,
+  PS_EXAMPLE_GENE_IDS,
+} from "../../lib/constants";
 import { GeneList } from "../../lib/api";
 
 interface BaseLayoutProps {
@@ -20,7 +24,7 @@ export const BaseLayout = ({ children }: BaseLayoutProps) => {
   const removeGeneList = useAppStore((state) => state.removeGeneList);
 
   useEffect(() => {
-    const exampleListId = "id-example-list";
+    const exampleListId = "picab-id-example-list";
     const exampleListToDelete = localStorage.getItem(
       `${GENE_LIST_PREFIX}-${exampleListId}`
     );
@@ -29,13 +33,34 @@ export const BaseLayout = ({ children }: BaseLayoutProps) => {
 
     const now = new Date().toUTCString();
     const exampleList: GeneList = {
-      id: "id-example-list",
-      name: "Example Gene List",
+      id: exampleListId,
+      name: "Spruce Example List",
       speciesId: 1,
       createdAt: now,
       updatedAt: now,
       lastAccessed: now,
       geneIds: EXAMPLE_GENE_IDS,
+    };
+    addGeneList(exampleList);
+  });
+
+  useEffect(() => {
+    const exampleListId = "pinsy-id-example-list";
+    const exampleListToDelete = localStorage.getItem(
+      `${GENE_LIST_PREFIX}-${exampleListId}`
+    );
+
+    if (exampleListToDelete) removeGeneList(exampleListId);
+
+    const now = new Date().toUTCString();
+    const exampleList: GeneList = {
+      id: exampleListId,
+      name: "Pine Example List",
+      speciesId: 2,
+      createdAt: now,
+      updatedAt: now,
+      lastAccessed: now,
+      geneIds: PS_EXAMPLE_GENE_IDS,
     };
     addGeneList(exampleList);
   });

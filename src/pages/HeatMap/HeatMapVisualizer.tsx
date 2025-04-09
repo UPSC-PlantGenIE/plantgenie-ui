@@ -99,8 +99,6 @@ export const HeatMapVisualizer = () => {
       return;
     }
 
-    console.log(selectedSpecies);
-
     setLoading(true);
 
     const response = post<ExpressionRequest, ExpressionResponse>(
@@ -115,7 +113,7 @@ export const HeatMapVisualizer = () => {
 
     response
       .then((value) => {
-        // console.log(value);
+        console.log(value);
         setExpressionData(value);
       })
       .catch((e) => setError(e as Error))
@@ -148,10 +146,6 @@ export const HeatMapVisualizer = () => {
 
     URL.revokeObjectURL(url);
   };
-
-  // if (error) {
-  //   return <div>Error!</div>
-  // }
 
   return (
     <div id="container" className={styles.heatMapContainer}>

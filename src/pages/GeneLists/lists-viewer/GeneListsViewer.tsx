@@ -41,7 +41,7 @@ export const GeneListsViewerRoute = () => {
         ...filterForActiveGeneList[0],
         lastAccessed: new Date().toUTCString(),
       });
-      setActiveGeneList(id);
+      // setActiveGeneList(id);
       window.history.pushState({ name: navLink }, "", navLink);
       window.dispatchEvent(
         new PopStateEvent("popstate", {

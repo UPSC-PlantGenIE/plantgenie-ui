@@ -64,7 +64,6 @@ export const ExperimentTitleToId: { [key: string]: number } = {
   "Picea abies Light Availability": 14,
 };
 
-
 export const EXAMPLE_GENE_IDS = [
   "PA_chr04_G002083",
   "PA_chr11_G002939",
@@ -99,4 +98,18 @@ export const EXAMPLE_GENE_IDS = [
   "PA_chr09_G003259",
   "PA_chr06_G002530",
   "PA_chr06_G003805",
-]
+];
+
+export const PS_EXAMPLE_GENE_IDS = [
+  "PS_chr01_G001510",
+  "PS_chr01_G001511",
+  "PS_chr01_G001858",
+  "PS_chr02_G005492",
+  "PS_chr05_G023222",
+  "PS_chr06_G027387",
+  "PS_chr07_G028528",
+  "PS_chr08_G036131",
+  "PS_chr08_G036386",
+  "PS_sUP1581_G057360",
+  "PS_sUP4596_G058587",
+];

@@ -194,12 +194,16 @@ export const GeneSearchResultsRoute = () => {
               value={selectedGeneListId}
               disabled={availableGeneLists.length === 0}
             >
-              {availableGeneLists.length !== 0 ? (
-                availableGeneLists.map((value, index) => (
-                  <option key={index} value={value.id}>
-                    {value.name}
-                  </option>
-                ))
+              {availableGeneLists.filter(
+                (value) => value.speciesId === speciesId
+              ).length !== 0 ? (
+                availableGeneLists
+                  .filter((value) => value.speciesId === speciesId)
+                  .map((value, index) => (
+                    <option key={index} value={value.id}>
+                      {value.name}
+                    </option>
+                  ))
               ) : (
                 <option value={undefined}>No gene lists available</option>
               )}

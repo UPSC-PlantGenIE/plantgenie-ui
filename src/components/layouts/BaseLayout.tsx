@@ -10,6 +10,7 @@ import { useAppStore } from "../../lib/state";
 import {
   EXAMPLE_GENE_IDS,
   GENE_LIST_PREFIX,
+  NUMERIC_ID_TO_JBROWSE,
   PS_EXAMPLE_GENE_IDS,
 } from "../../lib/constants";
 import { GeneList } from "../../lib/api";
@@ -19,7 +20,7 @@ interface BaseLayoutProps {
 }
 
 export const BaseLayout = ({ children }: BaseLayoutProps) => {
-  // const selectedSpecies = useAppStore((state) => state.species);
+  const selectedSpeciesId = useAppStore((state) => state.speciesId);
   const addGeneList = useAppStore((state) => state.addGeneList);
   const removeGeneList = useAppStore((state) => state.removeGeneList);
 
@@ -86,13 +87,13 @@ export const BaseLayout = ({ children }: BaseLayoutProps) => {
               >
                 Gene Lists
               </Link>
-              <Link
-                to="/jbrowse"
+              <a
                 className={styles.links}
-                activeClassName={styles.linksActive}
+                style={{ cursor: "pointer" }}
+                href={NUMERIC_ID_TO_JBROWSE[selectedSpeciesId]}
               >
                 JBrowse
-              </Link>
+              </a>
               <Link
                 to="/blast"
                 className={styles.links}

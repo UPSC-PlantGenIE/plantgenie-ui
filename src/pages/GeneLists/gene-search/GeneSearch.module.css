@@ -22,7 +22,7 @@
   height: 100%;
 }
 
-.blastFormContainer:focus-within {
+.geneSearchFormContainer:focus-within {
   border-color: #3b82f6;
 }
 

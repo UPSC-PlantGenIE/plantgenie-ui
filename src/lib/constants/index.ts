@@ -47,6 +47,12 @@ export const NUMERIC_ID_TO_SPECIES: { [key: number]: string } = {
   3: "Populus tremula",
 };
 
+// JBROWSE LINKS FOR SPECIES
+export const NUMERIC_ID_TO_JBROWSE: { [key: number]: string } = {
+  1: "https://genomes.scilifelab.se/genome-browser/?config=%2Fdata%2FmlYJHVRALC8KtpFNRWAi2TLUm7jXanGE%2Fconfig.json",
+  2: "https://genomes.scilifelab.se/genome-browser/?config=%2Fdata%2F38qQhuj9O2BKK4HM0cdQfbxOGVXUchMO%2Fconfig.json"
+}
+
 export const ExperimentTitleToId: { [key: string]: number } = {
   "Picea abies Cold Stress Roots": 1,
   "Picea abies Cold Stress Needles": 2,

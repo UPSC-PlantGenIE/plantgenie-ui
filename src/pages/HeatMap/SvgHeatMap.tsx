@@ -20,8 +20,12 @@ import {
 } from "../../lib/clustering";
 import { useHeatMapStore, setSvgHeight, setSvgWidth } from "./state";
 
+import styles from "./SvgHeatMap.module.css";
+import { TooltipHandle } from "./Tooltip";
+
 interface SvgHeatMapProps {
   svgRef: RefObject<SVGSVGElement | null>;
+  tooltipRef: RefObject<TooltipHandle | null>;
   marginTop: number;
   marginBottom: number;
   marginLeft: number;
@@ -37,8 +41,16 @@ interface SvgHeatMapProps {
   clusterLinkage: LinkageMetricOptions;
 }
 
+interface RectHoverData {
+  rowId: string;
+  colId: string;
+  value: number;
+  scaledValue: number;
+}
+
 export const SvgHeatMap = ({
   svgRef,
+  tooltipRef,
   marginBottom,
   marginLeft,
   marginRight,
@@ -56,12 +68,40 @@ export const SvgHeatMap = ({
   const svgWidth = useHeatMapStore((state) => state.svgWidth);
   const svgHeight = useHeatMapStore((state) => state.svgHeight);
 
+  const handleMouseOver = (
+    event: React.MouseEvent<SVGRectElement, MouseEvent>,
+    data: RectHoverData
+  ) => {
+    tooltipRef.current?.show(
+      <>
+        <div>
+          <strong>GeneId</strong>: {data.rowId}
+        </div>
+        <div>
+          <strong>Condition</strong>: {data.colId}
+        </div>
+        <div>
+          <strong>Original</strong>: {data.value.toFixed(3)}
+        </div>
+        <div>
+          <strong>Scaled</strong>: {(1 - data.scaledValue).toFixed(3)}
+        </div>
+      </>,
+      event.pageX,
+      event.pageY
+    );
+  };
+
+  const handleMouseOut = () => {
+    console.log("hiding!");
+    tooltipRef.current?.hide();
+  };
+
   const rowLabels = expressionData.genes.map(
     (value) => `${value.chromosomeId}_${value.geneId}`
   );
-  const colLabels = expressionData.samples.map(
-    (value) => `${value.reference} ${value.condition}`
-  );
+
+  const colLabels = expressionData.samples.map((value) => `${value.condition}`);
 
   const rowTextLength = useMaxTextLength({
     texts: rowLabels,
@@ -83,7 +123,6 @@ export const SvgHeatMap = ({
         const { width } = svgRef.current.getBoundingClientRect();
         requestAnimationFrame(() => {
           setSvgWidth(width);
-          // setSvgHeight(height);
         });
       }
     };
@@ -105,7 +144,7 @@ export const SvgHeatMap = ({
         resizeObserver.unobserve(svg);
       }
     };
-  }, [svgRef]);
+  }, [svgRef, cellPadding]);
 
   useEffect(() => {
     setSvgHeight(
@@ -132,6 +171,16 @@ export const SvgHeatMap = ({
     clusterLinkage,
     distanceMetric,
   });
+
+  const reorderedRowMap = useMemo(
+    () => createReorderedRowMapper(rowOrder, colOrder.length),
+    [rowOrder, colOrder]
+  );
+
+  const reorderedColMap = useMemo(
+    () => createReorderedColMapper(colOrder),
+    [colOrder]
+  );
 
   const reorderedIndexMap = useMemo(
     () => createReorderedIndexMapper(rowOrder, colOrder),
@@ -172,10 +221,7 @@ export const SvgHeatMap = ({
   const colorScale = useMemo(
     () =>
       scaleLinear()
-        .domain([
-          Math.max(...expressionData.values),
-          Math.min(...expressionData.values),
-        ])
+        .domain([Math.max(...values), Math.min(...values)])
         .range([0, 1]),
     [expressionData.values]
   );
@@ -199,13 +245,7 @@ export const SvgHeatMap = ({
           borderRadius: "var(--radius)",
         }}
       >
-        <rect
-          width="100%"
-          height="100%"
-          fill="var(--background)"
-          rx="5"
-          ry="5"
-        ></rect>
+        <rect width="100%" height="100%" fill="#080808" rx="5" ry="5"></rect>
       </svg>
     );
   }
@@ -222,11 +262,11 @@ export const SvgHeatMap = ({
     >
       <rect
         id="svg-background"
-        fill="#080808"
-        width="100%"
-        height="100%"
-        rx={5}
-        ry={5}
+        fill="var(--background)"
+        width={svgWidth}
+        height={svgHeight}
+        rx="var(--radius)"
+        ry="var(--radius)"
       ></rect>
       <rect
         id="heatmap-background"
@@ -235,33 +275,39 @@ export const SvgHeatMap = ({
         stroke="var(--color)"
         rx={1}
         ry={1}
-        // +- 1 for extra whitespace around the heatmap
-        x={heatmapBounds.left - 1}
-        y={heatmapBounds.top - 1}
-        width={heatmapBounds.right - heatmapBounds.left + 2}
-        height={heatmapBounds.bottom - heatmapBounds.top + 2}
+        // +- cellPadding for extra whitespace around the heatmap
+        x={heatmapBounds.left - cellPadding}
+        y={heatmapBounds.top - cellPadding}
+        width={heatmapBounds.right - heatmapBounds.left + cellPadding}
+        height={heatmapBounds.bottom - heatmapBounds.top + cellPadding}
       ></rect>
-      {/* <rect
-        width="100%"
-        height="100%"
-        fill="var(--background)"
-        rx="5"
-        ry="5"
-      ></rect> */}
-      <g id="rectangles">
+      <g id="rectangles" className={styles.heatmapRectangles}>
         {expressionData.values.map((_, index) => (
           <rect
+            className="heatmap-rect"
             key={index}
             x={horizontalScale(colIndexMapper(index))}
             y={verticalScale(rowIndexMapper(index))}
-            // height={Math.abs(verticalScale(0) - verticalScale(1))}
+            rx={1}
+            ry={1}
             height={cellHeight}
-            width={Math.abs(horizontalScale(0) - horizontalScale(1)) - cellPadding}
+            width={
+              Math.abs(horizontalScale(0) - horizontalScale(1)) - cellPadding
+            }
             fill={
               Number.isNaN(values[reorderedIndexMap(index)])
                 ? gray(50).toString()
                 : interpolateRdYlBu(values[reorderedIndexMap(index)])
             }
+            onMouseOver={(e) =>
+              handleMouseOver(e, {
+                value: expressionData.values[reorderedIndexMap(index)],
+                scaledValue: values[reorderedIndexMap(index)],
+                rowId: rowLabels[reorderedRowMap(index)],
+                colId: colLabels[reorderedColMap(index)],
+              })
+            }
+            onMouseOut={handleMouseOut}
           ></rect>
         ))}
       </g>

@@ -1,0 +1,14 @@
+/* .heatmapRectangles {} */
+
+:where(.heatmapRectangles) {
+  rect {
+    stroke: white;
+    stroke-width: 0;
+    transition: stroke 0.3s;
+  }
+  
+  rect:hover {
+    stroke: black;
+    stroke-width: 1px;
+  }
+}

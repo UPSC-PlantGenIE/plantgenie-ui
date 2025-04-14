@@ -117,7 +117,7 @@ export const BaseLayout = ({ children }: BaseLayoutProps) => {
               </Link>
 
               <Link
-                to="/"
+                to="/exnetwork"
                 className={styles.links}
                 activeClassName={styles.linksActive}
               >

@@ -93,7 +93,6 @@ export const SvgHeatMap = ({
   };
 
   const handleMouseOut = () => {
-    console.log("hiding!");
     tooltipRef.current?.hide();
   };
 
@@ -263,10 +262,9 @@ export const SvgHeatMap = ({
       <rect
         id="svg-background"
         fill="var(--background)"
+        style={{borderRadius: "var(--radius)"}}
         width={svgWidth}
         height={svgHeight}
-        rx="var(--radius)"
-        ry="var(--radius)"
       ></rect>
       <rect
         id="heatmap-background"

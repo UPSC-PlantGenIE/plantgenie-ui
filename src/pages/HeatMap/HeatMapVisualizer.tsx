@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { useAppStore } from "../../lib/state";
 
@@ -21,11 +21,12 @@ import { NoGeneListsError } from "./Errors";
 import { NoGeneListsErrorComponent } from "./HeatmapError";
 
 import { useHeatMapStore } from "./state";
+import D3Tooltip, { TooltipHandle } from "./Tooltip";
 
 export const HeatMapVisualizer = () => {
+  const tooltipRef = useRef<TooltipHandle>(null);
   const svgRef = useHeatMapStore((state) => state.svgRef);
   const svgHeight = useHeatMapStore((state) => state.svgHeight);
-  // const svgRef = useRef<SVGSVGElement>(null);
   const availableGeneLists = useAppStore((state) => state.availableGeneLists);
   const selectedSpeciesId = useAppStore((state) => state.speciesId);
   const selectedSpecies = useAppStore((state) => state.species);
@@ -73,16 +74,10 @@ export const HeatMapVisualizer = () => {
     );
 
     if (activeGeneList === undefined) {
-      // console.log("activeGeneList undefined");
-
-      // defaultGeneList =
-      //   availableGeneLists.length !== 0 ? availableGeneLists[0] : undefined;
-
       defaultGeneList =
         geneListsForSelectedSpecies.length !== 0
           ? geneListsForSelectedSpecies[0]
           : undefined;
-      // console.log(`default gene list ${defaultGeneList}`);
 
       if (defaultGeneList !== undefined) {
         setActiveGeneList(defaultGeneList.id);
@@ -130,12 +125,25 @@ export const HeatMapVisualizer = () => {
   const saveButtonClickHandler = () => {
     if (!svgRef.current) return;
 
+    const svgClone = svgRef.current.cloneNode(true) as SVGSVGElement;
+    const svgBackground = svgClone.getElementById(
+      "svg-background"
+    ) as SVGRectElement;
+
+    const heatmapBackground = svgClone.getElementById(
+      "heatmap-background"
+    ) as SVGRectElement;
+
+    svgBackground.setAttribute("fill", "white");
+    heatmapBackground.setAttribute("fill", "white");
+    heatmapBackground.setAttribute("stroke", "black");
+
     const now = new Date();
     const utcString = now.toISOString().replace(/[:.]/g, "-");
     const filename = `expression-heatmap-${utcString}.svg`;
 
     const serializer = new XMLSerializer();
-    const svgString = serializer.serializeToString(svgRef.current);
+    const svgString = serializer.serializeToString(svgClone);
     const blob = new Blob([svgString], { type: "image/svg+xml;charset=utf-8" });
     const url = URL.createObjectURL(blob);
 
@@ -371,9 +379,11 @@ export const HeatMapVisualizer = () => {
       <div
         id="heatmap-container"
         style={{
+          position: "relative",
           backgroundColor: "var(--background)",
           borderRadius: "var(--radius)",
           height: `${svgHeight}px`,
+          width: "100%",
         }}
       >
         {loading && !expressionData && !error ? (
@@ -389,6 +399,7 @@ export const HeatMapVisualizer = () => {
         {expressionData && !loading && !error ? (
           <SvgHeatMap
             svgRef={svgRef}
+            tooltipRef={tooltipRef}
             expressionData={expressionData}
             marginTop={10}
             marginBottom={10}
@@ -397,7 +408,7 @@ export const HeatMapVisualizer = () => {
             labelFontSize={10}
             labelPadding={10}
             cellHeight={15}
-            cellPadding={0}
+            cellPadding={1}
             scalingFunctionName={scalingFunctionName}
             clusterAxis={clusterAxis}
             distanceMetric={distanceMetric}
@@ -405,6 +416,7 @@ export const HeatMapVisualizer = () => {
           />
         ) : null}
       </div>
+        <D3Tooltip ref={tooltipRef}/>
     </div>
   );
 };

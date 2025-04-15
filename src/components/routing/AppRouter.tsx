@@ -33,6 +33,10 @@ const routes = [
     path: "/blast/result/:id",
     component: ({ id }: Record<string, string>) => <BlastResult id={id} />,
   },
+  {
+    path: "/exnetwork",
+    component: () => <div>This tool is currently under development.</div>,
+  },
   // {
   //   path: "/jbrowse",
   //   component: () => (

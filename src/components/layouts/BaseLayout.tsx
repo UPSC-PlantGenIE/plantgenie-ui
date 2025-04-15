@@ -88,6 +88,7 @@ export const BaseLayout = ({ children }: BaseLayoutProps) => {
                 Gene Lists
               </Link>
               <a
+                target="_blank"
                 className={styles.links}
                 style={{ cursor: "pointer" }}
                 href={NUMERIC_ID_TO_JBROWSE[selectedSpeciesId]}

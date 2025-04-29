@@ -76,6 +76,7 @@ export const GeneListsViewerRoute = () => {
               <th>Created</th>
               <th>Updated</th>
               <th>Last View</th>
+              <th>No. Genes</th>
               <th></th>
             </tr>
           </thead>
@@ -91,6 +92,7 @@ export const GeneListsViewerRoute = () => {
                     <td>{value.createdAt}</td>
                     <td>{value.updatedAt}</td>
                     <td>{value.lastAccessed}</td>
+                    <td>{value.geneIds.length}</td>
                     <td>
                       <button
                         className={styles.deleteButton}

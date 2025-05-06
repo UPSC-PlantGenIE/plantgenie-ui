@@ -7,7 +7,7 @@ mod tree;
 mod utils;
 
 use crate::distance::DistanceMetric;
-use crate::linkage::{AverageLinkage, Linkage, LinkageFunction, WardLinkage};
+use crate::linkage::LinkageFunction;
 use crate::tree::{HcTree, Node};
 use crate::utils::Matrix;
 
@@ -320,7 +320,7 @@ mod tests {
         //     51.0, 51.0, 51.0, // row 9
         // ];
 
-        let data_clone = data.clone();
+        // let data_clone = data.clone();
 
         // mutates the data above
         let result = super::hierarchical_clustering(

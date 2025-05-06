@@ -1,4 +1,7 @@
+use wasm_bindgen::prelude::*;
+
 #[derive(Debug, Clone, Copy)]
+#[wasm_bindgen]
 pub enum DistanceMetric {
     Euclidean,
     Chebyshev,

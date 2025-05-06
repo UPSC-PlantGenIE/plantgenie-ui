@@ -1,17 +1,25 @@
-use crate::tree::Node;
+use wasm_bindgen::prelude::*;
 
+use crate::{
+    distance::{Distance, Euclidean},
+    tree::Node,
+    utils::Matrix,
+};
+
+#[wasm_bindgen]
+#[derive(Debug, Clone, Copy)]
 pub enum LinkageFunction {
     Average,
     Ward,
 }
 
 impl LinkageFunction {
-    fn compute(
+    pub fn compute(
         &self,
         first_node: &Node,
         second_node: &Node,
         distance_matrix: &[f64],
-        data_matrix: &[f64],
+        data_matrix: &Matrix,
     ) -> f64 {
         match self {
             LinkageFunction::Average => AverageLinkage::compute(
@@ -35,7 +43,7 @@ pub trait Linkage {
         first_node: &Node,
         second_node: &Node,
         distance_matrix: &[f64],
-        data_matrix: &[f64],
+        data_matrix: &Matrix,
     ) -> f64;
 }
 
@@ -46,7 +54,7 @@ impl Linkage for AverageLinkage {
         first_node: &Node,
         second_node: &Node,
         distance_matrix: &[f64],
-        _data_matrix: &[f64],
+        _data_matrix: &Matrix,
     ) -> f64 {
         let n = ((1.0 + (1.0 + 8.0 * (distance_matrix.len() as f64)).sqrt())
             / 2.0) as usize;
@@ -72,17 +80,43 @@ impl Linkage for AverageLinkage {
     }
 }
 
-struct WardLinkage;
+pub struct WardLinkage;
 
 impl Linkage for WardLinkage {
     fn compute(
         first_node: &Node,
         second_node: &Node,
         _distance_matrix: &[f64],
-        data_matrix: &[f64],
+        data_matrix: &Matrix,
     ) -> f64 {
-        // let first_centroid = first_node.indices.iter().enumerate()
-        // for i in (0..)
-        1.0
+        let first_centroid_node_count = first_node.indices.len() as f64;
+        let mut first_centroid = vec![0.0; data_matrix.ncols];
+
+        for col_idx in 0..data_matrix.ncols {
+            for row_idx in first_node.indices.iter() {
+                first_centroid[col_idx] +=
+                    data_matrix.get(*row_idx, col_idx).unwrap();
+            }
+            first_centroid[col_idx] /= first_centroid_node_count;
+        }
+
+        let second_centroid_node_count = second_node.indices.len() as f64;
+        let mut second_centroid = vec![0.0; data_matrix.ncols];
+
+        for col_idx in 0..data_matrix.ncols {
+            for row_idx in second_node.indices.iter() {
+                second_centroid[col_idx] +=
+                    data_matrix.get(*row_idx, col_idx).unwrap();
+            }
+            second_centroid[col_idx] /= second_centroid_node_count;
+        }
+
+        let centroid_distance =
+            Euclidean.compute(&first_centroid, &second_centroid);
+
+        (((first_centroid_node_count + second_centroid_node_count)
+            / (first_centroid_node_count * second_centroid_node_count))
+            * centroid_distance.powi(2))
+        .sqrt()
     }
 }

@@ -37,6 +37,11 @@ pub struct PreOrderLeafIter<'a> {
     inner: PreorderIter<'a>,
 }
 
+pub struct LadderizedPreorderIter<'a> {
+    tree: &'a HcTree,
+    stack: Vec<usize>,
+}
+
 impl<'a> Iterator for PreorderIter<'a> {
     type Item = &'a Node;
 
@@ -63,6 +68,33 @@ impl<'a> Iterator for PreOrderLeafIter<'a> {
             }
         }
         None
+    }
+}
+
+impl<'a> Iterator for LadderizedPreorderIter<'a> {
+    type Item = &'a Node;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        let current_index = self.stack.pop()?;
+        let current_node = &self.tree.nodes[current_index];
+
+        let mut children_with_sizes: Vec<(usize, usize)> = current_node
+            .children
+            .iter()
+            .map(|&child_id| {
+                let size =
+                    &self.tree.nodes[child_id].get_subtree_size(self.tree);
+                (child_id, *size)
+            })
+            .collect();
+
+        children_with_sizes.sort_by_key(|&(_, size)| std::cmp::Reverse(size));
+
+        for &(child_index, _) in children_with_sizes.iter().rev() {
+            self.stack.push(child_index);
+        }
+
+        Some(current_node)
     }
 }
 
@@ -96,6 +128,16 @@ impl HcTree {
     pub fn preorder_leaf_traversal(&self) -> PreOrderLeafIter {
         PreOrderLeafIter {
             inner: self.preorder_node_traversal(),
+        }
+    }
+
+    pub fn ladderized_preorder_node_view(&self) -> LadderizedPreorderIter {
+        let root_index = self.nodes.len().checked_sub(1);
+        let stack = root_index.map_or_else(Vec::new, |idx| vec![idx]);
+
+        LadderizedPreorderIter {
+            tree: self,
+            stack,
         }
     }
 

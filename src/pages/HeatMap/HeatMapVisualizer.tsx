@@ -10,18 +10,22 @@ import {
 } from "../../lib/constants";
 import { ExpressionRequest, ExpressionResponse, post } from "../../lib/api";
 import { SvgHeatMap } from "./SvgHeatMap";
-import {
-  DistanceMetricOptions,
-  LINKAGE_METRICS,
-  LinkageMetricOptions,
-} from "../../lib/clustering";
-import { DISTANCE_METRICS } from "../../lib/clustering";
+// import {
+//   DistanceMetricOptions,
+//   LINKAGE_METRICS,
+//   LinkageMetricOptions,
+// } from "../../lib/clustering";
+// import { DISTANCE_METRICS } from "../../lib/clustering";
 import { DATA_SCALING_METHODS, DataScalingOptions } from "../../lib/scaling";
 import { NoGeneListsError } from "./Errors";
 import { NoGeneListsErrorComponent } from "./HeatmapError";
 
 import { useHeatMapStore } from "./state";
 import D3Tooltip, { TooltipHandle } from "./Tooltip";
+
+type ClusteringAxis = "Row" | "Column" | "Both";
+type LinkageFunction = "Average" | "Ward";
+type DistanceMetric = "Euclidean" | "Chebyshev";
 
 export const HeatMapVisualizer = () => {
   const tooltipRef = useRef<TooltipHandle>(null);
@@ -47,11 +51,17 @@ export const HeatMapVisualizer = () => {
     useState<ExpressionResponse | null>(null);
   const [scalingFunctionName, setScalingFunctionName] =
     useState<DataScalingOptions>("log");
-  const [clusterLinkage, setClusterLinkage] =
-    useState<LinkageMetricOptions>("average");
-  const [distanceMetric, setDistanceMetric] =
-    useState<DistanceMetricOptions>("euclidean");
-  const [clusterAxis, setClusterAxis] = useState<string>("row");
+  // const [clusterLinkage, setClusterLinkage] =
+  //   useState<LinkageMetricOptions>("average");
+  // const [distanceMetric, setDistanceMetric] =
+  //   useState<DistanceMetricOptions>("euclidean");
+  // const [clusterAxis, setClusterAxis] = useState<string>("row");
+
+  // const RustWorker = useRef<Worker | null>(null);
+  const [axis, setAxis] = useState<ClusteringAxis>("Row");
+  const [linkage, setLinkage] = useState<LinkageFunction>("Average");
+  const [distance, setDistance] = useState<DistanceMetric>("Euclidean");
+  // const [result, setResult] = useState<Payload | null>(null);
 
   useEffect(() => {
     if (
@@ -266,16 +276,26 @@ export const HeatMapVisualizer = () => {
               border: "1px solid var(--color)",
               borderRadius: "var(--radius)",
             }}
-            value={distanceMetric}
+            // value={distanceMetric}
+            // onChange={(event) =>
+            //   setDistanceMetric(event.target.value as DistanceMetricOptions)
+            // }
+            value={distance}
             onChange={(event) =>
-              setDistanceMetric(event.target.value as DistanceMetricOptions)
+              setDistance(event.target.value as DistanceMetric)
             }
           >
-            {DISTANCE_METRICS.map((value, index) => (
+            {/* {DISTANCE_METRICS.map((value, index) => (
               <option key={index} value={value}>
                 {value}
               </option>
-            ))}
+            ))} */}
+            <option value={"Euclidean"}>
+              euclidean
+            </option>
+            <option value={"Chebyshev"}>
+              chebyshev
+            </option>
           </select>
         </label>
         <label
@@ -298,16 +318,18 @@ export const HeatMapVisualizer = () => {
               border: "1px solid var(--color)",
               borderRadius: "var(--radius)",
             }}
-            value={clusterLinkage}
+            value={linkage}
             onChange={(event) =>
-              setClusterLinkage(event.target.value as LinkageMetricOptions)
+              setLinkage(event.target.value as LinkageFunction)
             }
           >
-            {LINKAGE_METRICS.map((value, index) => (
+            {/* {LINKAGE_METRICS.map((value, index) => (
               <option key={index} value={value}>
                 {value}
               </option>
-            ))}
+            ))} */}
+            <option value={"Average"}>average</option>
+            <option value={"Ward"}>ward</option>
           </select>
         </label>
         <label
@@ -330,14 +352,17 @@ export const HeatMapVisualizer = () => {
               border: "1px solid var(--color)",
               borderRadius: "var(--radius)",
             }}
-            value={clusterAxis}
-            onChange={(event) => setClusterAxis(event.target.value)}
+            value={axis}
+            onChange={(event) => setAxis(event.target.value as ClusteringAxis)}
           >
-            {["row", "col", "both"].map((value, index) => (
+            {/* {["row", "col", "both"].map((value, index) => (
               <option key={index} value={value}>
                 {value}
               </option>
-            ))}
+            ))} */}
+            <option value={"Row"}>row</option>
+            <option value={"Column"}>column</option>
+            <option value={"Both"}>both</option>
           </select>
         </label>
         <label
@@ -410,13 +435,14 @@ export const HeatMapVisualizer = () => {
             cellHeight={15}
             cellPadding={1}
             scalingFunctionName={scalingFunctionName}
-            clusterAxis={clusterAxis}
-            distanceMetric={distanceMetric}
-            clusterLinkage={clusterLinkage}
+            clusterAxis={axis}
+            // distanceMetric={distanceMetric}
+            distanceMetric={distance}
+            clusterLinkage={linkage}
           />
         ) : null}
       </div>
-        <D3Tooltip ref={tooltipRef}/>
+      <D3Tooltip ref={tooltipRef} />
     </div>
   );
 };

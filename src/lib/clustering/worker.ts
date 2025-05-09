@@ -14,8 +14,6 @@ self.onmessage = async (event: MessageEvent) => {
       // Ensure WASM is initialized
       await init();
 
-      // const { nrows, ncols, values } = payload;
-      // const result = hierarchical_clustering(nrows, ncols, values);
 
       const { nrows, ncols, values, axis, linkage, distance } = payload;
 

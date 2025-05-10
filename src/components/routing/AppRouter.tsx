@@ -12,6 +12,7 @@ import {
 import { BlastResult, BlastSubmit } from "../../pages/Blast";
 
 import { HeatMapVisualizer } from "../../pages/HeatMap";
+import { NetworkPage } from "../../pages/Network";
 
 const routes = [
   { path: "/", component: () => <Root /> },
@@ -35,16 +36,20 @@ const routes = [
   },
   {
     path: "/exnetwork",
-    component: () => <div>This tool is currently under development.</div>,
+    component: () => <NetworkPage />,
   },
-  // {
-  //   path: "/jbrowse",
-  //   component: () => (
-  //     <div style={{width: "100%", height: "100%"}}>
-  //       <iframe width="100%" height="100%" src="https://genomes.scilifelab.se/genome-browser/?config=%2Fdata%2F38qQhuj9O2BKK4HM0cdQfbxOGVXUchMO%2Fconfig.json"></iframe>
-  //     </div>
-  //   ),
-  // },
+  {
+    path: "/jbrowse",
+    component: () => (
+      <div style={{ width: "100%", height: "100%" }}>
+        <iframe
+          width="100%"
+          height="100%"
+          src="https://genomes.scilifelab.se/embed/?config=%252Fdata%252FmlYJHVRALC8KtpFNRWAi2TLUm7jXanGE%252Fconfig.json"
+        ></iframe>
+      </div>
+    ),
+  },
 ];
 
 const matchRoute = (

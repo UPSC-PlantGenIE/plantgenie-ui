@@ -48,3 +48,23 @@ export default tseslint.config({
   },
 })
 ```
+## Compiling Rust/WASM
+
+You can test the Rust code like this:
+
+
+```bash
+cargo test -- --nocapture
+```
+
+and compile with wasm-pack (need to install it)
+
+```bash
+cargo install wasm-pack
+```
+
+to compile from the crate directory into the javascript source:
+
+```bash
+wasm-pack build --target web --out-dir ../src/wasm
+```

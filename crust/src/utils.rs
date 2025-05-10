@@ -1,120 +1,6 @@
 use ::std::ops::Index;
 use core::fmt;
 
-#[derive(Debug)]
-pub enum MatrixType {
-    UpperTriangle,
-    LowerTriangle,
-    Full,
-}
-
-fn lower_triangular_index(i: usize, j: usize) -> usize {
-    // i >= j
-    i * (i + 1) / 2 + j
-}
-
-fn upper_triangular_index(i: usize, j: usize, ncols: usize) -> usize {
-    // i <= j
-    let row_offset = i * ncols - (i * (i - 1)) / 2;
-    row_offset + (j - i)
-}
-
-#[derive(Debug)]
-pub struct Matrix {
-    pub nrows: usize,
-    pub ncols: usize,
-    pub data: Vec<f64>,
-    pub matrix_type: MatrixType,
-}
-
-impl Matrix {
-    pub fn transpose(&mut self) {
-        // let mut transposed = vec![0.0; self.nrows * self.ncols];
-
-        match self.matrix_type {
-            MatrixType::Full => {
-                let (nrows, ncols) = (self.nrows, self.ncols);
-                let mut transposed = vec![0.0; nrows * ncols];
-
-                for i in 0..nrows {
-                    for j in 0..ncols {
-                        let src_index = i * ncols + j;
-                        let dest_index = j * nrows + i;
-                        transposed[dest_index] = self.data[src_index].clone();
-                    }
-                }
-
-                self.data = transposed;
-                self.nrows = ncols;
-                self.ncols = nrows;
-            }
-            MatrixType::LowerTriangle => {
-                self.matrix_type = MatrixType::UpperTriangle;
-                std::mem::swap(&mut self.nrows, &mut self.ncols);
-            }
-            MatrixType::UpperTriangle => {
-                self.matrix_type = MatrixType::LowerTriangle;
-                std::mem::swap(&mut self.nrows, &mut self.ncols);
-            }
-        }
-    }
-
-    pub fn get(&self, i: usize, j: usize) -> Option<f64> {
-        if i >= self.nrows || j >= self.ncols {
-            return None;
-        }
-
-        match self.matrix_type {
-            MatrixType::Full => {
-                let index = i * self.ncols + j;
-                self.data.get(index).copied()
-            }
-            MatrixType::LowerTriangle => {
-                let (row, col) = if i >= j { (i, j) } else { (j, i) };
-                let index = lower_triangular_index(row, col);
-                self.data.get(index).copied()
-            }
-            MatrixType::UpperTriangle => {
-                let (row, col) = if i <= j { (i, j) } else { (j, i) };
-                let index = upper_triangular_index(row, col, self.ncols);
-                self.data.get(index).copied()
-            }
-        }
-    }
-
-    pub fn rows(&self) -> impl Iterator<Item = &[f64]> {
-        self.data.chunks(self.ncols)
-    }
-
-    pub fn reorder_rows(&self, row_order: &[usize]) -> Vec<f64> {
-        let mut result = vec![0.0; self.nrows * self.ncols];
-        for (i, new_row_index) in row_order.iter().enumerate() {
-            let src_start = new_row_index * self.ncols;
-            let src_end = src_start + self.ncols;
-            let dst_start = i * self.ncols;
-
-            result[dst_start..dst_start + self.ncols]
-                .copy_from_slice(&self.data[src_start..src_end]);
-        }
-
-        result
-    }
-
-    pub fn reorder_rows_in_place(&mut self, row_order: &[usize]) {
-        let mut result = vec![0.0; self.nrows * self.ncols];
-        for (i, new_row_index) in row_order.iter().enumerate() {
-            let src_start = new_row_index * self.ncols;
-            let src_end = src_start + self.ncols;
-            let dst_start = i * self.ncols;
-
-            result[dst_start..dst_start + self.ncols]
-                .copy_from_slice(&self.data[src_start..src_end]);
-        }
-
-        self.data.copy_from_slice(&result);
-    }
-}
-
 pub struct MatrixView<'a> {
     data: &'a [f64],
     nrows: usize,
@@ -184,20 +70,6 @@ impl<'a> MatrixView<'a> {
                     i * (i - 1) / 2 + j
                 }
             }),
-        }
-    }
-
-    pub fn new_full(matrix: &'a Matrix) -> Self {
-        assert!(matches!(matrix.matrix_type, MatrixType::Full));
-        let nrows = matrix.nrows;
-        let ncols = matrix.ncols;
-        let data = &matrix.data;
-
-        MatrixView {
-            data,
-            nrows,
-            ncols,
-            get_index: Box::new(move |i, j| i * ncols + j),
         }
     }
 
@@ -296,17 +168,5 @@ impl<'a> MatrixLike for MatrixView<'a> {
     }
     fn get(&self, i: usize, j: usize) -> f64 {
         self.get(i, j)
-    }
-}
-
-impl MatrixLike for Matrix {
-    fn nrows(&self) -> usize {
-        self.nrows
-    }
-    fn ncols(&self) -> usize {
-        self.ncols
-    }
-    fn get(&self, i: usize, j: usize) -> f64 {
-        self.get(i, j).unwrap()
     }
 }

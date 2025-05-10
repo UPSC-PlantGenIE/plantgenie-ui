@@ -10,7 +10,6 @@ mod utils;
 use crate::distance::DistanceMetric;
 use crate::linkage::LinkageFunction;
 use crate::tree::{HcTree, Node};
-use crate::utils::Matrix;
 
 #[wasm_bindgen]
 #[derive(Debug, Clone, Copy)]
@@ -42,67 +41,6 @@ pub fn find_nodes_to_merge_with_view(
                 first_index: first_node.id,
                 second_index: second_node.id,
                 distance: linkage.compute_from_views(
-                    first_node,
-                    second_node,
-                    distance_matrix,
-                    data_matrix,
-                ),
-            });
-        }
-    }
-
-    let best_pair = pairs
-        .iter()
-        .reduce(|acc, current| {
-            if current.distance < acc.distance {
-                current
-            } else {
-                acc
-            }
-        })
-        .unwrap();
-
-    let indices: Vec<usize> = nodes[best_pair.first_index]
-        .indices
-        .iter()
-        .chain(nodes[best_pair.second_index].indices.iter())
-        .cloned()
-        .collect();
-
-    let next_index = nodes.len();
-    nodes[best_pair.first_index].update_parent(next_index);
-    nodes[best_pair.second_index].update_parent(next_index);
-
-    nodes.push(Node {
-        id: next_index,
-        parent: None,
-        children: vec![best_pair.first_index, best_pair.second_index],
-        indices,
-    });
-}
-
-pub fn find_nodes_to_merge(
-    nodes: &mut Vec<Node>,
-    distance_matrix: &[f64],
-    data_matrix: &Matrix,
-    linkage: LinkageFunction,
-) {
-    let mut pairs: Vec<LinkageResult> =
-        Vec::with_capacity(nodes.len() * (nodes.len() - 1) / 2);
-
-    for (i, first_node) in nodes.iter().enumerate() {
-        if first_node.parent.is_some() {
-            continue;
-        }
-        for second_node in nodes.iter().skip(i + 1) {
-            if second_node.parent.is_some() {
-                continue;
-            }
-
-            pairs.push(LinkageResult {
-                first_index: first_node.id,
-                second_index: second_node.id,
-                distance: linkage.compute(
                     first_node,
                     second_node,
                     distance_matrix,
@@ -190,32 +128,6 @@ impl HierarchicalClusteringResult {
     }
 }
 
-pub fn compute_distance_matrix(
-    data_matrix: &Matrix,
-    distance: DistanceMetric,
-) -> Vec<f64> {
-    let mut distance_matrix: Vec<f64> = Vec::<f64>::with_capacity(
-        data_matrix.nrows * (data_matrix.nrows - 1) / 2,
-    );
-
-    let matrix_view = MatrixView::new(
-        &data_matrix.data,
-        data_matrix.nrows,
-        data_matrix.ncols,
-    );
-
-    for i in 0..matrix_view.nrows() {
-        let row_i_vect: Vec<f64> = matrix_view.row(i);
-        for j in i + 1..matrix_view.nrows() {
-            let row_j_vect: Vec<f64> = matrix_view.row(j);
-            distance_matrix
-                .push(distance.compute(&row_i_vect, &row_j_vect).unwrap());
-        }
-    }
-
-    distance_matrix
-}
-
 pub fn compute_distance_matrix_from_view(
     data_matrix: &MatrixView,
     distance: DistanceMetric,
@@ -256,7 +168,7 @@ pub fn cluster_with_views(
         let num_nodes_without_parent =
             tree.nodes.iter().filter(|x| x.parent.is_none()).count();
 
-        println!("Nodes remaining: {}", num_nodes_without_parent);
+        // println!("Nodes remaining: {}", num_nodes_without_parent);
 
         if num_nodes_without_parent < 2 {
             break;
@@ -279,41 +191,6 @@ pub fn cluster_with_views(
     row_order
 }
 
-pub fn cluster(
-    data_matrix: &Matrix,
-    distance: DistanceMetric,
-    linkage: LinkageFunction,
-) -> Vec<usize> {
-    let distance_matrix = compute_distance_matrix(data_matrix, distance);
-
-    let mut tree = HcTree::initialize_new_tree(data_matrix.nrows);
-
-    loop {
-        let num_nodes_without_parent =
-            tree.nodes.iter().filter(|x| x.parent.is_none()).count();
-
-        println!("Nodes remaining: {}", num_nodes_without_parent);
-
-        if num_nodes_without_parent < 2 {
-            break;
-        }
-
-        find_nodes_to_merge(
-            &mut tree.nodes,
-            &distance_matrix,
-            &data_matrix,
-            linkage,
-        );
-    }
-
-    tree.ladderize();
-
-    let row_order: Vec<usize> =
-        tree.preorder_leaf_traversal().map(|node| node.id).collect();
-
-    row_order
-}
-
 #[wasm_bindgen]
 pub fn hierarchical_clustering(
     nrows: usize,
@@ -326,32 +203,21 @@ pub fn hierarchical_clustering(
     let data_matrix = MatrixView::new(&values, nrows, ncols);
 
     let (row_order, col_order) = match axis {
-        ClusteringAxis::Both => {
-            let row_order = cluster_with_views(&data_matrix, distance, linkage);
-            let col_order = cluster_with_views(
-                &data_matrix.transposed(),
-                distance,
-                linkage,
-            );
-            (row_order, col_order)
-        }
+        ClusteringAxis::Both => (
+            cluster_with_views(&data_matrix, distance, linkage),
+            cluster_with_views(&data_matrix.transposed(), distance, linkage),
+        ),
+
         ClusteringAxis::Row => (
             cluster_with_views(&data_matrix, distance, linkage),
             (0..ncols).collect(),
         ),
+
         ClusteringAxis::Column => (
             (0..nrows).collect(),
             cluster_with_views(&data_matrix.transposed(), distance, linkage),
         ),
     };
-
-    // let reordered_values: Vec<f64> = {
-    //     let permutation_view =
-    //         data_matrix.permutation(row_order.as_slice(), col_order.as_slice());
-    //     (0..permutation_view.nrows())
-    //         .flat_map(|i| permutation_view.row(i))
-    //         .collect()
-    // };
 
     HierarchicalClusteringResult {
         values: {
@@ -366,198 +232,9 @@ pub fn hierarchical_clustering(
     }
 }
 
-#[wasm_bindgen]
-pub fn hierarchical_clustering_old(
-    nrows: usize,
-    ncols: usize,
-    values: Vec<f64>,
-    axis: ClusteringAxis,
-    linkage: LinkageFunction,
-    distance: DistanceMetric,
-) -> HierarchicalClusteringResult {
-    println!("Weeeeeeeee're clustering!");
-
-    let mut data_matrix = Matrix {
-        nrows,
-        ncols,
-        data: values,
-        matrix_type: utils::MatrixType::Full,
-    };
-
-    // let mut distance_matrix =
-    //     Vec::<f64>::with_capacity(nrows * (nrows - 1) / 2);
-
-    // for (x, chunk_i) in data_matrix.rows().enumerate() {
-    //     for chunk_j in data_matrix.rows().skip(x + 1) {
-    //         distance_matrix.push(distance.compute(chunk_i, chunk_j).unwrap())
-    //     }
-    // }
-
-    let results = match axis {
-        ClusteringAxis::Both => {
-            let row_order = cluster(&data_matrix, distance, linkage);
-
-            // let col_order = {
-            //     let transposed_view = MatrixView::new_full(&data_matrix);
-            //     let transposed_view = transposed_view.transposed();
-            //     cluster(&transposed_view, distance, linkage)
-            // }
-            data_matrix.reorder_rows_in_place(&row_order);
-            data_matrix.transpose();
-            let col_order = cluster(&data_matrix, distance, linkage);
-            data_matrix.reorder_rows_in_place(&col_order);
-            data_matrix.transpose();
-            HierarchicalClusteringResult {
-                row_order,
-                col_order,
-                values: data_matrix.data,
-            }
-        }
-
-        ClusteringAxis::Row => {
-            let matrix_view = MatrixView::new_full(&data_matrix);
-            let row_order = cluster(&data_matrix, distance, linkage);
-
-            let data = {
-                let row_permutation_view =
-                    matrix_view.row_permutation(&row_order);
-                (0..row_permutation_view.nrows())
-                    .flat_map(|i| row_permutation_view.row(i))
-                    .collect()
-            };
-            HierarchicalClusteringResult {
-                row_order: row_order,
-                values: data,
-                col_order: (0..data_matrix.ncols).collect(),
-            }
-        }
-
-        ClusteringAxis::Column => {
-            let col_order = {
-                data_matrix.transpose();
-                cluster(&data_matrix, distance, linkage)
-            };
-            data_matrix.reorder_rows_in_place(&col_order);
-            data_matrix.transpose();
-            HierarchicalClusteringResult {
-                col_order,
-                values: data_matrix.data,
-                row_order: (0..data_matrix.nrows).collect(),
-            }
-        }
-    };
-
-    // let mut hc_tree = HcTree::initialize_new_tree(nrows);
-
-    // loop {
-    //     let num_nodes_without_parent =
-    //         hc_tree.nodes.iter().filter(|x| x.parent.is_none()).count();
-
-    //     println!("Nodes remaining: {}", num_nodes_without_parent);
-
-    //     if num_nodes_without_parent < 2 {
-    //         break;
-    //     }
-
-    //     find_nodes_to_merge(&mut hc_tree.nodes, &distance_matrix, &data_matrix);
-    // }
-
-    // println!("my root node is {:#?}", hc_tree.root().unwrap());
-    // println!("Number of nodes: {}", hc_tree.nodes.len());
-
-    // let before: Vec<usize> = hc_tree
-    //     .preorder_leaf_traversal()
-    //     .map(|node| node.id)
-    //     .collect();
-
-    // hc_tree.ladderize();
-
-    // let after: Vec<usize> = hc_tree
-    //     .preorder_leaf_traversal()
-    //     .map(|node| node.id)
-    //     .collect();
-
-    // println!("{:<30} | {:<30}", "Before ladderize", "After ladderize");
-    // println!("{}", "-".repeat(65));
-
-    // for (before_node, after_node) in before.iter().zip(after.iter()) {
-    //     println!(
-    //         "{:<30} | {:<30}",
-    //         format!("Node id: {}", before_node),
-    //         format!("Node id: {}", after_node)
-    //     );
-    // }
-
-    // let result = data_matrix.reorder_rows(&after);
-
-    // return HierarchicalClusteringResult {
-    //     row_order: after,
-    //     col_order: (0..ncols).collect::<Vec<usize>>(),
-    //     values: result,
-    // };
-    return results;
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
-
-    #[test]
-    fn cluster_test() {
-        let data: Vec<f64> = vec![
-            1.0, 2.0, 3.0, // row 0
-            2.0, 3.0, 4.0, // row 1
-            3.0, 4.0, 5.0, // row 2
-            8.0, 8.0, 8.0, // row 3
-            1.0, 0.0, 1.0, // row 4
-            0.0, 1.0, 0.0, // row 5
-            6.0, 5.0, 4.0, // row 6
-            9.0, 9.0, 9.0, // row 7
-            2.0, 2.0, 2.0, // row 8
-            5.0, 5.0, 5.0, // row 9
-        ];
-
-        // let data: Vec<f64> = vec![
-        //     // Cluster A under Euclidean
-        //     1.0, 1.0, 1.0, // row 0
-        //     2.0, 2.0, 2.0, // row 1
-        //     3.0, 3.0, 3.0, // row 2
-        //     // Cluster B under Chebyshev
-        //     0.0, 0.0, 10.0, // row 3
-        //     0.0, 0.0, 11.0, // row 4
-        //     0.0, 0.0, 12.0, // row 5
-        //     // These are outliers under Chebyshev but close in Euclidean to cluster A
-        //     1.0, 1.0, 10.0, // row 6
-        //     2.0, 2.0, 10.0, // row 7
-        //     // Separate cluster in both
-        //     50.0, 50.0, 50.0, // row 8
-        //     51.0, 51.0, 51.0, // row 9
-        // ];
-
-        // let data_clone = data.clone();
-
-        // mutates the data above
-        let result = super::hierarchical_clustering_old(
-            10,
-            3,
-            data,
-            super::ClusteringAxis::Row,
-            super::LinkageFunction::Average,
-            super::DistanceMetric::Chebyshev,
-        );
-
-        // data_clone
-        //     .iter()
-        //     .zip(result.values.iter())
-        //     .enumerate()
-        //     .for_each(|(x, (y, z))| println!("{x} - {y} {z}"));
-
-        result
-            .row_order
-            .iter()
-            .enumerate()
-            .for_each(|(x, y)| println!("{x}, {y}"));
-    }
 
     #[test]
     fn cluster_with_views_test() {
@@ -603,7 +280,6 @@ mod tests {
 
         println!("{:#?}", matrix_view);
 
-        // for i in 0..matrix_view.nrows() {}
         for (index, value) in data.iter().enumerate() {
             let matrix_value = matrix_view.get(index / 3, index % 3);
             println!("{matrix_value} {}", *value);

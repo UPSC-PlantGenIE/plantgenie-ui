@@ -31,7 +31,7 @@ type CrustWorkerSuccessResponse = {
 
 type CrustWorkerErrorResponse = {
   type: "error";
-  payload: "string";
+  payload: string;
 };
 
 type CrustWorkerResponse =
@@ -56,9 +56,17 @@ export const useCrust = ({
   distance,
 }: CrustHookProps) => {
   const crustWorker = useRef<Worker | null>(null);
-  const [result, setResult] = useState<HierarchicalClusteringResult | null>();
+  const [result, setResult] = useState<HierarchicalClusteringResult | null>(
+    null
+  );
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    setLoading(true);
+    setResult(null);
+    setError(null);
+
     crustWorker.current = new Worker(
       new URL("../../lib/clustering/worker.ts", import.meta.url),
       {
@@ -72,8 +80,13 @@ export const useCrust = ({
       console.log("Worker response:", event.data);
       const { type, payload } = event.data;
       if (type === "result") {
-        setResult(payload satisfies HierarchicalClusteringResult);
+        setResult(payload);
+        setError(null);
+      } else if (type === "error") {
+        setError(payload);
+        setResult(null);
       }
+      setLoading(false);
     };
 
     crustWorker.current.postMessage({
@@ -93,13 +106,43 @@ export const useCrust = ({
     };
   }, [axis, linkage, distance, data, ncols, nrows]);
 
-  return result ? {
-    rowOrder: [...result.row_order],
-    colOrder: [...result.col_order],
-    values: [...result.values],
-  } : {
-    rowOrder: [...Array(nrows).keys()],
-    colOrder: [...Array(ncols).keys()],
-    values: data,
+  if (loading) {
+    return {
+      rowOrder: [], // Return empty arrays while loading
+      colOrder: [],
+      values: [],
+      // loading: true,
+      // error: null,
+    };
+  }
+
+  if (error) {
+    return {
+      rowOrder: [...Array(nrows).keys()], // Fallback to original data on error
+      colOrder: [...Array(ncols).keys()],
+      values: data,
+      // loading: false,
+      // error: error,
+    };
+  }
+
+  return {
+    rowOrder: result ? [...result.row_order] : [...Array(nrows).keys()],
+    colOrder: result ? [...result.col_order] : [...Array(ncols).keys()],
+    values: result ? [...result.values] : data, // Use result.values if available
+    // loading: false,
+    // error: null,
   };
+
+  // return result
+  //   ? {
+  //       rowOrder: [...result.row_order],
+  //       colOrder: [...result.col_order],
+  //       values: [...result.values],
+  //     }
+  //   : {
+  //       rowOrder: [...Array(nrows).keys()],
+  //       colOrder: [...Array(ncols).keys()],
+  //       values: data,
+  //     };
 };

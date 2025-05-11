@@ -51,17 +51,10 @@ export const HeatMapVisualizer = () => {
     useState<ExpressionResponse | null>(null);
   const [scalingFunctionName, setScalingFunctionName] =
     useState<DataScalingOptions>("log");
-  // const [clusterLinkage, setClusterLinkage] =
-  //   useState<LinkageMetricOptions>("average");
-  // const [distanceMetric, setDistanceMetric] =
-  //   useState<DistanceMetricOptions>("euclidean");
-  // const [clusterAxis, setClusterAxis] = useState<string>("row");
 
-  // const RustWorker = useRef<Worker | null>(null);
   const [axis, setAxis] = useState<ClusteringAxis>("Row");
   const [linkage, setLinkage] = useState<LinkageFunction>("Average");
   const [distance, setDistance] = useState<DistanceMetric>("Euclidean");
-  // const [result, setResult] = useState<Payload | null>(null);
 
   useEffect(() => {
     if (
@@ -276,20 +269,11 @@ export const HeatMapVisualizer = () => {
               border: "1px solid var(--color)",
               borderRadius: "var(--radius)",
             }}
-            // value={distanceMetric}
-            // onChange={(event) =>
-            //   setDistanceMetric(event.target.value as DistanceMetricOptions)
-            // }
             value={distance}
             onChange={(event) =>
               setDistance(event.target.value as DistanceMetric)
             }
           >
-            {/* {DISTANCE_METRICS.map((value, index) => (
-              <option key={index} value={value}>
-                {value}
-              </option>
-            ))} */}
             <option value={"Euclidean"}>
               euclidean
             </option>
@@ -323,11 +307,6 @@ export const HeatMapVisualizer = () => {
               setLinkage(event.target.value as LinkageFunction)
             }
           >
-            {/* {LINKAGE_METRICS.map((value, index) => (
-              <option key={index} value={value}>
-                {value}
-              </option>
-            ))} */}
             <option value={"Average"}>average</option>
             <option value={"Ward"}>ward</option>
           </select>
@@ -355,11 +334,6 @@ export const HeatMapVisualizer = () => {
             value={axis}
             onChange={(event) => setAxis(event.target.value as ClusteringAxis)}
           >
-            {/* {["row", "col", "both"].map((value, index) => (
-              <option key={index} value={value}>
-                {value}
-              </option>
-            ))} */}
             <option value={"Row"}>row</option>
             <option value={"Column"}>column</option>
             <option value={"Both"}>both</option>
@@ -436,7 +410,6 @@ export const HeatMapVisualizer = () => {
             cellPadding={1}
             scalingFunctionName={scalingFunctionName}
             clusterAxis={axis}
-            // distanceMetric={distanceMetric}
             distanceMetric={distance}
             clusterLinkage={linkage}
           />

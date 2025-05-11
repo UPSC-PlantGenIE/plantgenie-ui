@@ -210,8 +210,6 @@ export const SvgHeatMap = ({
     distance: distanceMetric,
   });
 
-  console.log(rowOrder);
-
   const reorderedRowMap = useMemo(
     () => createReorderedRowMapper(rowOrder, colOrder.length),
     [rowOrder, colOrder]
@@ -268,6 +266,9 @@ export const SvgHeatMap = ({
 
   if (
     !(
+      rowOrder.length !== 0 &&
+      colOrder.length !== 0 &&
+      values.length !== 0 &&
       horizontalScale !== null &&
       verticalScale !== null &&
       colorScale !== null &&

@@ -14,7 +14,6 @@ self.onmessage = async (event: MessageEvent) => {
       // Ensure WASM is initialized
       await init();
 
-
       const { nrows, ncols, values, axis, linkage, distance } = payload;
 
       console.log(axis, linkage, distance);

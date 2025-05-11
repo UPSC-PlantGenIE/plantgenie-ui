@@ -12,16 +12,24 @@ import {
 } from "../../lib/clustering/utils";
 
 import { useMaxTextLength } from "../../lib/hooks";
-import { useClustering } from "../../lib/hooks";
-import { DataScalingOptions } from "../../lib/scaling";
-import {
-  DistanceMetricOptions,
-  LinkageMetricOptions,
-} from "../../lib/clustering";
+// import { useClustering } from "../../lib/hooks";
+// import { DataScalingOptions } from "../../lib/scaling";
+// import {
+//   DistanceMetricOptions,
+//   LinkageMetricOptions,
+// } from "../../lib/clustering";
 import { useHeatMapStore, setSvgHeight, setSvgWidth } from "./state";
 
 import styles from "./SvgHeatMap.module.css";
 import { TooltipHandle } from "./Tooltip";
+
+import {
+  useCrust,
+  ClusteringAxis,
+  LinkageFunction,
+  DistanceMetric,
+} from "../../lib/hooks/useCrust";
+import { DataScalers, DataScalingOptions } from "../../lib/scaling";
 
 interface SvgHeatMapProps {
   svgRef: RefObject<SVGSVGElement | null>;
@@ -36,9 +44,9 @@ interface SvgHeatMapProps {
   cellHeight: number;
   expressionData: ExpressionResponse;
   scalingFunctionName: DataScalingOptions;
-  distanceMetric: DistanceMetricOptions;
-  clusterAxis: string;
-  clusterLinkage: LinkageMetricOptions;
+  distanceMetric: DistanceMetric;
+  clusterAxis: ClusteringAxis;
+  clusterLinkage: LinkageFunction;
 }
 
 interface RectHoverData {
@@ -96,11 +104,21 @@ export const SvgHeatMap = ({
     tooltipRef.current?.hide();
   };
 
-  const rowLabels = expressionData.genes.map(
-    (value) => `${value.chromosomeId}_${value.geneId}`
+  // const rowLabels = expressionData.genes.map(
+  //   (value) => `${value.chromosomeId}_${value.geneId}`
+  // );
+
+  // const colLabels = expressionData.samples.map((value) => `${value.condition}`);
+
+  const rowLabels = useMemo(
+    () => expressionData.genes.map((v) => `${v.chromosomeId}_${v.geneId}`),
+    [expressionData.genes]
   );
 
-  const colLabels = expressionData.samples.map((value) => `${value.condition}`);
+  const colLabels = useMemo(
+    () => expressionData.samples.map((v) => `${v.condition}`),
+    [expressionData.samples]
+  );
 
   const rowTextLength = useMaxTextLength({
     texts: rowLabels,
@@ -159,16 +177,37 @@ export const SvgHeatMap = ({
     marginBottom,
     marginTop,
     cellHeight,
+    cellPadding,
+    labelPadding,
   ]);
 
-  const { rowOrder, colOrder, values } = useClustering({
-    data: expressionData.values,
+  // const { rowOrder, colOrder, values } = useClustering({
+  //   data: expressionData.values,
+  //   nrows: rowLabels.length,
+  //   ncols: colLabels.length,
+  //   scalingFunctionName,
+  //   clusterAxis,
+  //   clusterLinkage,
+  //   distanceMetric,
+  // });
+
+  const scaledData = useMemo(
+    () =>
+      DataScalers[scalingFunctionName].function({
+        data: expressionData.values,
+        nrows: rowLabels.length,
+        ncols: colLabels.length,
+      }),
+    [rowLabels, colLabels, expressionData, scalingFunctionName]
+  );
+
+  const { rowOrder, colOrder, values } = useCrust({
+    data: scaledData,
     nrows: rowLabels.length,
     ncols: colLabels.length,
-    scalingFunctionName,
-    clusterAxis,
-    clusterLinkage,
-    distanceMetric,
+    axis: clusterAxis,
+    linkage: clusterLinkage,
+    distance: distanceMetric,
   });
 
   const reorderedRowMap = useMemo(
@@ -222,11 +261,14 @@ export const SvgHeatMap = ({
       scaleLinear()
         .domain([Math.max(...values), Math.min(...values)])
         .range([0, 1]),
-    [expressionData.values]
+    [values]
   );
 
   if (
     !(
+      rowOrder.length !== 0 &&
+      colOrder.length !== 0 &&
+      values.length !== 0 &&
       horizontalScale !== null &&
       verticalScale !== null &&
       colorScale !== null &&
@@ -262,7 +304,7 @@ export const SvgHeatMap = ({
       <rect
         id="svg-background"
         fill="var(--background)"
-        style={{borderRadius: "var(--radius)"}}
+        style={{ borderRadius: "var(--radius)" }}
         width={svgWidth}
         height={svgHeight}
       ></rect>
@@ -292,10 +334,15 @@ export const SvgHeatMap = ({
             width={
               Math.abs(horizontalScale(0) - horizontalScale(1)) - cellPadding
             }
+            // fill={
+            //   Number.isNaN(values[reorderedIndexMap(index)])
+            //     ? gray(50).toString()
+            //     : interpolateRdYlBu(values[reorderedIndexMap(index)])
+            // }
             fill={
-              Number.isNaN(values[reorderedIndexMap(index)])
+              Number.isNaN(values[index])
                 ? gray(50).toString()
-                : interpolateRdYlBu(values[reorderedIndexMap(index)])
+                : interpolateRdYlBu(values[index])
             }
             onMouseOver={(e) =>
               handleMouseOver(e, {

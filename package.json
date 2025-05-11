@@ -5,8 +5,10 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "dev:wasm": "yarn compile_wasm && yarn dev",
     "build_original_use_later": "tsc -b && vite build",
     "build": "tsc --noEmit && vite build",
+    "compile_wasm": "wasm-pack build --target web --out-dir ../src/wasm clusters",
     "lint": "eslint .",
     "preview": "vite preview"
   },

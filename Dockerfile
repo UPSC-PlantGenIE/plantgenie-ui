@@ -1,8 +1,14 @@
-FROM rust:1.86.0-alpine3.21 AS wasm-builder
+FROM rust:1.86.0-slim-bookworm AS wasm-builder
 
-RUN apk add --no-cache curl \
-    && curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh -s -- -y \
-    && apk del curl
+# Install dependencies for wasm-pack and potential build scripts
+# build-essential is the Debian equivalent of build-base
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    curl \
+    ca-certificates \
+    build-essential \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN cargo install wasm-pack
 
 WORKDIR /usr/src/app
 

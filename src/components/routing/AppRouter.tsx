@@ -45,7 +45,7 @@ const routes = [
         <iframe
           width="100%"
           height="100%"
-          src="https://genomes.scilifelab.se/embed/?config=%252Fdata%252FmlYJHVRALC8KtpFNRWAi2TLUm7jXanGE%252Fconfig.json"
+          src="https://genomes.scilifelab.se/embed/?config=%2Fdata%2FmlYJHVRALC8KtpFNRWAi2TLUm7jXanGE%2Fconfig.json"
         ></iframe>
       </div>
     ),

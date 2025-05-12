@@ -21,6 +21,42 @@ jobs:
           node-version-file: 'package.json'
           cache: 'yarn'
 
+      - name: Cache Cargo artifacts
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/bin/
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+            crust/target/ # Cache the target dir of your wasm project
+          # Adjust 'my_wasm_crate/Cargo.lock' if your Cargo.lock is elsewhere or named differently
+          key: ${{ runner.os }}-cargo-crust-${{ hashFiles('crust/Cargo.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-cargo-crust-
+
+      - name: Install Rust and Cargo
+        run: |
+          curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain 1.86.0
+          echo "$HOME/.cargo/bin" >> $GITHUB_PATH
+
+      - name: Install wasm-pack
+        run: |
+          curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh -s -- -y
+          # wasm-pack is typically installed to $HOME/.cargo/bin, which is already in GITHUB_PATH
+
+      - name: Build WASM package
+        run: |
+          echo "Current directory: $(pwd)"
+          ls -la
+          # Ensure the output directory for wasm exists relative to the repo root
+          mkdir -p src/wasm
+          cd crust
+          wasm-pack build --target web --out-dir ../src/wasm --release
+          cd ..
+          echo "WASM package built into src/wasm:"
+          ls -la src/wasm
+
       - name: Install dependencies
         run: yarn install --frozen-lockfile
 

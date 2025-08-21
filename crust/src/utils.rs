@@ -129,10 +129,9 @@ impl<'a> MatrixView<'a> {
 impl<'a> fmt::Debug for MatrixView<'a> {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         f.debug_struct("MatrixView")
-            .field("data", &self.data) // Slices of f64 are Debug
+            .field("data", &self.data)
             .field("nrows", &self.nrows)
             .field("ncols", &self.ncols)
-            // For get_index, we can't print the function itself, so we print a placeholder.
             .field("get_index", &"<function>")
             .finish()
     }

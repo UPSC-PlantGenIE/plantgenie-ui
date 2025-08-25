@@ -8,14 +8,11 @@ import {
   ExperimentTitleToId,
   SPECIES_TO_NUMERIC_ID,
 } from "../../lib/constants";
-import { ExpressionRequest, ExpressionResponse, post } from "../../lib/api";
+import {
+  ExpressionResponse,
+  getExpressionData,
+} from "../../lib/backend";
 import { SvgHeatMap } from "./SvgHeatMap";
-// import {
-//   DistanceMetricOptions,
-//   LINKAGE_METRICS,
-//   LinkageMetricOptions,
-// } from "../../lib/clustering";
-// import { DISTANCE_METRICS } from "../../lib/clustering";
 import { DATA_SCALING_METHODS, DataScalingOptions } from "../../lib/scaling";
 import { NoGeneListsError } from "./Errors";
 import { NoGeneListsErrorComponent } from "./HeatmapError";
@@ -39,9 +36,7 @@ export const HeatMapVisualizer = () => {
 
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<Error | undefined>(undefined);
-
-  const availableExperiments =
-    AVAILABLE_EXPERIMENTS_BY_SPECIES[selectedSpecies];
+  const [availableExperiments, setAvailableExperiments]= useState<Array<string>>(AVAILABLE_EXPERIMENTS_BY_SPECIES[selectedSpecies] );
 
   const [selectedExperiment, setSelectedExperiment] = useState<string>(
     availableExperiments[0]
@@ -68,7 +63,10 @@ export const HeatMapVisualizer = () => {
     } else {
       setError(undefined);
     }
-  }, [availableGeneLists, selectedSpeciesId]);
+    const experiments = AVAILABLE_EXPERIMENTS_BY_SPECIES[selectedSpecies];
+    setAvailableExperiments(experiments);
+    setSelectedExperiment(experiments[0]);
+  }, [availableGeneLists, selectedSpeciesId, selectedSpecies]);
 
   useEffect(() => {
     let defaultGeneList = activeGeneList;
@@ -99,15 +97,23 @@ export const HeatMapVisualizer = () => {
 
     setLoading(true);
 
-    const response = post<ExpressionRequest, ExpressionResponse>(
-      "/expression",
-      {
-        species: selectedSpecies,
-        experimentId:
-          ExperimentTitleToId[`${selectedSpecies} ${selectedExperiment}`],
-        geneIds: defaultGeneList.geneIds,
-      }
-    );
+    console.log(`${selectedSpecies} ${selectedExperiment}`)
+
+    const response = getExpressionData({
+      experimentId:
+        ExperimentTitleToId[`${selectedSpecies} ${selectedExperiment}`],
+      geneIds: defaultGeneList.geneIds,
+    });
+
+    // const response = post<ExpressionRequest, ExpressionResponse>(
+    //   "/expression",
+    //   {
+    //     species: selectedSpecies,
+    //     experimentId:
+    //       ExperimentTitleToId[`${selectedSpecies} ${selectedExperiment}`],
+    //     geneIds: defaultGeneList.geneIds,
+    //   }
+    // );
 
     response
       .then((value) => {
@@ -120,6 +126,7 @@ export const HeatMapVisualizer = () => {
     activeGeneList,
     selectedSpecies,
     selectedSpeciesId,
+    availableExperiments,
     selectedExperiment,
     availableGeneLists,
     setActiveGeneList,
@@ -274,12 +281,8 @@ export const HeatMapVisualizer = () => {
               setDistance(event.target.value as DistanceMetric)
             }
           >
-            <option value={"Euclidean"}>
-              euclidean
-            </option>
-            <option value={"Chebyshev"}>
-              chebyshev
-            </option>
+            <option value={"Euclidean"}>euclidean</option>
+            <option value={"Chebyshev"}>chebyshev</option>
           </select>
         </label>
         <label

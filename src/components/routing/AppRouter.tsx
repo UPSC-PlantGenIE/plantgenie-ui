@@ -85,6 +85,7 @@ export const ApplicationRouter = () => {
   const unsetActiveApp = useAppStore((state) => state.unsetActiveApp);
 
   useEffect(() => {
+
     const handlePopState = (event: PopStateEvent) => {
       console.log(event.state);
       setApplicationPath(window.location.pathname);

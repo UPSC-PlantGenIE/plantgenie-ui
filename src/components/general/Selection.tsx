@@ -15,11 +15,19 @@ const options: Array<Option> = [
     name: "Pinus sylvestris",
     img: "/pinus-sylvestris-avatar-tiny.png",
   },
+  {
+    id: 3,
+    name: "Populus tremula",
+    img: "/populus-tremula-avatar-tiny.png"
+  },
 ];
 
 export const SelectionMenu = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  // const selectedSpeciesId = useAppStore((state) => state.speciesId);
   const [selected, setSelected] = useState<Option>(options[0]);
+  // const [selected, setSelected] = useState<Option>(options.filter((value) => value.id == selectedSpeciesId)[0] ?? options[0]);
+
   const setSelectedSpeciesId = useAppStore((state) => state.setSpeciesId);
   const setSelectedSpecies = useAppStore((state) => state.setSpecies);
   const setActiveGeneList = useAppStore((state) => state.setActiveGeneList);

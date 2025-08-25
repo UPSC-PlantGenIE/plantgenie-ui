@@ -29,6 +29,7 @@ export const AVAILABLE_EXPERIMENTS_BY_SPECIES: { [key: string]: string[] } = {
     "Wood Development",
   ],
   "Populus tremula": [
+    "Wood Development",
     // "Light Response Test",
     // "Drought Resistance Study",
     // "Root Structure Analysis",
@@ -50,8 +51,8 @@ export const NUMERIC_ID_TO_SPECIES: { [key: number]: string } = {
 // JBROWSE LINKS FOR SPECIES
 export const NUMERIC_ID_TO_JBROWSE: { [key: number]: string } = {
   1: "https://genomes.scilifelab.se/genome-browser/?config=%2Fdata%2FmlYJHVRALC8KtpFNRWAi2TLUm7jXanGE%2Fconfig.json",
-  2: "https://genomes.scilifelab.se/genome-browser/?config=%2Fdata%2F38qQhuj9O2BKK4HM0cdQfbxOGVXUchMO%2Fconfig.json"
-}
+  2: "https://genomes.scilifelab.se/genome-browser/?config=%2Fdata%2F38qQhuj9O2BKK4HM0cdQfbxOGVXUchMO%2Fconfig.json",
+};
 
 export const ExperimentTitleToId: { [key: string]: number } = {
   "Picea abies Cold Stress Roots": 1,
@@ -68,6 +69,7 @@ export const ExperimentTitleToId: { [key: string]: number } = {
   "Picea abies Wood Development": 12,
   "Pinus sylvestris Wood Development": 13,
   "Picea abies Light Availability": 14,
+  "Populus tremula Wood Development": 15,
 };
 
 export const EXAMPLE_GENE_IDS = [
@@ -118,4 +120,26 @@ export const PS_EXAMPLE_GENE_IDS = [
   "PS_chr08_G036386",
   "PS_sUP1581_G057360",
   "PS_sUP4596_G058587",
+];
+
+export const PT_EXAMPLE_GENE_IDS = [
+  "Potra2n11c23199",
+  "Potra2n13c26130",
+  "Potra2n16c29730",
+  "Potra2n18c32336",
+  "Potra2n18c32995",
+  "Potra2n1c2300",
+  "Potra2n2c4078",
+  "Potra2n2c5822",
+  "Potra2n3c7211",
+  "Potra2n4c8952",
+  "Potra2n571s36008",
+  "Potra2n5c11119",
+  "Potra2n5c12058",
+  "Potra2n5c12591",
+  "Potra2n6c13086",
+  "Potra2n6c13749",
+  "Potra2n6c14938",
+  "Potra2n7c15965",
+  "Potra2n9c19448",
 ];

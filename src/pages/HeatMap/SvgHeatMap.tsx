@@ -4,7 +4,8 @@ import { gray } from "d3-color";
 import { scaleLinear } from "d3-scale";
 import { interpolateRdYlBu } from "d3-scale-chromatic";
 
-import { ExpressionResponse } from "../../lib/api";
+// import { ExpressionResponse } from "../../lib/api";
+import { ExpressionResponse } from "../../lib/backend";
 import {
   createReorderedColMapper,
   createReorderedIndexMapper,
@@ -12,12 +13,6 @@ import {
 } from "../../lib/clustering/utils";
 
 import { useMaxTextLength } from "../../lib/hooks";
-// import { useClustering } from "../../lib/hooks";
-// import { DataScalingOptions } from "../../lib/scaling";
-// import {
-//   DistanceMetricOptions,
-//   LinkageMetricOptions,
-// } from "../../lib/clustering";
 import { useHeatMapStore, setSvgHeight, setSvgWidth } from "./state";
 
 import styles from "./SvgHeatMap.module.css";
@@ -110,13 +105,24 @@ export const SvgHeatMap = ({
 
   // const colLabels = expressionData.samples.map((value) => `${value.condition}`);
 
-  const rowLabels = useMemo(
-    () => expressionData.genes.map((v) => `${v.chromosomeId}_${v.geneId}`),
-    [expressionData.genes]
+  // const rowLabels = useMemo(
+  //   () => expressionData.genes.map((v) => `${v.chromosomeId}_${v.geneId}`),
+  //   [expressionData.genes]
+  // );
+
+    const rowLabels = useMemo(
+    () => expressionData.geneIds.map((v) => v),
+    [expressionData.geneIds]
   );
 
-  const colLabels = useMemo(
-    () => expressionData.samples.map((v) => `${v.condition}`),
+
+  // const colLabels = useMemo(
+  //   () => expressionData.samples.map((v) => `${v.condition}`),
+  //   [expressionData.samples]
+  // );
+
+    const colLabels = useMemo(
+    () => expressionData.samples.map((v) => v),
     [expressionData.samples]
   );
 
@@ -165,14 +171,14 @@ export const SvgHeatMap = ({
 
   useEffect(() => {
     setSvgHeight(
-      expressionData.genes.length * (cellHeight + cellPadding) +
+      expressionData.geneIds.length * (cellHeight + cellPadding) +
         labelPadding +
         colTextLength +
         marginTop +
         marginBottom
     );
   }, [
-    expressionData.genes,
+    expressionData.geneIds,
     colTextLength,
     marginBottom,
     marginTop,
@@ -226,7 +232,7 @@ export const SvgHeatMap = ({
   );
 
   const rowIndexMapper = createReorderedRowMapper(
-    [...Array(expressionData.genes.length).keys()],
+    [...Array(expressionData.geneIds.length).keys()],
     expressionData.samples.length
   );
   const colIndexMapper = createReorderedColMapper([
@@ -334,11 +340,6 @@ export const SvgHeatMap = ({
             width={
               Math.abs(horizontalScale(0) - horizontalScale(1)) - cellPadding
             }
-            // fill={
-            //   Number.isNaN(values[reorderedIndexMap(index)])
-            //     ? gray(50).toString()
-            //     : interpolateRdYlBu(values[reorderedIndexMap(index)])
-            // }
             fill={
               Number.isNaN(values[index])
                 ? gray(50).toString()

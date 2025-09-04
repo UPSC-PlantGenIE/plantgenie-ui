@@ -91,7 +91,7 @@ export const ExperimentTitleToId: { [key: string]: number } = {
   "Prunus avium Wood Development": 18,
 };
 
-export const EXAMPLE_GENE_IDS = [
+export const PICEA_ABIES_EXAMPLES = [
   "PA_chr04_G002083",
   "PA_chr11_G002939",
   "PA_chr03_G006338",
@@ -127,21 +127,7 @@ export const EXAMPLE_GENE_IDS = [
   "PA_chr06_G003805",
 ];
 
-export const PS_EXAMPLE_GENE_IDS = [
-  "PS_chr01_G001510",
-  "PS_chr01_G001511",
-  "PS_chr01_G001858",
-  "PS_chr02_G005492",
-  "PS_chr05_G023222",
-  "PS_chr06_G027387",
-  "PS_chr07_G028528",
-  "PS_chr08_G036131",
-  "PS_chr08_G036386",
-  "PS_sUP1581_G057360",
-  "PS_sUP4596_G058587",
-];
-
-export const PT_EXAMPLE_GENE_IDS = [
+export const POPULUS_TREMULA_EXAMPLES = [
   "Potra2n11c23199",
   "Potra2n13c26130",
   "Potra2n16c29730",
@@ -163,18 +149,115 @@ export const PT_EXAMPLE_GENE_IDS = [
   "Potra2n9c19448",
 ];
 
-export const PRUNUS_AVIUM_EXAMPLE = [
-  "FUN_006420-T1",
-  "FUN_006421-T1",
-  "FUN_006571-T1",
-  "FUN_008202-T1",
-  "FUN_032245-T1",
-  "FUN_032272-T1",
-  "FUN_023551-T1",
-  "FUN_020402-T1",
-  "FUN_039811-T1",
-  "FUN_027137-T1",
-  "FUN_027254-T1",
-  "FUN_027255-T1",
-  "FUN_030863-T1",
+export const PRUNUS_AVIUM_EXAMPLES = ["FUN_006420","FUN_006421","FUN_006571","FUN_008202","FUN_032245","FUN_032272","FUN_023551","FUN_020402","FUN_039811","FUN_027137","FUN_027254","FUN_027255","FUN_030863"]
+
+const BETULA_PENDULA_EXAMPLES = [
+  "Bpev01.c0000.g0006",
+  "Bpev01.c0196.g0006",
+  "Bpev01.c0205.g0006",
+  "Bpev01.c0374.g0017",
+  "Bpev01.c0374.g0018",
+  "Bpev01.c0402.g0034",
+  "Bpev01.c0480.g0087",
+  "Bpev01.c0598.g0015",
+  "Bpev01.c0603.g0003",
+  "Bpev01.c0603.g0003",
+  "Bpev01.c0777.g0012",
+];
+
+const PINUS_EXAMPLES = [
+  "PS_chr01_G000118",
+  "PS_chr01_G000159",
+  "PS_chr01_G000250",
+  "PS_chr01_G000251",
+  "PS_chr01_G000252",
+  "PS_chr01_G001664",
+  "PS_chr01_G001797",
+  "PS_chr01_G002695",
+  "PS_chr02_G008974",
+  "PS_chr02_G008976",
+  "PS_chr02_G008977",
+  "PS_chr02_G008979",
+  "PS_chr02_G008980",
+  "PS_chr02_G008981",
+  "PS_chr02_G008982",
+  "PS_chr02_G008984",
+  "PS_chr02_G008985",
+  "PS_chr02_G008986",
+  "PS_chr02_G008987",
+  "PS_chr02_G008988",
+  "PS_chr02_G008989",
+  "PS_chr02_G008991",
+  "PS_chr02_G008992",
+  "PS_chr02_G008994",
+  "PS_chr02_G009897",
+  "PS_chr03_G010819",
+  "PS_chr03_G013412",
+  "PS_chr03_G013882",
+  "PS_chr03_G013959",
+  "PS_chr05_G023417",
+  "PS_chr05_G023418",
+  "PS_chr05_G023420",
+  "PS_chr06_G026429",
+  "PS_chr06_G026856",
+  "PS_chr07_G029402",
+  "PS_chr07_G029798",
+  "PS_chr08_G032386",
+  "PS_chr08_G034445",
+  "PS_chr08_G035526",
+  "PS_chr09_G037814",
+  "PS_chr09_G038815",
+  "PS_chr09_G039418",
+  "PS_chr09_G040837",
+  "PS_chr10_G041446",
+  "PS_chr10_G041713",
+  "PS_chr10_G043725",
+  "PS_chr11_G045092",
+  "PS_chr12_G051034",
+];
+
+type ExampleList = {
+  id: string;
+  speciesId: number;
+  name: string;
+  geneIds: Array<string>;
+}
+
+export const EXAMPLE_LISTS: Array<ExampleList> = [
+  {
+    id: "picab-id-example-list",
+    name: "Spruce Examples",
+    speciesId: 1,
+    geneIds: PICEA_ABIES_EXAMPLES,
+  },
+  {
+    id: "pinsy-id-example-list",
+    name: "Scots Pine Examples",
+    speciesId: 2,
+    geneIds: PINUS_EXAMPLES,
+  },
+  {
+    id: "potra-id-example-list",
+    name: "Aspen Examples",
+    speciesId: 3,
+    geneIds: POPULUS_TREMULA_EXAMPLES,
+  },
+  {
+    id: "pruav-id-example-list",
+    name: "Cherry Examples",
+    speciesId: 5,
+    geneIds: PRUNUS_AVIUM_EXAMPLES,
+  },
+  {
+    id: "bepen-id-example-list",
+    name: "Birch Examples",
+    speciesId: 6,
+    geneIds: BETULA_PENDULA_EXAMPLES,
+  },
+  {
+    id: "pinta-id-example-list",
+    name: "Loblolly Pine Examples",
+    speciesId: 7,
+    geneIds: PINUS_EXAMPLES,
+  },
 ];

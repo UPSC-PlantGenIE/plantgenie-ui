@@ -105,20 +105,13 @@ export const HeatMapVisualizer = () => {
       geneIds: defaultGeneList.geneIds,
     });
 
-    // const response = post<ExpressionRequest, ExpressionResponse>(
-    //   "/expression",
-    //   {
-    //     species: selectedSpecies,
-    //     experimentId:
-    //       ExperimentTitleToId[`${selectedSpecies} ${selectedExperiment}`],
-    //     geneIds: defaultGeneList.geneIds,
-    //   }
-    // );
-
     response
       .then((value) => {
         console.log(value);
         setExpressionData(value);
+        if (value.units == "vst") {
+          setScalingFunctionName("none")
+        }
       })
       .catch((e) => setError(e as Error))
       .finally(() => setLoading(false));

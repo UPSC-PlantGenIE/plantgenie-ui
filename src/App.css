@@ -1,7 +1,7 @@
 #root {
   margin: 0 auto;
   min-height: 100vh;
-  width: clamp(12em, 100vw, 1280px);
+  width: clamp(12em, 100vw, 1480px);
   display: grid;
   grid-template-areas:
     "header"
@@ -19,7 +19,7 @@
   #root {
     display: grid;
     grid-template-areas: unset;
-    grid-template-columns: 15em 1fr;
+    grid-template-columns: 14em 1fr;
     grid-template-rows: auto 1fr auto;
     column-gap: 0.5em;
   }

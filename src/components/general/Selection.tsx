@@ -27,17 +27,17 @@ const supplementalSpecies: Array<Option> = [
   {
     id: 5,
     name: "Prunus avium",
-    img: "/populus-tremula-avatar-tiny.png",
+    img: "/prunus-avium-avatar-tiny.png",
   },
   {
     id: 6,
     name: "Betula pendula",
-    img: "/populus-tremula-avatar-tiny.png",
+    img: "/betula-pendula-avatar-tiny.png",
   },
   {
     id: 7,
     name: "Pinus taeda",
-    img: "/populus-tremula-avatar-tiny.png",
+    img: "/pinus-taeda-avatar-tiny.png",
   },
 ];
 
@@ -56,17 +56,17 @@ const options: Array<Option> = [
   {
     id: 5,
     name: "Prunus avium",
-    img: "/populus-tremula-avatar-tiny.png",
+    img: "/prunus-avium-avatar-tiny.png",
   },
   {
     id: 6,
     name: "Betula pendula",
-    img: "/populus-tremula-avatar-tiny.png",
+    img: "/betula-pendula-avatar-tiny.png",
   },
   {
     id: 7,
     name: "Pinus taeda",
-    img: "/populus-tremula-avatar-tiny.png",
+    img: "/pinus-taeda-avatar-tiny.png",
   },
 ];
 

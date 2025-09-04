@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { baseUrl } from "../../../lib/api";
 
 import styles from "./BlastResult.module.css";
+
 interface BlastResultRow {
   qseqid: string;
   sseqid: string;
@@ -69,6 +70,7 @@ export const BlastResult = ({ id }: Record<string, string>) => {
   const [blastResults, setBlastResults] = useState<BlastResultRow[]>([]);
 
   useEffect(() => {
+    let errorMessage = "Error checking job status.";
     let retries = 0;
     const maxRetries = 5;
     const interval = setInterval(async () => {
@@ -78,34 +80,31 @@ export const BlastResult = ({ id }: Record<string, string>) => {
           clearInterval(interval);
           throw Error(`Failed to download result with id = ${id}`);
         }
-        // const response = await fetch(
-        //   `${baseUrl}/poll-for-blast-result/${id}`
-        // );
         const response = await fetch(`${baseUrl}/v1/blast/poll/${id}`)
         const data = await response.json();
 
         if (data.status === "SUCCESS") {
-          setCompletedAt(data.completed_at);
           clearInterval(interval);
           fetchResults();
+          setCompletedAt(data.completedAt);
         } else if (data.status === "FAILED") {
           clearInterval(interval);
           setError("Job failed.");
           setStatus("error");
         }
         // Otherwise, keep polling...
-      } catch (err) {
+      } catch (error: unknown) {
         clearInterval(interval);
-        setError("Error checking job status.");
+        if (error instanceof Error) {
+          errorMessage = error.message;
+        }
+        setError(errorMessage);
         setStatus("error");
       }
     }, 3000);
 
     const fetchResults = async () => {
       try {
-        // const response = await fetch(
-        //   `${baseUrl}/retrieve-blast-result/${id}`
-        // );
         const response = await fetch(`${baseUrl}/v1/blast/retrieve/${id}/tsv`);
         const data = await response.text();
         // setResult(data);
@@ -117,13 +116,10 @@ export const BlastResult = ({ id }: Record<string, string>) => {
       }
     };
     return () => clearInterval(interval);
-  });
+  }, [id]);
 
   const saveBlastTableHandler = async () => {
     try {
-      // const response = await fetch(
-      //   `${baseUrl}/retrieve-blast-result/${id}`
-      // );
       const response = await fetch(`${baseUrl}/v1/blast/retrieve/${id}/tsv`);
 
       const data = await response.text();

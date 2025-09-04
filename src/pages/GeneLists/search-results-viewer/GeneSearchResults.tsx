@@ -74,7 +74,7 @@ export const GeneSearchResultsRoute = () => {
         updatedAt: now,
         lastAccessed: now,
         geneIds: selectedGenes.map(
-          (value) => `${value.chromosomeId}_${value.geneId}`
+          (value) => `${value.geneId}`
         ),
       };
 
@@ -102,7 +102,7 @@ export const GeneSearchResultsRoute = () => {
         ...new Set([
           ...selectedGeneList.geneIds,
           ...selectedGenes.map(
-            (value) => `${value.chromosomeId}_${value.geneId}`
+            (value) => `${value.geneId}`
           ),
         ]),
       ];
@@ -230,9 +230,9 @@ export const GeneSearchResultsRoute = () => {
                           onChange={() => handleRowCheckboxChange(index)}
                         />
                       </td>
-                      <td>{`${value.chromosomeId}_${value.geneId}`}</td>
-                      <td>{value.preferredName}</td>
-                      <td>{value.description}</td>
+                      <td>{`${value.geneId}`}</td>
+                      <td>{value.geneName ?? "NA"}</td>
+                      <td>{value.description ?? "NA"}</td>
                     </tr>
                   ))
                 : null}

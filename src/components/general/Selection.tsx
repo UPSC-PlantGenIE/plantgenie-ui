@@ -1,12 +1,45 @@
 import { useState } from "react";
 import styles from "./Selection.module.css";
 import { AvailableSpecies, useAppStore } from "../../lib/state";
+import { Divider } from "./Divider";
 
 interface Option {
   id: number;
   name: string;
   img: string;
 }
+
+const mainSpecies: Array<Option> = [
+  { id: 1, name: "Picea abies", img: "/picea-abies-avatar-tiny.png" },
+  {
+    id: 2,
+    name: "Pinus sylvestris",
+    img: "/pinus-sylvestris-avatar-tiny.png",
+  },
+  {
+    id: 3,
+    name: "Populus tremula",
+    img: "/populus-tremula-avatar-tiny.png",
+  },
+];
+
+const supplementalSpecies: Array<Option> = [
+  {
+    id: 5,
+    name: "Prunus avium",
+    img: "/prunus-avium-avatar-tiny.png",
+  },
+  {
+    id: 6,
+    name: "Betula pendula",
+    img: "/betula-pendula-avatar-tiny.png",
+  },
+  {
+    id: 7,
+    name: "Pinus taeda",
+    img: "/pinus-taeda-avatar-tiny.png",
+  },
+];
 
 const options: Array<Option> = [
   { id: 1, name: "Picea abies", img: "/picea-abies-avatar-tiny.png" },
@@ -15,11 +48,34 @@ const options: Array<Option> = [
     name: "Pinus sylvestris",
     img: "/pinus-sylvestris-avatar-tiny.png",
   },
+  {
+    id: 3,
+    name: "Populus tremula",
+    img: "/populus-tremula-avatar-tiny.png",
+  },
+  {
+    id: 5,
+    name: "Prunus avium",
+    img: "/prunus-avium-avatar-tiny.png",
+  },
+  {
+    id: 6,
+    name: "Betula pendula",
+    img: "/betula-pendula-avatar-tiny.png",
+  },
+  {
+    id: 7,
+    name: "Pinus taeda",
+    img: "/pinus-taeda-avatar-tiny.png",
+  },
 ];
 
 export const SelectionMenu = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  // const selectedSpeciesId = useAppStore((state) => state.speciesId);
   const [selected, setSelected] = useState<Option>(options[0]);
+  // const [selected, setSelected] = useState<Option>(options.filter((value) => value.id == selectedSpeciesId)[0] ?? options[0]);
+
   const setSelectedSpeciesId = useAppStore((state) => state.setSpeciesId);
   const setSelectedSpecies = useAppStore((state) => state.setSpecies);
   const setActiveGeneList = useAppStore((state) => state.setActiveGeneList);
@@ -71,7 +127,21 @@ export const SelectionMenu = () => {
         </svg>
       </button>
       <ul tabIndex={-1} role="listbox" hidden={!isOpen}>
-        {options.map((value) => (
+        {mainSpecies.map((value) => (
+          <li
+            key={value.id}
+            role="option"
+            onClick={() => optionClickedHandler(value.id)}
+          >
+            <div className={styles.option}>
+              <img src={value.img} className={styles.optionAvatar} />
+              <span className={styles.optionName}>{value.name}</span>
+            </div>
+          </li>
+        ))}
+        <Divider />
+        <p className={styles.otherSpeciesLabel}>Other Species</p>
+        {supplementalSpecies.map((value) => (
           <li
             key={value.id}
             role="option"

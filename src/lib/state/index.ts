@@ -1,6 +1,6 @@
 import { StateCreator, create } from "zustand";
 
-import { GeneAnnotation, GeneList } from "../api";
+import { GeneAnnotation, GeneList } from "../backend";
 import {
   GENE_LIST_PREFIX,
   GENE_LIST_ID_KEY,
@@ -8,7 +8,16 @@ import {
 } from "../constants";
 import { localStorageParser } from "../localstorage";
 
-export type AvailableSpecies = "Picea abies" | "Pinus sylvestris";
+export type AvailableSpecies =
+  | "Picea abies"
+  | "Pinus sylvestris"
+  | "Populus tremula"
+  | "Prunus avium"
+  | "Betula pendula"
+  | "Pinus taeda";
+// Prunus avium - sweet cherry
+// Betula pendula - silver birch
+// Pinus taeda - lodgepole pine
 
 export interface MainSlice {
   applicationPath: string;
@@ -41,6 +50,7 @@ export const createMainSlice: StateCreator<MainSlice, [], [], MainSlice> = (
   applicationPath: window.location.pathname,
   speciesId: (() => {
     const retrievedId = localStorage.getItem(SPECIES_ID_KEY);
+    console.log(`ID = ${retrievedId}`);
     if (retrievedId !== null) return Number.parseInt(retrievedId);
     return 1;
   })(),
@@ -48,7 +58,10 @@ export const createMainSlice: StateCreator<MainSlice, [], [], MainSlice> = (
   activeApp: undefined,
   setActiveApp: (applicationName) => set({ activeApp: applicationName }),
   unsetActiveApp: () => set({ activeApp: undefined }),
-  setSpeciesId: (id) => set({ speciesId: id }),
+  setSpeciesId: (id) => {
+    // localStorage.setItem(SPECIES_ID_KEY, id.toString());
+    set({ speciesId: id });
+  },
   species: "Picea abies",
   setSpecies: (name) => set({ species: name }),
 });

@@ -121,28 +121,14 @@ export const useCrust = ({
       rowOrder: [...Array(nrows).keys()], // Fallback to original data on error
       colOrder: [...Array(ncols).keys()],
       values: data,
-      // loading: false,
-      // error: error,
+      loading: false,
+      error: error,
     };
   }
 
   return {
     rowOrder: result ? [...result.row_order] : [...Array(nrows).keys()],
     colOrder: result ? [...result.col_order] : [...Array(ncols).keys()],
-    values: result ? [...result.values] : data, // Use result.values if available
-    // loading: false,
-    // error: null,
+    values: result ? [...result.values] : data,
   };
-
-  // return result
-  //   ? {
-  //       rowOrder: [...result.row_order],
-  //       colOrder: [...result.col_order],
-  //       values: [...result.values],
-  //     }
-  //   : {
-  //       rowOrder: [...Array(nrows).keys()],
-  //       colOrder: [...Array(ncols).keys()],
-  //       values: data,
-  //     };
 };

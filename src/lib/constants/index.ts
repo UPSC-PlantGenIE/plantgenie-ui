@@ -28,30 +28,47 @@ export const AVAILABLE_EXPERIMENTS_BY_SPECIES: { [key: string]: string[] } = {
     "Drought Stress Roots",
     "Wood Development",
   ],
-  "Populus tremula": [
-    // "Light Response Test",
-    // "Drought Resistance Study",
-    // "Root Structure Analysis",
-  ],
+  "Populus tremula": ["Wood Development"],
+  "Prunus avium": ["Wood Development"],
+  "Betula pendula": ["Wood Development"],
+  "Pinus taeda": ["Wood Development"],
 };
 
 export const SPECIES_TO_NUMERIC_ID: { [key: string]: number } = {
   "Picea abies": 1,
   "Pinus sylvestris": 2,
   "Populus tremula": 3,
+  "Arabidopsis thaliana": 4,
+  "Prunus avium": 5,
+  "Betula pendula": 6,
+  "Pinus taeda": 7,
+};
+
+export const SPECIES_TO_GENOME_ID: { [key: string]: number } = {
+  "Picea abies": 1,
+  "Pinus sylvestris": 2,
+  "Populus tremula": 3,
+  "Arabidopsis thaliana": 4,
+  "Prunus avium": 5,
+  "Betula pendula": 6,
+  "Pinus taeda": 2,
 };
 
 export const NUMERIC_ID_TO_SPECIES: { [key: number]: string } = {
   1: "Picea abies",
   2: "Pinus sylvestris",
   3: "Populus tremula",
+  4: "Arabidopsis thaliana",
+  5: "Prunus avium",
+  6: "Betula pendula",
+  7: "Pinus taeda",
 };
 
 // JBROWSE LINKS FOR SPECIES
 export const NUMERIC_ID_TO_JBROWSE: { [key: number]: string } = {
   1: "https://genomes.scilifelab.se/genome-browser/?config=%2Fdata%2FmlYJHVRALC8KtpFNRWAi2TLUm7jXanGE%2Fconfig.json",
-  2: "https://genomes.scilifelab.se/genome-browser/?config=%2Fdata%2F38qQhuj9O2BKK4HM0cdQfbxOGVXUchMO%2Fconfig.json"
-}
+  2: "https://genomes.scilifelab.se/genome-browser/?config=%2Fdata%2F38qQhuj9O2BKK4HM0cdQfbxOGVXUchMO%2Fconfig.json",
+};
 
 export const ExperimentTitleToId: { [key: string]: number } = {
   "Picea abies Cold Stress Roots": 1,
@@ -68,6 +85,10 @@ export const ExperimentTitleToId: { [key: string]: number } = {
   "Picea abies Wood Development": 12,
   "Pinus sylvestris Wood Development": 13,
   "Picea abies Light Availability": 14,
+  "Populus tremula Wood Development": 15,
+  "Pinus taeda Wood Development": 16,
+  "Betula pendula Wood Development": 17,
+  "Prunus avium Wood Development": 18,
 };
 
 export const EXAMPLE_GENE_IDS = [
@@ -118,4 +139,42 @@ export const PS_EXAMPLE_GENE_IDS = [
   "PS_chr08_G036386",
   "PS_sUP1581_G057360",
   "PS_sUP4596_G058587",
+];
+
+export const PT_EXAMPLE_GENE_IDS = [
+  "Potra2n11c23199",
+  "Potra2n13c26130",
+  "Potra2n16c29730",
+  "Potra2n18c32336",
+  "Potra2n18c32995",
+  "Potra2n1c2300",
+  "Potra2n2c4078",
+  "Potra2n2c5822",
+  "Potra2n3c7211",
+  "Potra2n4c8952",
+  "Potra2n571s36008",
+  "Potra2n5c11119",
+  "Potra2n5c12058",
+  "Potra2n5c12591",
+  "Potra2n6c13086",
+  "Potra2n6c13749",
+  "Potra2n6c14938",
+  "Potra2n7c15965",
+  "Potra2n9c19448",
+];
+
+export const PRUNUS_AVIUM_EXAMPLE = [
+  "FUN_006420-T1",
+  "FUN_006421-T1",
+  "FUN_006571-T1",
+  "FUN_008202-T1",
+  "FUN_032245-T1",
+  "FUN_032272-T1",
+  "FUN_023551-T1",
+  "FUN_020402-T1",
+  "FUN_039811-T1",
+  "FUN_027137-T1",
+  "FUN_027254-T1",
+  "FUN_027255-T1",
+  "FUN_030863-T1",
 ];

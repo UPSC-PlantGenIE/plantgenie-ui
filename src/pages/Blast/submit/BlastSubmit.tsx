@@ -6,6 +6,7 @@ import { Form } from "../../../components/routing/Form";
 import { Divider } from "../../../components/general/Divider";
 
 import styles from "./BlastSubmit.module.css";
+import { SPECIES_TO_NUMERIC_ID, SPECIES_TO_GENOME_ID } from "../../../lib/constants";
 
 type BlastProgramOptions = "blastn" | "blastp" | "blastx";
 const blastProgramOptions: BlastProgramOptions[] = [
@@ -89,10 +90,23 @@ export const BlastSubmit = () => {
     formData.append("dbtype", selectedDatabase);
     formData.append("program", selectedProgram);
     formData.append("species", selectedSpecies);
+    formData.append("species_id", SPECIES_TO_NUMERIC_ID[selectedSpecies].toString());
+    formData.append("genome_id", SPECIES_TO_GENOME_ID[selectedSpecies].toString());
 
     try {
+      // const response = await fetch(
+      //   `${baseUrl}/submit-blast-query/`,
+      //   {
+      //     method: "POST",
+      //     headers: {
+      //       Accept: "application/json",
+      //     },
+      //     body: formData,
+      //   }
+      // );
+      // new blast endpoint
       const response = await fetch(
-        `${baseUrl}/submit-blast-query/`,
+        `${baseUrl}/v1/blast/${selectedProgram}/submit?database_type=${selectedDatabase}`,
         {
           method: "POST",
           headers: {
@@ -109,14 +123,14 @@ export const BlastSubmit = () => {
       console.log("Response:", result);
 
       window.history.pushState(
-        { name: `/blast/result/${result.job_id}` },
+        { name: `/blast/result/${result.jobId}` },
         "",
-        `/blast/result/${result.job_id}`
+        `/blast/result/${result.jobId}`
       );
 
       window.dispatchEvent(
         new PopStateEvent("popstate", {
-          state: { name: `/blast/result/${result.job_id}`, results: result },
+          state: { name: `/blast/result/${result.jobId}`, results: result },
         })
       );
     } catch (error) {

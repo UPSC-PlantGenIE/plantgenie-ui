@@ -12,6 +12,7 @@ import {
   GENE_LIST_PREFIX,
   NUMERIC_ID_TO_JBROWSE,
   PS_EXAMPLE_GENE_IDS,
+  PT_EXAMPLE_GENE_IDS,
 } from "../../lib/constants";
 import { GeneList } from "../../lib/api";
 
@@ -22,7 +23,6 @@ interface BaseLayoutProps {
 export const BaseLayout = ({ children }: BaseLayoutProps) => {
   const selectedSpeciesId = useAppStore((state) => state.speciesId);
   const addGeneList = useAppStore((state) => state.addGeneList);
-  const removeGeneList = useAppStore((state) => state.removeGeneList);
 
   useEffect(() => {
     const exampleListId = "picab-id-example-list";
@@ -30,7 +30,7 @@ export const BaseLayout = ({ children }: BaseLayoutProps) => {
       `${GENE_LIST_PREFIX}-${exampleListId}`
     );
 
-    if (exampleListToDelete) removeGeneList(exampleListId);
+    if (exampleListToDelete) return;
 
     const now = new Date().toUTCString();
     const exampleList: GeneList = {
@@ -51,7 +51,7 @@ export const BaseLayout = ({ children }: BaseLayoutProps) => {
       `${GENE_LIST_PREFIX}-${exampleListId}`
     );
 
-    if (exampleListToDelete) removeGeneList(exampleListId);
+    if (exampleListToDelete) return;
 
     const now = new Date().toUTCString();
     const exampleList: GeneList = {
@@ -62,6 +62,27 @@ export const BaseLayout = ({ children }: BaseLayoutProps) => {
       updatedAt: now,
       lastAccessed: now,
       geneIds: PS_EXAMPLE_GENE_IDS,
+    };
+    addGeneList(exampleList);
+  });
+
+  useEffect(() => {
+    const exampleListId = "potra-id-example-list";
+    const exampleListToDelete = localStorage.getItem(
+      `${GENE_LIST_PREFIX}-${exampleListId}`
+    );
+
+    if (exampleListToDelete) return;
+
+    const now = new Date().toUTCString();
+    const exampleList: GeneList = {
+      id: exampleListId,
+      name: "Aspen Example List",
+      speciesId: 3,
+      createdAt: now,
+      updatedAt: now,
+      lastAccessed: now,
+      geneIds: PT_EXAMPLE_GENE_IDS,
     };
     addGeneList(exampleList);
   });

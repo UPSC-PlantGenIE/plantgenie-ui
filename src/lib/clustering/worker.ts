@@ -6,7 +6,11 @@ import init, {
   DistanceMetric,
 } from "../../wasm/crust"; // Adjust path as needed
 
-self.onmessage = async (event: MessageEvent) => {
+// onmessage = async (event: MessageEvent) => {
+//   const {type, payload } = event.data;
+// };
+
+onmessage = async (event: MessageEvent) => {
   const { type, payload } = event.data;
 
   if (type === "hierarchical_clustering") {

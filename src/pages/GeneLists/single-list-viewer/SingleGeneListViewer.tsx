@@ -1,11 +1,9 @@
 import { useEffect, useState } from "react";
 import { useAppStore } from "../../../lib/state";
 import {
-  AnnotationsRequest,
-  AnnotationsResponse,
   GeneAnnotation,
-  post,
-} from "../../../lib/api";
+  getAnnotationData,
+} from "../../../lib/backend";
 import { TrashIcon } from "../../../assets/icons/Trash";
 
 import styles from "./SingleGeneListViewer.module.css";
@@ -32,23 +30,15 @@ export const SingleGeneListViewer = ({ id }: Record<string, string>) => {
       ...selectedGeneList,
       lastAccessed: new Date().toUTCString(),
     });
-
-  }, [id])
+  }, [id]);
 
   useEffect(() => {
     if (!selectedGeneList) return;
 
-    const fetchAnnotations = async () => {
-      return await post<AnnotationsRequest, AnnotationsResponse>(
-        "/annotations",
-        {
-          species: selectedSpecies,
-          geneIds: selectedGeneList.geneIds,
-        }
-      );
-    };
-
-    fetchAnnotations()
+    getAnnotationData({
+      species: selectedSpecies,
+      geneIds: selectedGeneList.geneIds,
+    })
       .then((results) => setAnnotations(results.results))
       .catch((error) => console.log(error));
   }, [id, availableGeneLists]);
@@ -93,14 +83,14 @@ export const SingleGeneListViewer = ({ id }: Record<string, string>) => {
               {annotations.length > 0
                 ? annotations.map((value, index) => (
                     <tr key={index}>
-                      <td>{`${value.chromosomeId}_${value.geneId}`}</td>
-                      <td>{value.preferredName}</td>
-                      <td>{value.description}</td>
+                      <td>{value.geneId}</td>
+                      <td>{value.geneName ?? "NA"}</td>
+                      <td>{value.description ?? "NA"}</td>
                       <td>
                         <button
                           className={styles.deleteButton}
                           onClick={deleteHandler(
-                            `${value.chromosomeId}_${value.geneId}`
+                            `${value.geneId}`
                           )}
                         >
                           <TrashIcon height={20} width={20} />

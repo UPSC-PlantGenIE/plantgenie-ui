@@ -1,11 +1,14 @@
 import styles from "./GeneSearch.module.css";
 import { Form } from "../../../components/routing/Form";
 import { ChangeEvent, FormEvent, useRef, useState } from "react";
-import {
-  AnnotationsRequest,
-  AnnotationsResponse,
-  post,
-} from "../../../lib/api";
+// import {
+//   AnnotationsRequest,
+//   AnnotationsResponse,
+//   post,
+// } from "../../../lib/api";
+
+import { getAnnotationData } from "../../../lib/backend";
+
 import { useAppStore } from "../../../lib/state";
 import { Divider } from "../../../components/general/Divider";
 
@@ -38,13 +41,15 @@ export const GeneSearchRoute = () => {
       .split(delimiter)
       .map((line) => line.trim());
 
-    const results = await post<AnnotationsRequest, AnnotationsResponse>(
-      "/annotations",
-      {
-        species: selectedSpecies,
-        geneIds: parsedGeneIds,
-      }
-    );
+    // const results = await post<AnnotationsRequest, AnnotationsResponse>(
+    //   "/annotations",
+    //   {
+    //     species: selectedSpecies,
+    //     geneIds: parsedGeneIds,
+    //   }
+    // );
+
+    const results = await getAnnotationData({species: selectedSpecies, geneIds: parsedGeneIds})
 
     setSearchResults(results.results);
 

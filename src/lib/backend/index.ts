@@ -1,4 +1,4 @@
-import { post } from "../api";
+import { get, post } from "../api";
 
 export type ExpressionRequest = {
   experimentId: number;
@@ -31,7 +31,7 @@ export type AnnotationResponse = {
   results: GeneAnnotation[];
 };
 
-export interface GeneList {
+export type GeneList = {
   id: string;
   speciesId: number;
   name: string;
@@ -39,7 +39,30 @@ export interface GeneList {
   updatedAt: string;
   lastAccessed: string;
   geneIds: string[];
-}
+};
 
 export const getAnnotationData = (request_body: AnnotationRequest) =>
   post<AnnotationRequest, AnnotationResponse>("/v1/annotations", request_body);
+
+// class AvailableSpecies(PlantGenieModel):
+//     species_id: int = Field(alias="id")
+//     species_name: str = Field(alias="speciesName")
+//     species_abbreviation: str = Field(alias="speciesAbbreviation")
+//     avatar_path: str = Field(alias="avatarPath")
+
+// class AvailableSpeciesResponse(PlantGenieModel):
+//     species: List[AvailableSpecies]
+
+export type AvailableSpecies = {
+  speciesId: number;
+  speciesName: string;
+  speciesAbbreviation: string;
+  avatarPath: string;
+};
+
+export type AvailableSpeciesResponse = {
+  species: Array<AvailableSpecies>;
+};
+
+export const getAvailableSpecies = () =>
+  get<AvailableSpeciesResponse>("/available-species");

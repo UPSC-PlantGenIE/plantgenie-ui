@@ -21,14 +21,14 @@ export const Root = () => {
           Umeå Plant Science Centre
         </a>{" "}
         in Umeå, Sweden. The tools available here allow visualization and
-        analysis of genomic data for the following species:
+        analysis of genomic data for the following main species:
       </p>
       <ul className={styles.speciesList}>
         <li>
           <a target="_blank" href="https://en.wikipedia.org/wiki/Picea_abies">
             <em>Picea abies</em>
             <br />
-            (Norway Spruce)
+            (Norway spruce)
           </a>
         </li>
         <li>
@@ -38,7 +38,7 @@ export const Root = () => {
           >
             <em>Pinus sylvestris</em>
             <br />
-            (Scots Pine)
+            (Scots pine)
           </a>
         </li>
         <li>
@@ -49,10 +49,16 @@ export const Root = () => {
           >
             <em>Populus tremula</em>
             <br />
-            (Common Aspen)
+            (Aspen)
           </a>
         </li>
       </ul>
+      <p>
+        A few other supplemental species are provided as well to complement the
+        main ones and they are <em>Betula pendula</em> (silver birch),{" "}
+        <em>Prunus avium</em> (sweet cherry) and <em>Pinus taeda</em> (loblolly
+        pine).
+      </p>
       <p>
         This application includes both the frontend for user interaction and a
         backend REST API, which can also be queried directly for certain types

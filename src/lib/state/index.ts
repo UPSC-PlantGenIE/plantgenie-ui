@@ -8,7 +8,16 @@ import {
 } from "../constants";
 import { localStorageParser } from "../localstorage";
 
-export type AvailableSpecies = "Picea abies" | "Pinus sylvestris";
+export type AvailableSpecies =
+  | "Picea abies"
+  | "Pinus sylvestris"
+  | "Populus tremula"
+  | "Prunus avium"
+  | "Betula pendula"
+  | "Pinus taeda";
+// Prunus avium - sweet cherry
+// Betula pendula - silver birch
+// Pinus taeda - lodgepole pine
 
 export interface MainSlice {
   applicationPath: string;

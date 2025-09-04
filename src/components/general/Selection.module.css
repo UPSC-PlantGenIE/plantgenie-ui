@@ -50,6 +50,12 @@
     grid-row-start: 1;
   }
 
+  .otherSpeciesLabel {
+    font-size: 0.75em;
+    text-align: left;
+    padding-left: 0.5em;
+  }
+
   ul {
     margin: 0;
     padding: 0;

@@ -35,11 +35,11 @@ const blastTsvColumns = [
 
 const parseBlastResults = (data: string): BlastResultRow[] => {
   return data
-    .trim() // Remove leading/trailing whitespace
-    .split("\n") // Split into rows
+    .trim()
+    .split("\n")
     .map((line) => {
-      const cols = line.split("\t"); // Split each row into columns
-      if (cols.length !== 12) return null; // Ensure correct number of columns
+      const cols = line.split("\t");
+      if (cols.length !== 12) return null;
 
       return {
         qseqid: cols[0],
@@ -56,7 +56,7 @@ const parseBlastResults = (data: string): BlastResultRow[] => {
         bitscore: parseFloat(cols[11]),
       };
     })
-    .filter((row): row is BlastResultRow => row !== null); // Filter out any invalid rows
+    .filter((row): row is BlastResultRow => row !== null);
 };
 
 export const BlastResult = ({ id }: Record<string, string>) => {
@@ -69,11 +69,20 @@ export const BlastResult = ({ id }: Record<string, string>) => {
   const [blastResults, setBlastResults] = useState<BlastResultRow[]>([]);
 
   useEffect(() => {
+    let retries = 0;
+    const maxRetries = 5;
     const interval = setInterval(async () => {
+      retries += 1;
       try {
-        const response = await fetch(
-          `${baseUrl}/poll-for-blast-result/${id}`
-        );
+        if (retries > maxRetries) {
+          clearInterval(interval);
+          throw Error(`Failed to download result with id = ${id}`);
+        }
+        // const response = await fetch(
+        //   `${baseUrl}/poll-for-blast-result/${id}`
+        // );
+        const response = await fetch(`${baseUrl}/v1/blast/poll/blah`)
+        // const response = await fetch(`${baseUrl}/v1/blast/poll/${id}`)
         const data = await response.json();
 
         if (data.status === "SUCCESS") {
@@ -95,9 +104,10 @@ export const BlastResult = ({ id }: Record<string, string>) => {
 
     const fetchResults = async () => {
       try {
-        const response = await fetch(
-          `${baseUrl}/retrieve-blast-result/${id}`
-        );
+        // const response = await fetch(
+        //   `${baseUrl}/retrieve-blast-result/${id}`
+        // );
+        const response = await fetch(`${baseUrl}/v1/blast/retrieve/${id}/tsv`);
         const data = await response.text();
         // setResult(data);
         setBlastResults(parseBlastResults(data));
@@ -108,13 +118,15 @@ export const BlastResult = ({ id }: Record<string, string>) => {
       }
     };
     return () => clearInterval(interval);
-  }, []);
+  });
 
   const saveBlastTableHandler = async () => {
     try {
-      const response = await fetch(
-        `${baseUrl}/retrieve-blast-result/${id}`
-      );
+      // const response = await fetch(
+      //   `${baseUrl}/retrieve-blast-result/${id}`
+      // );
+      const response = await fetch(`${baseUrl}/v1/blast/retrieve/${id}/tsv`);
+
       const data = await response.text();
 
       const blob = new Blob([data], { type: "text/tsv" });
@@ -133,9 +145,11 @@ export const BlastResult = ({ id }: Record<string, string>) => {
 
   const saveBlastHtmlHandler = async () => {
     try {
-      const response = await fetch(
-        `${baseUrl}/retrieve-blast-result-as-html/${id}`
-      );
+      // const response = await fetch(
+      //   `${baseUrl}/retrieve-blast-result-as-html/${id}`
+      // );
+      const response = await fetch(`${baseUrl}/v1/blast/retrieve/${id}/html`);
+
       const data = await response.text();
 
       const blob = new Blob([data], { type: "text/html" });

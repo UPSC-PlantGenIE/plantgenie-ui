@@ -81,8 +81,7 @@ export const BlastResult = ({ id }: Record<string, string>) => {
         // const response = await fetch(
         //   `${baseUrl}/poll-for-blast-result/${id}`
         // );
-        const response = await fetch(`${baseUrl}/v1/blast/poll/blah`)
-        // const response = await fetch(`${baseUrl}/v1/blast/poll/${id}`)
+        const response = await fetch(`${baseUrl}/v1/blast/poll/${id}`)
         const data = await response.json();
 
         if (data.status === "SUCCESS") {

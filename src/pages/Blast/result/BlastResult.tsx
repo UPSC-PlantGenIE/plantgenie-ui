@@ -104,14 +104,17 @@ export const BlastResult = ({ id }: Record<string, string>) => {
     }, 3000);
 
     const fetchResults = async () => {
+      let errorMessage = "Failed to fetch results."
       try {
         const response = await fetch(`${baseUrl}/v1/blast/retrieve/${id}/tsv`);
         const data = await response.text();
-        // setResult(data);
         setBlastResults(parseBlastResults(data));
         setStatus("success");
-      } catch (err) {
-        setError("Failed to fetch results.");
+      } catch (error: unknown) {
+        if (error instanceof Error) {
+          errorMessage = error.message;
+        }
+        setError(errorMessage);
         setStatus("error");
       }
     };
@@ -133,16 +136,14 @@ export const BlastResult = ({ id }: Record<string, string>) => {
       link.click();
 
       URL.revokeObjectURL(url);
-    } catch (error) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (error: unknown) {
       window.alert("There was an error downloading the file");
     }
   };
 
   const saveBlastHtmlHandler = async () => {
     try {
-      // const response = await fetch(
-      //   `${baseUrl}/retrieve-blast-result-as-html/${id}`
-      // );
       const response = await fetch(`${baseUrl}/v1/blast/retrieve/${id}/html`);
 
       const data = await response.text();
@@ -156,6 +157,7 @@ export const BlastResult = ({ id }: Record<string, string>) => {
       link.click();
 
       URL.revokeObjectURL(url);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       window.alert("There was an error downloading the file");
     }

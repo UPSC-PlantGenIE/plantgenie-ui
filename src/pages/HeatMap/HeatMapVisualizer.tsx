@@ -111,6 +111,8 @@ export const HeatMapVisualizer = () => {
         setExpressionData(value);
         if (value.units == "vst") {
           setScalingFunctionName("none")
+        } else {
+          setScalingFunctionName("log")
         }
       })
       .catch((e) => setError(e as Error))

@@ -53,7 +53,7 @@ export const BaseLayout = ({ children }: BaseLayoutProps) => {
             </div>
             <div className={styles.linkContainer}>
               <Divider />
-              <h2 className={styles.linkContainerHeader}>Genome Tools</h2>
+              <h2 className={styles.linkContainerHeader}>Genomics Tools</h2>
               <Divider />
               <Link
                 to="/gene-lists"
@@ -62,14 +62,13 @@ export const BaseLayout = ({ children }: BaseLayoutProps) => {
               >
                 Gene Lists
               </Link>
-              <a
-                target="_blank"
+              <Link
+                to="/exheatmap"
                 className={styles.links}
-                style={{ cursor: "pointer" }}
-                href={NUMERIC_ID_TO_JBROWSE[selectedSpeciesId]}
+                activeClassName={styles.linksActive}
               >
-                JBrowse
-              </a>
+                Expression Heatmap
+              </Link>
               <Link
                 to="/blast"
                 className={styles.links}
@@ -80,25 +79,32 @@ export const BaseLayout = ({ children }: BaseLayoutProps) => {
             </div>
             <div className={styles.linkContainer}>
               <Divider />
-              <h2 className={styles.linkContainerHeader}>
-                Gene Expression Tools
-              </h2>
+              <h2 className={styles.linkContainerHeader}>External Tools</h2>
               <Divider />
-              <Link
-                to="/exheatmap"
+              <a
+                target="_blank"
                 className={styles.links}
-                activeClassName={styles.linksActive}
+                style={{ cursor: "pointer" }}
+                href={NUMERIC_ID_TO_JBROWSE[selectedSpeciesId]}
               >
-                Expression Heatmap
-              </Link>
-
-              <Link
-                to="/exnetwork"
+                JBrowse
+              </a>
+              <a
+                target="_blank"
                 className={styles.links}
-                activeClassName={styles.linksActive}
+                style={{ cursor: "pointer" }}
+                href="https://ortholog-seeker.nbiswebapp.bioshu.se/"
               >
-                Expression Network
-              </Link>
+                OrthoSeeker
+              </a>
+              <a
+                target="_blank"
+                className={styles.links}
+                style={{ cursor: "pointer" }}
+                href="https://population-genomics.nbiswebapp.bioshu.se/"
+              >
+                Spruce SNP Analyzer
+              </a>
             </div>
           </div>
           <div className={styles.navFooter}>

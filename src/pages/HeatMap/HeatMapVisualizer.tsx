@@ -402,7 +402,7 @@ export const HeatMapVisualizer = () => {
             marginBottom={10}
             marginLeft={10}
             marginRight={10}
-            labelFontSize={10}
+            labelFontSize={9}
             labelPadding={10}
             cellHeight={15}
             cellPadding={1}

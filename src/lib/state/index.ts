@@ -14,10 +14,7 @@ export type AvailableSpecies =
   | "Populus tremula"
   | "Prunus avium"
   | "Betula pendula"
-  | "Pinus taeda";
-// Prunus avium - sweet cherry
-// Betula pendula - silver birch
-// Pinus taeda - lodgepole pine
+  | "Pinus contorta";
 
 export interface MainSlice {
   applicationPath: string;

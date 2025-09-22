@@ -36,8 +36,8 @@ const supplementalSpecies: Array<Option> = [
   },
   {
     id: 7,
-    name: "Pinus taeda",
-    img: "/pinus-taeda-avatar-tiny.png",
+    name: "Pinus contorta",
+    img: "/pinus-contorta-avatar-tiny.png",
   },
 ];
 
@@ -65,8 +65,8 @@ const options: Array<Option> = [
   },
   {
     id: 7,
-    name: "Pinus taeda",
-    img: "/pinus-taeda-avatar-tiny.png",
+    name: "Pinus contorta",
+    img: "/pinus-contorta-avatar-tiny.png",
   },
 ];
 

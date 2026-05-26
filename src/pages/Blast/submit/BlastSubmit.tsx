@@ -15,12 +15,12 @@ const blastProgramOptions: BlastProgramOptions[] = [
   "blastx",
 ];
 
-type BlastDatabaseOptions = "genome" | "cds" | "mrna" | "protein";
+type BlastDatabaseOptions = "genome" | "cds" | "mrna" | "prot";
 const blastDatabaseOptions: BlastDatabaseOptions[] = [
   "genome",
   "cds",
   "mrna",
-  "protein",
+  "prot",
 ];
 
 export const BlastSubmit = () => {
